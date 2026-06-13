@@ -361,7 +361,7 @@
                 <th>ชื่อยี่ห้อ</th>
                 <th>ความแรง</th>
                 <th>รูปแบบยา</th>
-                <th>หน่วยวัตถุดิบ</th>
+                <th>Outputs</th>
                 <th>อายุยาหลังเตรียม</th>
                 <th>เก็บที่</th>
                 <th>สถานะ</th>
@@ -433,34 +433,20 @@
           </div>
         </div>
 
-        <!-- หน่วยวัตถุดิบ / รูปแบบผลิตภัณฑ์สำเร็จ -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
-            <label class="field-label">หน่วยวัตถุดิบที่ใช้ *</label>
-            <select id="p-rawunit" required class="select-field">
-              <option value="">-- เลือกหน่วย --</option>
-              <option value="เม็ด">เม็ด</option>
-              <option value="แคปซูล">แคปซูล</option>
-              <option value="mg">mg</option>
-              <option value="g">g</option>
-              <option value="ml">ml</option>
-              <option value="vial">vial</option>
-              <option value="amp">amp</option>
-            </select>
-          </div>
-          <div>
-            <label class="field-label">รูปแบบผลิตภัณฑ์สำเร็จ (Output) *</label>
-            <select id="p-outputtype" required class="select-field">
-              <option value="">-- เลือก --</option>
-              <option value="ยาน้ำแขวนตะกอน">ยาน้ำแขวนตะกอน (Suspension)</option>
-              <option value="ยาน้ำเชื่อม">ยาน้ำเชื่อม (Syrup)</option>
-              <option value="สารละลาย">สารละลาย (Solution)</option>
-              <option value="แคปซูล">แคปซูล (Repackaged Capsule)</option>
-              <option value="ครีม/เจล">ครีม/เจล</option>
-              <option value="ยาหยอด">ยาหยอด</option>
-              <option value="อื่นๆ">อื่นๆ</option>
-            </select>
-          </div>
+        <!-- รูปแบบผลิตภัณฑ์สำเร็จ -->
+        <div>
+          <label class="field-label">รูปแบบผลิตภัณฑ์สำเร็จ (Outputs) *</label>
+          <select id="p-outputtype" required class="select-field">
+            <option value="">-- เลือก --</option>
+            <option value="ยาน้ำแขวนตะกอน">ยาน้ำแขวนตะกอน (Suspension)</option>
+            <option value="ยาน้ำเชื่อม">ยาน้ำเชื่อม (Syrup)</option>
+            <option value="สารละลาย">สารละลาย (Solution)</option>
+            <option value="แคปซูล">แคปซูล (Repackaged Capsule)</option>
+            <option value="ครีม/เจล">ครีม/เจล</option>
+            <option value="ยาหยอดตา">ยาหยอดตา (Eye Drops)</option>
+            <option value="ยาฉีด">ยาฉีด (Injection)</option>
+            <option value="อื่นๆ">อื่นๆ</option>
+          </select>
         </div>
 
         <!-- อายุยา / เก็บที่ -->
@@ -490,29 +476,33 @@
           </div>
         </div>
 
-        <!-- รหัสยา / เลขทะเบียน -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
-            <label class="field-label">รหัสยา (Drug Code)</label>
-            <input type="text" id="p-drugcode" placeholder="รหัสยาในระบบ HIS (ถ้ามี)" class="input-field">
-          </div>
-          <div>
-            <label class="field-label">เลขทะเบียนยา (Reg. No.)</label>
-            <input type="text" id="p-regno" placeholder="เลขทะเบียน อย." class="input-field">
-          </div>
+        <!-- รหัสยา -->
+        <div>
+          <label class="field-label">รหัสยา (Drug Code)</label>
+          <input type="text" id="p-drugcode" placeholder="รหัสยาในระบบ HIS (ถ้ามี)" class="input-field">
         </div>
 
-        <!-- สูตรตำรับ / วิธีเตรียม -->
+        <!-- Worksheet แนบไฟล์ -->
         <div>
-          <label class="field-label">สูตรตำรับ / สัดส่วนผสม (Formula)</label>
-          <textarea id="p-formula" rows="2" placeholder="เช่น Omeprazole 1 เม็ด (20mg) + Ora-Plus 50 ml + Ora-Sweet SF 50 ml"
-            class="input-field resize-none"></textarea>
-        </div>
-
-        <div>
-          <label class="field-label">วิธีเตรียม / ขั้นตอนสำคัญ (Preparation Steps)</label>
-          <textarea id="p-prepmethod" rows="3" placeholder="ขั้นตอนการเตรียมยา, ข้อควรระวังในการผสม ฯลฯ"
-            class="input-field resize-none"></textarea>
+          <label class="field-label">สูตรตำรับ / Worksheet (แนบไฟล์)</label>
+          <div class="rounded-2xl p-4 border-2 border-dashed" style="border-color:#c4a8cb; background:#fdf8fc;">
+            <input type="file" id="p-worksheet-file" accept=".pdf,.jpg,.jpeg,.png,.xlsx,.xls,.doc,.docx"
+              class="block w-full text-sm font-bold" style="color:#4a4780;"
+              onchange="onWorksheetFileChange(event)">
+            <input type="hidden" id="p-worksheet-name">
+            <input type="hidden" id="p-worksheet-data">
+            <div id="worksheetPreview" class="mt-3 hidden">
+              <div class="flex items-center justify-between gap-3 p-3 bg-white rounded-xl border" style="border-color:#e8c4d8;">
+                <span class="text-sm font-black flex items-center gap-2" style="color:#4a4780;">
+                  📎 <span id="worksheetFileName">-</span>
+                </span>
+                <button type="button" onclick="removeWorksheetFile()" class="btn-danger">🗑️ ลบไฟล์</button>
+              </div>
+            </div>
+            <p class="text-[10px] font-bold mt-2" style="color:#c4a8cb;">
+              * รองรับไฟล์ PDF, รูปภาพ, Excel หรือ Word (สำหรับ worksheet สูตรตำรับ/วิธีเตรียม)
+            </p>
+          </div>
         </div>
 
         <!-- คำเตือนมาตรฐาน -->
@@ -624,11 +614,11 @@
 
       if (isDemo) {
         productData = [
-          { id:"1", drugCode:"D001", genericName:"Omeprazole",    brandName:"Losec",  strength:"20 mg/5 ml",  dosageForm:"ยาน้ำ", rawUnit:"Syr", outputType:"ยาน้ำแขวนตะกอน", expiryDays:"30", storage:"ตู้เย็น (2-8°C)", status:"active",   regNo:"1A 123/45", formula:"Omeprazole capsules + Ora-Plus + Ora-Sweet SF", prepMethod:"ผสมตามสัดส่วน เขย่าให้เข้ากัน", defaultWarning:"เขย่าขวดก่อนใช้ เก็บในตู้เย็น", note:"" },
-          { id:"2", drugCode:"D002", genericName:"Amoxicillin",   brandName:"Amoxil", strength:"250 mg/5 ml", dosageForm:"ยาน้ำ", rawUnit:"Syr", outputType:"ยาน้ำเชื่อม",     expiryDays:"14", storage:"ตู้เย็น (2-8°C)", status:"active",   regNo:"",          formula:"", prepMethod:"", defaultWarning:"เขย่าขวดก่อนใช้", note:"" },
-          { id:"3", drugCode:"D003", genericName:"Prednisolone",  brandName:"-",      strength:"5 mg/ml",     dosageForm:"ยาน้ำ", rawUnit:"Syr", outputType:"สารละลาย",       expiryDays:"7",  storage:"อุณหภูมิห้อง",     status:"active",   regNo:"",          formula:"", prepMethod:"", defaultWarning:"", note:"" },
-          { id:"4", drugCode:"D004", genericName:"Phenobarbital", brandName:"-",      strength:"3 mg/ml",     dosageForm:"ยาน้ำ", rawUnit:"Syr", outputType:"สารละลาย",       expiryDays:"14", storage:"อุณหภูมิห้อง",     status:"inactive", regNo:"",          formula:"", prepMethod:"", defaultWarning:"", note:"เลิกใช้ชั่วคราว" },
-          { id:"5", drugCode:"D005", genericName:"Metronidazole", brandName:"Flagyl", strength:"40 mg/ml",    dosageForm:"ยาน้ำ", rawUnit:"Syr", outputType:"ยาน้ำแขวนตะกอน", expiryDays:"30", storage:"อุณหภูมิห้อง",     status:"active",   regNo:"",          formula:"", prepMethod:"", defaultWarning:"เขย่าขวดก่อนใช้ ป้องกันแสง", note:"" },
+          { id:"1", drugCode:"D001", genericName:"Omeprazole",    brandName:"Losec",  strength:"20 mg/5 ml",  dosageForm:"ยาน้ำ", outputType:"ยาน้ำแขวนตะกอน", expiryDays:"30", storage:"ตู้เย็น (2-8°C)", status:"active",   worksheetName:"", worksheetData:"", defaultWarning:"เขย่าขวดก่อนใช้ เก็บในตู้เย็น", note:"" },
+          { id:"2", drugCode:"D002", genericName:"Amoxicillin",   brandName:"Amoxil", strength:"250 mg/5 ml", dosageForm:"ยาน้ำ", outputType:"ยาน้ำเชื่อม",     expiryDays:"14", storage:"ตู้เย็น (2-8°C)", status:"active",   worksheetName:"", worksheetData:"", defaultWarning:"เขย่าขวดก่อนใช้", note:"" },
+          { id:"3", drugCode:"D003", genericName:"Prednisolone",  brandName:"-",      strength:"5 mg/ml",     dosageForm:"ยาน้ำ", outputType:"สารละลาย",       expiryDays:"7",  storage:"อุณหภูมิห้อง",     status:"active",   worksheetName:"", worksheetData:"", defaultWarning:"", note:"" },
+          { id:"4", drugCode:"D004", genericName:"Phenobarbital", brandName:"-",      strength:"3 mg/ml",     dosageForm:"ยาน้ำ", outputType:"สารละลาย",       expiryDays:"14", storage:"อุณหภูมิห้อง",     status:"inactive", worksheetName:"", worksheetData:"", defaultWarning:"", note:"เลิกใช้ชั่วคราว" },
+          { id:"5", drugCode:"D005", genericName:"Metronidazole", brandName:"Flagyl", strength:"40 mg/ml",    dosageForm:"ยาน้ำ", outputType:"ยาน้ำแขวนตะกอน", expiryDays:"30", storage:"อุณหภูมิห้อง",     status:"active",   worksheetName:"", worksheetData:"", defaultWarning:"เขย่าขวดก่อนใช้ ป้องกันแสง", note:"" },
         ];
         loadingMsg.textContent = `⚠️ Demo Mode — ข้อมูลตัวอย่าง (${productData.length} รายการ)`;
         loadingMsg.style.color = "#f59e0b";
@@ -684,7 +674,7 @@
               <td>${p.brandName || '-'}</td>
               <td>${p.strength || '-'}</td>
               <td><span class="form-type-badge" style="background:${color};">${p.dosageForm || '-'}</span></td>
-              <td>${p.rawUnit || '-'}</td>
+              <td class="text-xs">${p.outputType || '-'}${p.worksheetName ? ' <span title="มี Worksheet แนบ">📎</span>' : ''}</td>
               <td>${p.expiryDays || '-'} วัน</td>
               <td class="text-xs">${p.storage || '-'}</td>
               <td><span class="status-pill ${statusClass}">${statusLabel}</span></td>
@@ -713,11 +703,12 @@
       document.getElementById('modalTitle').textContent = "➕ เพิ่มรายการยาใหม่";
       document.getElementById('p-saveBtn').textContent = "💾 บันทึก";
       document.getElementById('p-id').value = "";
-      ['p-generic','p-brand','p-strength','p-dosageform','p-rawunit','p-outputtype',
-       'p-expirydays','p-drugcode','p-regno','p-formula','p-prepmethod','p-defaultwarning','p-note']
+      ['p-generic','p-brand','p-strength','p-dosageform','p-outputtype',
+       'p-expirydays','p-drugcode','p-defaultwarning','p-note']
         .forEach(id => document.getElementById(id).value = "");
       document.getElementById('p-storage').value = "อุณหภูมิห้อง";
       document.getElementById('p-status').value = "active";
+      removeWorksheetFile();
       document.getElementById('productModal').classList.remove('hidden');
     }
 
@@ -739,18 +730,55 @@
       document.getElementById('p-brand').value = p.brandName || "";
       document.getElementById('p-strength').value = p.strength || "";
       document.getElementById('p-dosageform').value = p.dosageForm || "";
-      document.getElementById('p-rawunit').value = p.rawUnit || "";
       document.getElementById('p-outputtype').value = p.outputType || "";
       document.getElementById('p-expirydays').value = p.expiryDays || "";
       document.getElementById('p-storage').value = p.storage || "อุณหภูมิห้อง";
       document.getElementById('p-status').value = p.status || "active";
       document.getElementById('p-drugcode').value = p.drugCode || "";
-      document.getElementById('p-regno').value = p.regNo || "";
-      document.getElementById('p-formula').value = p.formula || "";
-      document.getElementById('p-prepmethod').value = p.prepMethod || "";
       document.getElementById('p-defaultwarning').value = p.defaultWarning || "";
       document.getElementById('p-note').value = p.note || "";
+
+      if (p.worksheetName) {
+        document.getElementById('p-worksheet-name').value = p.worksheetName;
+        document.getElementById('p-worksheet-data').value = p.worksheetData || "";
+        document.getElementById('worksheetFileName').textContent = p.worksheetName;
+        document.getElementById('worksheetPreview').classList.remove('hidden');
+      } else {
+        removeWorksheetFile();
+      }
       document.getElementById('productModal').classList.remove('hidden');
+    }
+
+
+    // =========================================
+    // 📎 WORKSHEET FILE HANDLING
+    // =========================================
+    function onWorksheetFileChange(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      if (file.size > 4 * 1024 * 1024) {
+        alert("⚠️ ไฟล์ใหญ่เกินไป กรุณาเลือกไฟล์ไม่เกิน 4MB ค่ะ");
+        e.target.value = "";
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = function(ev) {
+        document.getElementById('p-worksheet-name').value = file.name;
+        document.getElementById('p-worksheet-data').value = ev.target.result; // base64 data URL
+        document.getElementById('worksheetFileName').textContent = file.name;
+        document.getElementById('worksheetPreview').classList.remove('hidden');
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function removeWorksheetFile() {
+      document.getElementById('p-worksheet-file').value = "";
+      document.getElementById('p-worksheet-name').value = "";
+      document.getElementById('p-worksheet-data').value = "";
+      document.getElementById('worksheetFileName').textContent = "-";
+      document.getElementById('worksheetPreview').classList.add('hidden');
     }
 
 
@@ -769,15 +797,13 @@
         brandName:      document.getElementById('p-brand').value.trim(),
         strength:       document.getElementById('p-strength').value.trim(),
         dosageForm:     document.getElementById('p-dosageform').value,
-        rawUnit:        document.getElementById('p-rawunit').value,
         outputType:     document.getElementById('p-outputtype').value,
         expiryDays:     document.getElementById('p-expirydays').value,
         storage:        document.getElementById('p-storage').value,
         status:         document.getElementById('p-status').value,
         drugCode:       document.getElementById('p-drugcode').value.trim(),
-        regNo:          document.getElementById('p-regno').value.trim(),
-        formula:        document.getElementById('p-formula').value.trim(),
-        prepMethod:     document.getElementById('p-prepmethod').value.trim(),
+        worksheetName:  document.getElementById('p-worksheet-name').value,
+        worksheetData:  document.getElementById('p-worksheet-data').value,
         defaultWarning: document.getElementById('p-defaultwarning').value.trim(),
         note:           document.getElementById('p-note').value.trim(),
       };
