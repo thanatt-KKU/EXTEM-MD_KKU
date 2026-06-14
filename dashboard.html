@@ -112,15 +112,6 @@
     }
     .status-pending { background: #fef3c7; color: #b45309; }
     .status-done    { background: #d1fae5; color: #065f46; }
-    .status-partial { background: #e0e7ff; color: #4338ca; }
-
-    /* Role progress indicator */
-    .role-dot {
-      width: 10px; height: 10px; border-radius: 50%;
-      display: inline-block; flex-shrink: 0;
-    }
-    .role-dot.filled { background: #8b85c1; }
-    .role-dot.empty  { background: #e8c4d8; }
 
     .person-pill {
       display: inline-block; padding: 2px 8px; border-radius: 8px;
@@ -171,9 +162,6 @@
     }
     .chip-clear-btn:hover { color: #8b85c1; }
 
-    /* Workload Table */
-    .wl-total-row td { background: #f0eef8 !important; border-top: 2px solid #c4a8cb; }
-
     /* Role Summary Cards */
     .role-card {
       border-radius: 16px; padding: 16px; text-align: center;
@@ -194,13 +182,9 @@
     .tab-btn:not(.active) { background: #f0eef8; color: #4a4780; border-color: #e8c4d8; }
     .tab-btn:not(.active):hover { border-color: #8b85c1; }
 
-    /* Role progress mini-bar in table */
-    .role-progress {
-      display: flex; gap: 4px; align-items: center;
-    }
-    .role-icon {
-      font-size: 0.65rem; font-weight: 800; color: #8b85c1; white-space: nowrap;
-    }
+    /* Workload table border helpers */
+    .wl-role-sep { border-left: 2px solid rgba(255,255,255,0.2); }
+    .wl-role-sep-body { border-left: 2px solid #e8c4d8; }
 
     @media print {
       body { background: white !important; }
@@ -306,34 +290,15 @@
               <label class="field-label">สถานะ</label>
               <select id="searchStatus" onchange="filterDisplay()" class="select-field">
                 <option value="">ทั้งหมด</option>
-                <option value="pending">⏳ รอเช็ค</option>
-                <option value="partial">🔵 เช็คบางส่วน</option>
+                <option value="pending">⏳ รอดำเนินการ</option>
                 <option value="done">✅ เสร็จสมบูรณ์</option>
               </select>
             </div>
           </div>
           <div class="flex justify-end">
-            <button onclick="loadData()" class="btn-primary text-sm px-6 py-3">🔍 ดึงข้อมูลตามวันที่</button>
+            <button onclick="loadData()" class="btn-primary text-sm px-6 py-3">🔄 ดึงข้อมูลตามวันที่</button>
           </div>
         </section>
-
-        <!-- Legend -->
-        <div class="flex gap-4 flex-wrap px-1 mb-3 no-print">
-          <span class="text-xs font-bold text-purple-200 uppercase tracking-wider">ไอคอนสถานะ:</span>
-          <div class="flex items-center gap-1.5">
-            <span style="font-size:14px;">🧪</span><span class="text-xs font-bold text-purple-200">เตรียมยา</span>
-          </div>
-          <div class="flex items-center gap-1.5">
-            <span style="font-size:14px;">✅</span><span class="text-xs font-bold text-purple-200">เช็คยา</span>
-          </div>
-          <div class="flex items-center gap-1.5">
-            <span style="font-size:14px;">🏷️</span><span class="text-xs font-bold text-purple-200">ทำฉลาก</span>
-          </div>
-          <div class="flex items-center gap-1.5">
-            <span style="font-size:14px;">🔍</span><span class="text-xs font-bold text-purple-200">เช็คฉลาก</span>
-          </div>
-          <span class="text-[10px] text-purple-300">— คลิก ✏️ เพื่อบันทึกรายชื่อ</span>
-        </div>
 
         <!-- Table -->
         <section class="bg-white p-6 rounded-2xl card-shadow">
@@ -348,7 +313,7 @@
                   <th style="min-width:160px;">HN / ชื่อคนไข้</th>
                   <th style="min-width:80px;">Ward</th>
                   <th style="min-width:160px;">ผลิตภัณฑ์</th>
-                  <th class="text-center" style="min-width:100px;">ปริมาตร</th>
+                  <th class="text-center" style="min-width:130px;">จำนวน</th>
                   <th class="text-center" style="min-width:120px;">ความคืบหน้า</th>
                   <th class="text-center rounded-tr-2xl no-print" style="min-width:90px;">จัดการ</th>
                 </tr>
@@ -423,7 +388,7 @@
                 <div class="text-xs font-bold mt-1" style="color:#8b85c1;">ครั้ง</div>
                 <div class="mt-2 pt-2 border-t border-purple-100">
                   <div class="text-2xl font-black" style="color:#4a4780;" id="total-prep-doses">0</div>
-                  <div class="text-xs font-bold" style="color:#8b85c1;">ขนาน</div>
+                  <div class="text-xs font-bold" style="color:#8b85c1;">ขวด</div>
                 </div>
               </div>
               <div class="role-card role-card-check">
@@ -433,7 +398,7 @@
                 <div class="text-xs font-bold mt-1" style="color:#8b85c1;">ครั้ง</div>
                 <div class="mt-2 pt-2 border-t border-green-100">
                   <div class="text-2xl font-black" style="color:#065f46;" id="total-check-doses">0</div>
-                  <div class="text-xs font-bold" style="color:#8b85c1;">ขนาน</div>
+                  <div class="text-xs font-bold" style="color:#8b85c1;">ขวด</div>
                 </div>
               </div>
               <div class="role-card role-card-label">
@@ -443,7 +408,7 @@
                 <div class="text-xs font-bold mt-1" style="color:#8b85c1;">ครั้ง</div>
                 <div class="mt-2 pt-2 border-t border-blue-100">
                   <div class="text-2xl font-black" style="color:#1e40af;" id="total-label-doses">0</div>
-                  <div class="text-xs font-bold" style="color:#8b85c1;">ขนาน</div>
+                  <div class="text-xs font-bold" style="color:#8b85c1;">ขวด</div>
                 </div>
               </div>
               <div class="role-card role-card-lcheck">
@@ -453,18 +418,9 @@
                 <div class="text-xs font-bold mt-1" style="color:#8b85c1;">ครั้ง</div>
                 <div class="mt-2 pt-2 border-t border-yellow-100">
                   <div class="text-2xl font-black" style="color:#b45309;" id="total-lcheck-doses">0</div>
-                  <div class="text-xs font-bold" style="color:#8b85c1;">ขนาน</div>
+                  <div class="text-xs font-bold" style="color:#8b85c1;">ขวด</div>
                 </div>
               </div>
-            </div>
-
-            <!-- Note -->
-            <div class="p-3 rounded-xl text-xs font-bold flex gap-2 items-start" style="background:#f0eef8; color:#4a4780;">
-              <span>💡</span>
-              <span>
-                <strong>ครั้ง</strong> = จำนวน LOT ที่รับผิดชอบ &nbsp;|&nbsp;
-                <strong>ขนาน</strong> = จำนวนขวดรวม (prepCount) — ถ้า 1 LOT มี 2 คนร่วม ทั้ง 2 คนได้ครั้ง = 1 และขนาน = จำนวนขวดของ LOT นั้น
-              </span>
             </div>
 
             <!-- Workload Table -->
@@ -474,22 +430,22 @@
                 <table>
                   <thead>
                     <tr style="background: linear-gradient(135deg, #1e1b3a, #4a4780); color:white;">
-                      <th class="px-4 py-3 rounded-tl-2xl text-left" style="min-width:70px; font-size:0.72rem;">ชื่อย่อ</th>
-                      <th class="text-center px-3 py-3" colspan="2" style="font-size:0.72rem; border-left:1px solid rgba(255,255,255,0.15);">🧪 เตรียมยา</th>
-                      <th class="text-center px-3 py-3" colspan="2" style="font-size:0.72rem; border-left:1px solid rgba(255,255,255,0.15);">✅ เช็คยา</th>
-                      <th class="text-center px-3 py-3" colspan="2" style="font-size:0.72rem; border-left:1px solid rgba(255,255,255,0.15);">🏷️ ทำฉลาก</th>
-                      <th class="text-center px-3 py-3 rounded-tr-2xl" colspan="2" style="font-size:0.72rem; border-left:1px solid rgba(255,255,255,0.15);">🔍 เช็คฉลาก</th>
+                      <th class="px-4 py-3 rounded-tl-2xl text-left" style="min-width:80px; font-size:0.72rem;">ชื่อย่อ</th>
+                      <th class="text-center px-3 py-3 wl-role-sep" colspan="2" style="font-size:0.75rem;">🧪 เตรียมยา</th>
+                      <th class="text-center px-3 py-3 wl-role-sep" colspan="2" style="font-size:0.75rem;">✅ เช็คยา</th>
+                      <th class="text-center px-3 py-3 wl-role-sep" colspan="2" style="font-size:0.75rem;">🏷️ ทำฉลาก</th>
+                      <th class="text-center px-3 py-3 wl-role-sep rounded-tr-2xl" colspan="2" style="font-size:0.75rem;">🔍 เช็คฉลาก</th>
                     </tr>
-                    <tr style="background:#2d2b5e; color:rgba(255,255,255,0.7);">
-                      <th class="px-4 py-2"></th>
-                      <th class="px-2 py-2 text-center text-[10px] font-black uppercase border-l border-white/10">ครั้ง</th>
-                      <th class="px-2 py-2 text-center text-[10px] font-black uppercase border-r border-white/20">ขนาน</th>
-                      <th class="px-2 py-2 text-center text-[10px] font-black uppercase">ครั้ง</th>
-                      <th class="px-2 py-2 text-center text-[10px] font-black uppercase border-r border-white/20">ขนาน</th>
-                      <th class="px-2 py-2 text-center text-[10px] font-black uppercase">ครั้ง</th>
-                      <th class="px-2 py-2 text-center text-[10px] font-black uppercase border-r border-white/20">ขนาน</th>
-                      <th class="px-2 py-2 text-center text-[10px] font-black uppercase">ครั้ง</th>
-                      <th class="px-2 py-2 text-center text-[10px] font-black uppercase">ขนาน</th>
+                    <tr style="background:#2d2b5e; color:rgba(255,255,255,0.65);">
+                      <th class="px-4 py-2 text-[10px] font-black uppercase text-left"></th>
+                      <th class="px-3 py-2 text-center text-[10px] font-black uppercase wl-role-sep">ครั้ง</th>
+                      <th class="px-3 py-2 text-center text-[10px] font-black uppercase">ขวด</th>
+                      <th class="px-3 py-2 text-center text-[10px] font-black uppercase wl-role-sep">ครั้ง</th>
+                      <th class="px-3 py-2 text-center text-[10px] font-black uppercase">ขวด</th>
+                      <th class="px-3 py-2 text-center text-[10px] font-black uppercase wl-role-sep">ครั้ง</th>
+                      <th class="px-3 py-2 text-center text-[10px] font-black uppercase">ขวด</th>
+                      <th class="px-3 py-2 text-center text-[10px] font-black uppercase wl-role-sep">ครั้ง</th>
+                      <th class="px-3 py-2 text-center text-[10px] font-black uppercase">ขวด</th>
                     </tr>
                   </thead>
                   <tbody id="wl-table-body"></tbody>
@@ -667,23 +623,23 @@
       return String(str).split(',').map(s => s.trim()).filter(Boolean);
     }
 
+    // สถานะมีแค่ 2 แบบ: เสร็จ (ครบ 4 งาน) หรือ รอดำเนินการ
     function getRowStatus(row) {
       const hasP  = parsePersons(row.preparer).length    > 0;
       const hasC  = parsePersons(row.checker).length     > 0;
       const hasLM = parsePersons(row.labelMaker).length  > 0;
       const hasLC = parsePersons(row.labelChecker).length> 0;
-      if (hasP && hasC && hasLM && hasLC) return { label:'เสร็จสมบูรณ์', cls:'status-done',    key:'done'    };
-      if (!hasP && !hasC && !hasLM && !hasLC) return { label:'รอดำเนินการ', cls:'status-pending', key:'pending' };
-      return { label:'กำลังดำเนินการ', cls:'status-partial', key:'partial' };
+      if (hasP && hasC && hasLM && hasLC) return { label:'เสร็จสมบูรณ์', cls:'status-done', key:'done' };
+      return { label:'รอดำเนินการ', cls:'status-pending', key:'pending' };
     }
 
     // แสดง progress dots 4 role
     function renderProgressDots(row) {
       const roles = [
-        { key:'preparer',    icon:'🧪', val:row.preparer },
-        { key:'checker',     icon:'✅', val:row.checker  },
-        { key:'labelMaker',  icon:'🏷️', val:row.labelMaker },
-        { key:'labelChecker',icon:'🔍', val:row.labelChecker },
+        { icon:'🧪', val:row.preparer },
+        { icon:'✅', val:row.checker  },
+        { icon:'🏷️', val:row.labelMaker },
+        { icon:'🔍', val:row.labelChecker },
       ];
       return `<div class="flex items-center gap-2">` +
         roles.map(r => {
@@ -811,13 +767,13 @@
 
     function getDemoData(dateStr) {
       return [
-        { id:"1", rowIndex:2, date:dateStr, lotNumber:"ET6906001", hn:"100001", name:"นางสมหญิง ใจดี",      ward:"5ก",    productName:"Omeprazole (Losec) — 20 mg/5 ml",     prepVolume:"60",  prepCount:"3", preparer:"SK",     checker:"OP",    labelMaker:"TT",    labelChecker:"NC"  },
-        { id:"2", rowIndex:3, date:dateStr, lotNumber:"ET6906002", hn:"100002", name:"นายสมชาย รักเรียน",   ward:"MICU 1",productName:"Amoxicillin (Amoxil) — 250 mg/5 ml", prepVolume:"100", prepCount:"5", preparer:"OP,SK",  checker:"TT",    labelMaker:"MP",    labelChecker:""    },
-        { id:"3", rowIndex:4, date:dateStr, lotNumber:"ET6906003", hn:"100003", name:"เด็กชายปอนด์ มั่งมี", ward:"PICU",  productName:"Prednisolone — 5 mg/ml",               prepVolume:"30",  prepCount:"2", preparer:"",       checker:"",      labelMaker:"",      labelChecker:""    },
-        { id:"4", rowIndex:5, date:dateStr, lotNumber:"ET6906004", hn:"100004", name:"นางสาวฟ้าใส วันดี",   ward:"6ก",    productName:"Metronidazole (Flagyl) — 40 mg/ml",    prepVolume:"120", prepCount:"4", preparer:"NC",     checker:"MP",    labelMaker:"SK",    labelChecker:"OP"  },
-        { id:"5", rowIndex:6, date:dateStr, lotNumber:"ET6906005", hn:"100005", name:"นายอัมพร สีทอง",      ward:"3ข",    productName:"Phenobarbital — 3 mg/ml",               prepVolume:"50",  prepCount:"1", preparer:"TT",     checker:"SK",    labelMaker:"",      labelChecker:""    },
-        { id:"6", rowIndex:7, date:dateStr, lotNumber:"ET6906006", hn:"100006", name:"นางมาลี สุขสันต์",    ward:"2ค",    productName:"Omeprazole (Losec) — 20 mg/5 ml",     prepVolume:"60",  prepCount:"6", preparer:"NC,OP",  checker:"SK,TT", labelMaker:"NC",    labelChecker:"MP"  },
-        { id:"7", rowIndex:8, date:dateStr, lotNumber:"ET6906007", hn:"100007", name:"เด็กหญิงดาว มีโชค",  ward:"PICU",  productName:"Prednisolone — 5 mg/ml",               prepVolume:"30",  prepCount:"2", preparer:"MP",     checker:"NC",    labelMaker:"TT",    labelChecker:"SK"  },
+        { id:"1", rowIndex:2, date:dateStr, lotNumber:"ET6906001", hn:"100001", name:"นางสมหญิง ใจดี",      ward:"5ก",    productName:"Omeprazole (Losec) — 20 mg/5 ml",     prepVolume:"60",  prepCount:"3", prepUnit:"ml", preparer:"SK",     checker:"OP",    labelMaker:"TT",    labelChecker:"NC"  },
+        { id:"2", rowIndex:3, date:dateStr, lotNumber:"ET6906002", hn:"100002", name:"นายสมชาย รักเรียน",   ward:"MICU 1",productName:"Amoxicillin (Amoxil) — 250 mg/5 ml", prepVolume:"100", prepCount:"5", prepUnit:"ml", preparer:"OP,SK",  checker:"TT",    labelMaker:"MP",    labelChecker:""    },
+        { id:"3", rowIndex:4, date:dateStr, lotNumber:"ET6906003", hn:"100003", name:"เด็กชายปอนด์ มั่งมี", ward:"PICU",  productName:"Prednisolone — 5 mg/ml",               prepVolume:"30",  prepCount:"2", prepUnit:"ml", preparer:"",       checker:"",      labelMaker:"",      labelChecker:""    },
+        { id:"4", rowIndex:5, date:dateStr, lotNumber:"ET6906004", hn:"100004", name:"นางสาวฟ้าใส วันดี",   ward:"6ก",    productName:"Metronidazole (Flagyl) — 40 mg/ml",    prepVolume:"120", prepCount:"4", prepUnit:"ml", preparer:"NC",     checker:"MP",    labelMaker:"SK",    labelChecker:"OP"  },
+        { id:"5", rowIndex:6, date:dateStr, lotNumber:"ET6906005", hn:"100005", name:"นายอัมพร สีทอง",      ward:"3ข",    productName:"Phenobarbital — 3 mg/ml",               prepVolume:"50",  prepCount:"1", prepUnit:"ml", preparer:"TT",     checker:"SK",    labelMaker:"",      labelChecker:""    },
+        { id:"6", rowIndex:7, date:dateStr, lotNumber:"ET6906006", hn:"100006", name:"นางมาลี สุขสันต์",    ward:"2ค",    productName:"Omeprazole (Losec) — 20 mg/5 ml",     prepVolume:"60",  prepCount:"6", prepUnit:"ml", preparer:"NC,OP",  checker:"SK,TT", labelMaker:"NC",    labelChecker:"MP"  },
+        { id:"7", rowIndex:8, date:dateStr, lotNumber:"ET6906007", hn:"100007", name:"เด็กหญิงดาว มีโชค",  ward:"PICU",  productName:"Prednisolone — 5 mg/ml",               prepVolume:"30",  prepCount:"2", prepUnit:"ml", preparer:"MP",     checker:"NC",    labelMaker:"TT",    labelChecker:"SK"  },
       ];
     }
 
@@ -853,7 +809,7 @@
       });
       const top = Object.entries(pc).sort((a,b) => b[1]-a[1])[0];
       document.getElementById('topProduct').textContent = top
-        ? `${top[0].split(' — ')[0]} (${top[1]} ขนาน)` : '-';
+        ? `${top[0].split(' — ')[0]} (${top[1]} ขวด)` : '-';
 
       if (!filtered.length) {
         document.getElementById('summaryBody').innerHTML =
@@ -864,6 +820,14 @@
       document.getElementById('summaryBody').innerHTML = filtered.map((row, i) => {
         const st = getRowStatus(row);
         const productShort = (row.productName||'-').split(' — ')[0];
+        // column จำนวน: "60 ml × 3 ขวด" (ใช้ prepUnit ถ้ามี)
+        const unit  = row.prepUnit || 'ml';
+        const vol   = row.prepVolume || '-';
+        const count = row.prepCount  || '1';
+        const qtyDisplay = (vol !== '-')
+          ? `${vol} ${unit} × ${count} ขวด`
+          : `${count} ขวด`;
+
         return `
         <tr>
           <td class="text-center font-black text-sm" style="color:#8b85c1;">${i+1}</td>
@@ -876,9 +840,7 @@
           <td class="font-black text-sm" style="color:#4a4780;">${row.ward||'-'}</td>
           <td class="text-sm font-bold" style="color:#1e1b3a; max-width:160px; line-height:1.3;">${productShort}</td>
           <td class="text-center">
-            <span class="font-black text-sm" style="color:#4a4780;">${row.prepVolume||'-'} ml</span>
-            <br>
-            <span class="text-xs font-bold" style="color:#8b85c1;">${row.prepCount||'1'} ขนาน</span>
+            <span class="font-black text-sm whitespace-nowrap" style="color:#4a4780;">${qtyDisplay}</span>
           </td>
           <td>
             <div class="flex flex-col gap-1 items-start">
@@ -905,10 +867,14 @@
     function openPersonModal(row) {
       document.getElementById('pm-rowIndex').value = row.rowIndex || row.id;
       document.getElementById('pm-lot').textContent  = row.lotNumber || '-';
+      const unit  = row.prepUnit || 'ml';
+      const vol   = row.prepVolume || '-';
+      const count = row.prepCount  || '1';
+      const qtyDisplay = (vol !== '-') ? `${vol} ${unit} × ${count} ขวด` : `${count} ขวด`;
       document.getElementById('pm-info').innerHTML =
         `<span style="color:#1e1b3a;font-weight:800;">${row.hn||'-'}</span>
          <span style="color:#8b85c1;"> | </span>${row.name||'-'}
-         <br><span style="color:#8b85c1;font-size:0.75rem;">${(row.productName||'').split(' — ')[0]} — ${row.prepCount||'1'} ขนาน</span>`;
+         <br><span style="color:#8b85c1;font-size:0.75rem;">${(row.productName||'').split(' — ')[0]} — ${qtyDisplay}</span>`;
 
       setModalChips('pm-preparer',     row.preparer    ||'');
       setModalChips('pm-checker',      row.checker     ||'');
@@ -1024,10 +990,10 @@
       document.getElementById('wl-empty').classList.add('hidden');
       document.getElementById('wl-result').classList.remove('hidden');
 
-      const roles = ['preparer','checker','labelMaker','labelChecker'];
+      const roles    = ['preparer','checker','labelMaker','labelChecker'];
       const fieldKey = { preparer:'preparer', checker:'checker', labelMaker:'labelMaker', labelChecker:'labelChecker' };
 
-      // Build workload object
+      // Build workload object — แต่ละคนนับครั้ง (LOT) และขวด (prepCount) แยก
       const workload = {};
       persons.forEach(p => {
         workload[p] = {};
@@ -1037,31 +1003,21 @@
       filtered.forEach(row => {
         const doses = parseInt(row.prepCount) || 1;
         roles.forEach(role => {
-          const peopleInRole = parsePersons(row[fieldKey[role]]);
-          peopleInRole.forEach(person => {
+          parsePersons(row[fieldKey[role]]).forEach(person => {
             if (!workload[person]) return;
             workload[person][role].count++;
-            workload[person][role].doses += doses;  // แต่ละคนได้เต็ม (ไม่หาร)
+            workload[person][role].doses += doses;
           });
         });
       });
 
-      // Grand totals
+      // Grand totals: นับจาก filtered โดยตรง (1 LOT นับ 1 ครั้ง ถึงแม้มีหลายคน)
       const totals = {};
-      roles.forEach(r => { totals[r] = { count:0, doses:0 }; });
-      persons.forEach(p => {
-        roles.forEach(r => {
-          totals[r].count = Math.max(totals[r].count, workload[p]?.[r]?.count || 0);
-          // total count = sum ของทุกคน (นับซ้ำได้ถ้าหลายคนร่วม LOT เดียวกัน)
-        });
-      });
-      // คำนวณ total ใหม่แบบถูก: นับจาก filtered โดยตรง
       roles.forEach(role => {
         let count = 0, doses = 0;
         const seen = new Set();
         filtered.forEach(row => {
-          const peopleInRole = parsePersons(row[fieldKey[role]]);
-          const matchPeople  = peopleInRole.filter(p => persons.includes(p));
+          const matchPeople = parsePersons(row[fieldKey[role]]).filter(p => persons.includes(p));
           if (matchPeople.length > 0 && !seen.has(row.id)) {
             seen.add(row.id);
             count++;
@@ -1083,7 +1039,7 @@
       document.getElementById('total-lcheck-count').textContent = totals.labelChecker.count;
       document.getElementById('total-lcheck-doses').textContent = fmt(totals.labelChecker.doses);
 
-      // Sort persons by total workload
+      // Sort persons by total workload (descending)
       const activePersons = persons
         .filter(p => roles.some(r => (workload[p]?.[r]?.count||0) > 0))
         .sort((a,b) => {
@@ -1099,35 +1055,35 @@
         labelChecker:'#b45309',
       };
 
-      const makeCell = (role, person) => {
+      // สร้าง 2 cells ต่อ role (ครั้ง | ขวด)
+      const makeCountCell = (role, person, isSep) => {
         const c = workload[person]?.[role]?.count || 0;
+        const color = c > 0 ? roleColors[role] : '#e8c4d8';
+        return `<td class="text-center py-3 px-3${isSep ? ' wl-role-sep-body' : ''}">
+          <span style="font-size:1.2rem;font-weight:900;color:${color};">${c}</span>
+        </td>`;
+      };
+      const makeDosesCell = (role, person) => {
         const d = workload[person]?.[role]?.doses || 0;
-        if (c === 0) return `
-          <td class="text-center py-3 px-2" style="border-left:1px solid #f0eef8;">
-            <span style="font-size:1.1rem;font-weight:900;color:#e8c4d8;">0</span>
-            <br><span style="font-size:0.7rem;color:#e8c4d8;">0 ขนาน</span>
-          </td>`;
-        return `
-          <td class="text-center py-3 px-2" style="border-left:1px solid #f0eef8;">
-            <span style="font-size:1.25rem;font-weight:900;color:${roleColors[role]};">${c}</span>
-            <br><span style="font-size:0.7rem;font-weight:700;color:#8b85c1;">${fmt(d)} ขนาน</span>
-          </td>`;
+        const color = d > 0 ? '#8b85c1' : '#e8c4d8';
+        return `<td class="text-center py-3 px-3">
+          <span style="font-size:0.85rem;font-weight:700;color:${color};">${d > 0 ? fmt(d) : '0'}</span>
+        </td>`;
       };
 
-      const makeTotalCell = (role) => {
-        const c = workload[persons[0]] ? (() => {
-          let cnt=0, dos=0;
-          persons.forEach(p => { cnt += workload[p]?.[role]?.count||0; dos += workload[p]?.[role]?.doses||0; });
-          return { count:cnt, doses:dos };
-        })() : { count:0, doses:0 };
-        // คำนวณรวมจาก workload ของทุกคน
-        let totalC=0, totalD=0;
-        persons.forEach(p => { totalC+=workload[p]?.[role]?.count||0; totalD+=workload[p]?.[role]?.doses||0; });
-        return `
-          <td class="text-center py-3 px-2" style="border-left:1px solid #c4a8cb;">
-            <span style="font-size:1.25rem;font-weight:900;color:${roleColors[role]};">${totalC}</span>
-            <br><span style="font-size:0.7rem;font-weight:700;color:#8b85c1;">${fmt(totalD)} ขนาน</span>
-          </td>`;
+      const makeTotalCountCell = (role, isSep) => {
+        let c = 0;
+        persons.forEach(p => { c += workload[p]?.[role]?.count || 0; });
+        return `<td class="text-center py-3 px-3${isSep ? ' wl-role-sep-body' : ''}">
+          <span style="font-size:1.2rem;font-weight:900;color:${roleColors[role]};">${c}</span>
+        </td>`;
+      };
+      const makeTotalDosesCell = (role) => {
+        let d = 0;
+        persons.forEach(p => { d += workload[p]?.[role]?.doses || 0; });
+        return `<td class="text-center py-3 px-3">
+          <span style="font-size:0.85rem;font-weight:700;color:#8b85c1;">${fmt(d)}</span>
+        </td>`;
       };
 
       const rows = activePersons.map(p => `
@@ -1137,19 +1093,19 @@
               font-family:'Courier New',monospace;font-weight:900;letter-spacing:0.08em;
               padding:4px 12px;border-radius:10px;display:inline-block;font-size:0.85rem;">${p}</span>
           </td>
-          ${makeCell('preparer',p)}${makeCell('preparer',p).replace('count','doses')}
-          ${makeCell('checker',p)}${makeCell('checker',p).replace('count','doses')}
-          ${makeCell('labelMaker',p)}${makeCell('labelMaker',p).replace('count','doses')}
-          ${makeCell('labelChecker',p)}${makeCell('labelChecker',p).replace('count','doses')}
+          ${makeCountCell('preparer',p,true)}${makeDosesCell('preparer',p)}
+          ${makeCountCell('checker',p,true)}${makeDosesCell('checker',p)}
+          ${makeCountCell('labelMaker',p,true)}${makeDosesCell('labelMaker',p)}
+          ${makeCountCell('labelChecker',p,true)}${makeDosesCell('labelChecker',p)}
         </tr>`).join('');
 
       const totalRow = activePersons.length ? `
         <tr style="background:#f0eef8;border-top:2px solid #c4a8cb;">
           <td class="px-4 py-3 font-black text-sm" style="color:#4a4780;">รวมทั้งหมด</td>
-          ${makeTotalCell('preparer')}${makeTotalCell('preparer')}
-          ${makeTotalCell('checker')}${makeTotalCell('checker')}
-          ${makeTotalCell('labelMaker')}${makeTotalCell('labelMaker')}
-          ${makeTotalCell('labelChecker')}${makeTotalCell('labelChecker')}
+          ${makeTotalCountCell('preparer',true)}${makeTotalDosesCell('preparer')}
+          ${makeTotalCountCell('checker',true)}${makeTotalDosesCell('checker')}
+          ${makeTotalCountCell('labelMaker',true)}${makeTotalDosesCell('labelMaker')}
+          ${makeTotalCountCell('labelChecker',true)}${makeTotalDosesCell('labelChecker')}
         </tr>` : '';
 
       document.getElementById('wl-table-body').innerHTML =
