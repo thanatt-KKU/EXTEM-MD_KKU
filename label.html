@@ -1,0 +1,360 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ระบบพิมพ์ฉลากยาเฉพาะราย | Srinagarind Hospital</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    * { 
+      font-family: 'Sarabun', sans-serif; 
+      color: #000; 
+      line-height: 1.15; 
+    }
+    body {
+      background-color: #f1f5f9;
+    }
+    [contenteditable="true"]:hover { 
+      background: #fff9c4; 
+      outline: 1px dashed #4a4780; 
+      cursor: text; 
+    }
+
+    /* สไตล์สำหรับการควบคุมหน้าจอและการพิมพ์ */
+    @media print {
+      .no-print { display: none !important; }
+      @page { size: auto; margin: 0mm; }
+      body { background: #fff; margin: 0 !important; padding: 0 !important; }
+      .print-area:not(.active) { display: none !important; }
+      .label-box { 
+        box-shadow: none !important; 
+        border: 1px solid #000 !important; 
+        margin: 0 auto 5mm auto !important; 
+        page-break-after: always; 
+      }
+    }
+
+    /* ── 📦 1 & 2: ขนาดฉลากติดถุงและติดขวดยา (อิงจากขนาดฉลากหน้าถุงเดิม 3.5x2.48 นิ้ว) ── */
+    .label-standard { 
+      width: 3.5in; 
+      height: 2.48in; 
+      padding: 0.15in 0.2in; 
+      background: white; 
+      border: 2px solid #1e1b3a; 
+      margin: 15px auto; 
+      box-sizing: border-box; 
+      position: relative; 
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      border-radius: 4px;
+    }
+
+    /* ── 💉 3: ขนาดฉลากเล็กพิเศษสำหรับติด Syringe (สูง 2.5 cm x ยาว 5.0 cm) ── */
+    .label-syringe {
+      width: 5.0cm;
+      height: 2.5cm;
+      padding: 1mm 2mm;
+      background: white;
+      border: 1px solid #1e1b3a;
+      margin: 15px auto;
+      box-sizing: border-box;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      overflow: hidden;
+      border-radius: 2px;
+    }
+
+    /* Utility classes สำหรับฉลากย่อย */
+    .header-accent {
+      border-bottom: 2px solid #1e1b3a;
+      padding-bottom: 2px;
+      margin-bottom: 4px;
+    }
+  </style>
+</head>
+<body class="min-h-screen pb-20">
+
+  <nav class="no-print sticky top-0 z-50 bg-slate-900 text-white shadow-lg py-3 px-4 mb-6">
+    <div class="max-w-5xl mx-auto flex justify-between items-center">
+      <button onclick="history.back()" class="flex items-center gap-2 px-4 py-2 bg-slate-700 hover:bg-slate-600 rounded-xl transition-all font-bold text-sm text-white">
+        <span>⬅️</span> แก้ไขข้อมูล (ย้อนกลับ)
+      </button>
+      <div class="text-center hidden md:block">
+        <p class="text-xs font-bold text-purple-300 tracking-widest uppercase">Extemporaneous Preparation System</p>
+        <p class="text-[10px] text-slate-400">Srinagarind Hospital</p>
+      </div>
+      <div class="flex gap-2">
+        <a href="index.html" class="flex items-center gap-2 px-4 py-2 bg-indigo-600 hover:bg-indigo-500 rounded-xl transition-all font-bold text-sm text-white">
+          <span>➕</span> เพิ่มเคสใหม่
+        </a>
+        <a href="dashboard.html" class="flex items-center gap-2 px-4 py-2 bg-emerald-600 hover:bg-emerald-500 rounded-xl transition-all font-bold text-sm text-white">
+          <span>📊</span> Dashboard
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="max-w-4xl mx-auto py-2 px-4 no-print text-center">
+    <div class="mb-6 bg-white p-4 rounded-2xl shadow-sm border border-slate-200">
+      <h1 class="text-xl font-black text-slate-800 uppercase tracking-tight">🖨️ จัดการพิมพ์ฉลากยาเฉพาะราย</h1>
+      <p class="text-sm text-slate-500 mt-1">
+        ผู้ป่วย: <span id="topPatientInfo" class="font-black text-indigo-600">กำลังโหลดข้อมูล...</span>
+      </p>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
+      
+      <div id="card-bag" onclick="selectSection('bag')" class="bg-white p-5 rounded-2xl border-4 border-slate-200 cursor-pointer transition-all hover:border-indigo-400 shadow-sm">
+        <div class="text-3xl mb-1">🛍️</div>
+        <h3 class="font-black text-indigo-700 text-base">1. ฉลากใหญ่ติดถุง</h3>
+        <p class="text-xs text-slate-400 mt-1">แสดงรายชื่อ Ward และจำนวนขวดรวม</p>
+      </div>
+      
+      <div id="card-product" onclick="selectSection('product')" class="bg-white p-5 rounded-2xl border-4 border-slate-200 cursor-pointer transition-all hover:border-purple-400 shadow-sm">
+        <div class="text-3xl mb-1">🍾</div>
+        <h3 class="font-black text-purple-700 text-base">2. ฉลากติดขวดยา / ซองยา</h3>
+        <p class="text-xs text-slate-400 mt-1">แสดงชื่อยา วิธีใช้ และคำเตือน (ไม่ระบุขวดรวม)</p>
+      </div>
+
+      <div id="card-syringe" onclick="selectSection('syringe')" class="bg-white p-5 rounded-2xl border-4 border-slate-200 cursor-pointer transition-all hover:border-amber-400 shadow-sm">
+        <div class="text-3xl mb-1">💉</div>
+        <h3 class="font-black text-amber-700 text-base">3. ฉลากเล็กติด Syringe</h3>
+        <p class="text-xs text-slate-400 mt-1">ขนาดเล็กพิเศษ 5.0 × 2.5 cm เน้นข้อมูลสำคัญ</p>
+      </div>
+
+    </div>
+
+    <div id="action-btns" class="hidden mb-6">
+      <button onclick="window.print()" class="bg-slate-900 text-white py-4 px-16 rounded-2xl font-black text-lg shadow-lg hover:bg-slate-800 hover:scale-[1.02] active:scale-[0.98] transition-all">
+        🖨️ สั่งพิมพ์ฉลากที่เลือก
+      </button>
+      <p class="text-xs text-slate-400 mt-2">* สามารถคลิกข้อความบนตัวอย่างฉลากด้านล่างเพื่อพิมพ์แก้ไขข้อความสดได้ก่อนพิมพ์จริงค่ะ</p>
+    </div>
+  </div>
+
+  <div id="bag-area" class="print-area"></div>
+
+  <div id="product-area" class="print-area"></div>
+
+  <div id="syringe-area" class="print-area"></div>
+
+
+  <script>
+    // ตรวจสอบสถานะการ Login
+    if (!sessionStorage.getItem('rxUser')) {
+      alert("⚠️ กรุณาเข้าสู่ระบบในหน้าแรกก่อนนะคะ");
+      window.location.href = "index.html";
+    }
+
+    let rxData = {};
+
+    document.addEventListener('DOMContentLoaded', () => {
+      // ดึงข้อมูลผ่าน URL Parameters ที่ส่งมาจากหน้า index.html
+      const urlParams = new URLSearchParams(window.location.search);
+      
+      if (urlParams.has('hn')) {
+        // Mapping ข้อมูลจากฟอร์มส่งตัวแปร
+        rxData = {
+          orderDate: urlParams.get('orderDate') || '',
+          lotNumber: urlParams.get('lotNumber') || 'ET------',
+          hn: urlParams.get('hn') || '',
+          patientName: urlParams.get('patientName') || '',
+          patientAge: urlParams.get('patientAge') || '',
+          patientWeight: urlParams.get('patientWeight') || '',
+          ward: urlParams.get('ward') || '',
+          patientNote: urlParams.get('patientNote') || '',
+          productId: urlParams.get('productId') || '',
+          productName: urlParams.get('productName') || '',
+          genericName: urlParams.get('genericName') || '',
+          brandName: urlParams.get('brandName') || '',
+          strength: urlParams.get('strength') || '',
+          unit: urlParams.get('unit') || 'ml',
+          expiryDays: parseInt(urlParams.get('expiryDays')) || 7,
+          rawAmount: urlParams.get('rawAmount') || '',
+          prepVolume: urlParams.get('prepVolume') || '',
+          prepCount: parseInt(urlParams.get('prepCount')) || 1,
+          dosePerTime: urlParams.get('dosePerTime') || '',
+          timesPerDay: urlParams.get('timesPerDay') || '',
+          timingText: urlParams.get('timingText') || '',
+          sigText: urlParams.get('sigText') || '',
+          labelWarning: urlParams.get('labelWarning') || '',
+          recordedBy: urlParams.get('recordedBy') || ''
+        };
+
+        // แสดงพรีวิวข้อมูลผู้ป่วยด้านบนแผงควบคุม
+        document.getElementById('topPatientInfo').innerText = `HN: ${rxData.hn} - ${rxData.patientName} (Ward: ${rxData.ward || '-'})`;
+        
+        // รันการแสดงผลฉลากทั้งหมดลงในพรีวิวกล่อง
+        renderLabels();
+      } else {
+        document.getElementById('topPatientInfo').innerText = "❌ ไม่พบข้อมูลกรุณากลับไปทำรายการใหม่ค่ะ";
+      }
+    });
+
+    // เลือกประเภทฉลากที่จะจัดแสดงและสั่งพิมพ์
+    function selectSection(type) {
+      document.querySelectorAll('.print-area').forEach(el => el.classList.remove('active'));
+      document.getElementById(`${type}-area`).classList.add('active');
+      
+      document.querySelectorAll('[id^="card-"]').forEach(el => {
+        el.classList.remove('border-indigo-500', 'border-purple-500', 'border-amber-500', 'shadow-md');
+        el.classList.add('border-slate-200');
+      });
+
+      const card = document.getElementById(`card-${type}`);
+      if(type === 'bag') card.classList.add('border-indigo-500', 'shadow-md');
+      if(type === 'product') card.classList.add('border-purple-500', 'shadow-md');
+      if(type === 'syringe') card.classList.add('border-amber-500', 'shadow-md');
+      
+      document.getElementById('action-btns').classList.remove('hidden');
+    }
+
+    // ฟังก์ชันจัดฟอร์แมตวันที่ไทย (ว.ม.ย. +543)
+    function formatThaiDate(dateStr) {
+      if (!dateStr) return "-";
+      const d = new Date(dateStr);
+      if (isNaN(d.getTime())) return dateStr;
+      const months = ["ม.ค.","ก.พ.","มี.ค.","เม.ย.","พ.ค.","มิ.ย.","ก.ค.","ส.ค.","ก.ย.","ต.ค.","พ.ย.","ธ.ค."];
+      return `${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear() + 543}`;
+    }
+
+    // คำนวณวันหมดอายุสะท้อนกลับ (เล็ดเจอร์แก้ไข: วันสั่งผลิต + Expiry Days ของยา)
+    function calculateExpiryDate(dateStr, days) {
+      if (!dateStr) return "-";
+      const d = new Date(dateStr);
+      if (isNaN(d.getTime())) return "-";
+      d.setDate(d.getDate() + days);
+      return formatThaiDate(d);
+    }
+
+    // ฟังก์ชันประกอบ Component ตัวฉลากทั้งหมด
+    function renderLabels() {
+      const bagArea = document.getElementById('bag-area');
+      const productArea = document.getElementById('product-area');
+      const syringeArea = document.getElementById('syringe-area');
+
+      bagArea.innerHTML = '';
+      productArea.innerHTML = '';
+      syringeArea.innerHTML = '';
+
+      const totalBags = rxData.prepCount;
+
+      // 1. วนลูปสร้างฉลากติดถุง (ระบุจำนวนขวดสะสม เช่น 1/3, 2/3)
+      for (let i = 1; i <= totalBags; i++) {
+        bagArea.innerHTML += createBagLabelHTML(rxData, i, totalBags);
+      }
+
+      // 2. วนลูปสร้างฉลากติดขวดยา (ไม่ระบุขวดสะสม แยกชิ้นอิสระ)
+      for (let i = 1; i <= totalBags; i++) {
+        productArea.innerHTML += createProductLabelHTML(rxData);
+      }
+
+      // 3. วนลูปสร้างฉลากเล็กติด Syringe
+      for (let i = 1; i <= totalBags; i++) {
+        syringeArea.innerHTML += createSyringeLabelHTML(rxData);
+      }
+    }
+
+    // 🛍️ HTML Template: ฉลากใหญ่ติดถุง (Bag Label)
+    function createBagLabelHTML(o, current, total) {
+      return `
+        <div class="label-box label-standard shadow-md text-xs" contenteditable="true">
+          <div>
+            <div class="flex justify-between items-center header-accent">
+              <span class="font-black text-sm tracking-tight">🛍️ ฉลากหน้าถุงยาเฉพาะราย</span>
+              <span class="font-black bg-slate-900 text-white px-2 py-0.5 rounded text-xs">ถุงที่ ${current}/${total}</span>
+            </div>
+            <div class="grid grid-cols-2 gap-1 font-bold text-slate-800 border-b border-dashed border-slate-300 pb-1 mb-1">
+              <div><span class="font-normal text-slate-500">HN:</span> ${o.hn}</div>
+              <div class="text-right"><span class="font-normal text-slate-500">Ward:</span> <span class="text-sm font-black">${o.ward || '-'}</span></div>
+              <div class="col-span-2 text-sm font-black text-slate-900 mt-0.5">ชื่อ: ${o.patientName}</div>
+            </div>
+            <div class="mt-1">
+              <p class="font-semibold text-slate-500 text-[10px] uppercase">รายการยารวมในถุงผลิต:</p>
+              <p class="font-black text-sm text-indigo-950 leading-tight">${o.genericName} ${o.brandName ? `(${o.brandName})` : ''}</p>
+              <p class="font-bold text-slate-700 text-[11px] mt-0.5">ความแรง: ${o.strength} | ปริมาตรรวม: <span class="underline">${o.prepVolume} ml</span></p>
+            </div>
+          </div>
+          <div class="flex justify-between items-end border-t border-slate-300 pt-1 mt-1 text-[10px] font-medium text-slate-600">
+            <div>
+              <p>วันที่เตรียม: ${formatThaiDate(o.orderDate)}</p>
+              <p class="font-bold text-red-600">❄️ การเก็บรักษา: เก็บในตู้เย็น 2-8°C</p>
+            </div>
+            <div class="text-right">
+              <p class="font-mono bg-slate-100 px-1 font-bold text-slate-800 text-[11px] inline-block rounded mb-0.5">${o.lotNumber}</p>
+              <p>ผู้บันทึก: ${o.recordedBy || 'ฝ่ายเภสัชกรรม'}</p>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    // 🍾 HTML Template: ฉลากติดขวดยา/ซองยา (Product Label - ไม่ระบุจำนวนขวด)
+    function createProductLabelHTML(o) {
+      // ตัดอักขระขึ้นบรรทัดใหม่ของคำเตือนเพื่อจัดระเบียบ Text
+      const cleanWarning = o.labelWarning ? o.labelWarning.replace(/\n/g, ' ') : '';
+      return `
+        <div class="label-box label-standard shadow-md text-xs" contenteditable="true">
+          <div>
+            <div class="flex justify-between items-center header-accent">
+              <span class="font-black text-[13px] text-purple-950">💊 โรงพยาบาลศรีนครินทร์</span>
+              <span class="font-mono text-[10px] bg-purple-50 border border-purple-300 px-1.5 py-0.2 rounded text-purple-800 font-bold">LOT: ${o.lotNumber}</span>
+            </div>
+            <div class="flex justify-between font-bold text-slate-800 mb-1 border-b border-slate-200 pb-0.5">
+              <span>HN: ${o.hn}</span>
+              <span class="text-sm font-black">${o.ward || '-'}</span>
+            </div>
+            <div class="font-black text-slate-900 mb-1 text-sm truncate">ผู้ป่วย: ${o.patientName}</div>
+            
+            <div class="bg-purple-50/60 p-1.5 rounded-lg border border-purple-100 my-1">
+              <p class="font-black text-xs text-purple-900 leading-snug">${o.genericName} ${o.brandName ? `(${o.brandName})` : ''}</p>
+              <p class="font-bold text-slate-600 text-[10px]">ความแรง: ${o.strength} (Vol: ${o.prepVolume} ml)</p>
+            </div>
+
+            <div class="mt-1 bg-amber-50/40 p-1 rounded border border-amber-200">
+              <p class="font-black text-xs text-amber-950 leading-tight">วิธีใช้: ${o.dosePerTime ? `รับประทานครั้งละ ${o.dosePerTime} ml` : ''} ${o.timesPerDay ? `วันละ ${o.timesPerDay} ครั้ง` : ''} ${o.timingText}</p>
+              ${cleanWarning ? `<p class="text-[10px] font-bold text-red-600 mt-0.5 leading-tight">⚠️ คำเตือน: ${cleanWarning}</p>` : ''}
+            </div>
+          </div>
+
+          <div class="flex justify-between items-end border-t border-slate-200 pt-1 mt-1 text-[9px] font-medium text-slate-500">
+            <div>
+              <p>วันที่เตรียม: ${formatThaiDate(o.orderDate)}</p>
+              <p class="font-bold text-purple-950">หมดอายุ: ${calculateExpiryDate(o.orderDate, o.expiryDays)}</p>
+            </div>
+            <div class="text-right">
+              <p class="font-semibold text-slate-400">ขวดบรรจุยาเฉพาะราย</p>
+              <p>สว. ขอนแก่น</p>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    // 💉 HTML Template: ฉลากเล็กติด Syringe (Syringe Label - 5.0 x 2.5 cm)
+    function createSyringeLabelHTML(o) {
+      return `
+        <div class="label-box label-syringe shadow-sm text-[8px]" contenteditable="true">
+          <div class="flex justify-between font-black border-b border-black pb-0.5 leading-none">
+            <span>HN: ${o.hn}</span>
+            <span class="truncate max-w-[2.2cm]">${o.patientName}</span>
+            <span>W:${o.ward || '-'}</span>
+          </div>
+          <div class="my-0.5 leading-tight">
+            <p class="font-black text-[9px] truncate text-indigo-900 leading-none">${o.genericName}</p>
+            <p class="font-bold text-slate-700 text-[7.5px] leading-none mt-0.5">Dose: <span class="text-[9px] font-black underline">${o.dosePerTime} ml</span> (${o.timingText || 'ตามสั่ง'})</p>
+          </div>
+          <div class="flex justify-between items-center border-t border-slate-300 pt-0.5 font-bold text-[7px] text-slate-500 leading-none">
+            <span>Exp: ${calculateExpiryDate(o.orderDate, o.expiryDays)}</span>
+            <span class="font-mono text-[7px] bg-slate-100 px-0.5 font-black text-black">${o.lotNumber}</span>
+          </div>
+        </div>
+      `;
+    }
+  </script>
+</body>
+</html>
