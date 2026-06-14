@@ -13,13 +13,10 @@
       min-height: 100vh;
     }
     .gradient-header { background: linear-gradient(135deg, #1e1b3a 0%, #4a4780 50%, #8b85c1 100%); }
-    .card-shadow { box-shadow: 0 10px 30px -5px rgba(30, 27, 58, 0.3); }
+    .card-shadow { box-shadow: 0 10px 30px -5px rgba(30,27,58,0.3); }
     .section-title {
-      border-left: 5px solid #8b85c1;
-      padding-left: 12px;
-      font-weight: 800;
-      color: #1e1b3a;
-      font-size: 1.1rem;
+      border-left: 5px solid #8b85c1; padding-left: 12px;
+      font-weight: 800; color: #1e1b3a; font-size: 1.1rem;
     }
     .input-field {
       width: 100%; padding: 10px 14px;
@@ -54,7 +51,8 @@
     .btn-secondary {
       background: #fdf8fc; color: #4a4780; border: 2px solid #e8c4d8;
       padding: 10px 18px; border-radius: 12px; font-weight: 800;
-      font-size: 0.85rem; transition: all 0.2s; cursor: pointer; font-family: 'Sarabun', sans-serif;
+      font-size: 0.85rem; transition: all 0.2s; cursor: pointer;
+      font-family: 'Sarabun', sans-serif;
     }
     .btn-secondary:hover { border-color: #8b85c1; background: #f5effa; }
     .btn-danger {
@@ -78,14 +76,16 @@
       vertical-align: middle; margin-right: 6px;
     }
     .demo-badge {
-      display: inline-block; background: linear-gradient(135deg, #f59e0b, #fbbf24);
+      display: inline-block;
+      background: linear-gradient(135deg, #f59e0b, #fbbf24);
       color: #1e1b3a; font-size: 0.6rem; font-weight: 900;
       padding: 2px 8px; border-radius: 20px; letter-spacing: 0.1em;
       text-transform: uppercase; vertical-align: middle; margin-left: 4px;
     }
     .lot-badge {
       font-family: 'Courier New', monospace; font-size: 0.9rem; font-weight: 900;
-      letter-spacing: 0.08em; background: linear-gradient(135deg, #1e1b3a, #4a4780);
+      letter-spacing: 0.08em;
+      background: linear-gradient(135deg, #1e1b3a, #4a4780);
       color: #e8c4d8; padding: 4px 12px; border-radius: 10px;
       display: inline-block; white-space: nowrap;
     }
@@ -97,7 +97,8 @@
     table { width: 100%; border-collapse: collapse; }
     thead th {
       padding: 14px 12px; text-align: left; font-size: 0.72rem;
-      font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; white-space: nowrap;
+      font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em;
+      white-space: nowrap;
     }
     tbody td { padding: 12px; vertical-align: middle; font-size: 0.88rem; color: #1e1b3a; font-weight: 600; }
     tbody tr { border-bottom: 1px solid #f0eef8; transition: background 0.15s; }
@@ -109,8 +110,6 @@
     .status-pending { background: #fef3c7; color: #b45309; }
     .status-done    { background: #d1fae5; color: #065f46; }
     .status-partial { background: #e0e7ff; color: #4338ca; }
-
-    /* Person Pills — Multi select */
     .person-pill {
       display: inline-block; padding: 3px 9px; border-radius: 8px;
       font-size: 0.72rem; font-weight: 800;
@@ -120,16 +119,15 @@
       display: inline-block; padding: 3px 9px; border-radius: 8px;
       font-size: 0.7rem; font-weight: 700; background: #fff1f2; color: #e11d48;
     }
-
-    /* Multi-select checkbox dropdown */
+    /* Multi-select */
     .multi-select-wrapper { position: relative; }
     .multi-select-display {
-      min-height: 44px; padding: 8px 12px; border: 2px solid #e8c4d8;
-      border-radius: 12px; background: #fdf8fc; cursor: pointer;
+      min-height: 44px; padding: 8px 12px;
+      border: 2px solid #e8c4d8; border-radius: 12px;
+      background: #fdf8fc; cursor: pointer;
       display: flex; flex-wrap: wrap; gap: 4px; align-items: center;
       transition: all 0.2s;
     }
-    .multi-select-display:focus-within,
     .multi-select-display.open { border-color: #8b85c1; box-shadow: 0 0 0 3px rgba(139,133,193,0.15); }
     .multi-select-dropdown {
       position: absolute; top: calc(100% + 4px); left: 0; right: 0;
@@ -147,7 +145,6 @@
     .multi-option:hover { background: #f0eef8; }
     .multi-option input[type="checkbox"] { accent-color: #8b85c1; width: 16px; height: 16px; cursor: pointer; }
     .multi-placeholder { color: #c4a8cb; font-weight: 400; font-size: 0.88rem; }
-
     /* Modal */
     .modal-overlay {
       position: fixed; inset: 0; background: rgba(30,27,58,0.65);
@@ -161,28 +158,60 @@
     }
     .modal-box::-webkit-scrollbar { width: 4px; }
     .modal-box::-webkit-scrollbar-thumb { background: #8b85c1; border-radius: 4px; }
-
-    /* Tab styles */
+    /* Tabs */
     .tab-btn {
       padding: 10px 20px; border-radius: 12px; font-weight: 800;
       font-size: 0.85rem; cursor: pointer; transition: all 0.2s;
       border: 2px solid transparent; white-space: nowrap;
     }
-    .tab-btn.active {
-      background: linear-gradient(135deg, #4a4780, #8b85c1);
-      color: white; border-color: #4a4780;
-    }
+    .tab-btn.active { background: linear-gradient(135deg, #4a4780, #8b85c1); color: white; border-color: #4a4780; }
     .tab-btn:not(.active) { background: #f0eef8; color: #4a4780; border-color: #e8c4d8; }
     .tab-btn:not(.active):hover { border-color: #8b85c1; }
 
-    /* Workload table */
-    .wl-table th { background: linear-gradient(135deg, #1e1b3a, #4a4780); color: white; }
-    .wl-number {
-      font-size: 1.6rem; font-weight: 900;
-      background: linear-gradient(135deg, #4a4780, #8b85c1);
-      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    /* ===== Workload Table ===== */
+    .wl-role-header {
+      padding: 10px 8px; text-align: center; font-size: 0.7rem;
+      font-weight: 800; text-transform: uppercase; letter-spacing: 0.04em;
+      white-space: nowrap; vertical-align: bottom;
     }
-    .wl-zero { font-size: 1.6rem; font-weight: 900; color: #e8c4d8; }
+    .wl-sub-header {
+      font-size: 0.62rem; font-weight: 700; opacity: 0.75;
+      text-transform: uppercase; display: block; margin-top: 2px;
+    }
+    .wl-cell { padding: 10px 8px; text-align: center; vertical-align: middle; }
+    .wl-num-big {
+      font-size: 1.5rem; font-weight: 900; display: block; line-height: 1;
+    }
+    .wl-num-small {
+      font-size: 0.75rem; font-weight: 700; display: block; margin-top: 3px;
+    }
+    .wl-zero-big { font-size: 1.5rem; font-weight: 900; color: #e8c4d8; display: block; line-height: 1; }
+    .wl-zero-small { font-size: 0.7rem; font-weight: 600; color: #e8c4d8; display: block; margin-top: 3px; }
+    .wl-total-row td { background: #f0eef8 !important; border-top: 2px solid #c4a8cb; }
+    .wl-total-row .wl-num-big { color: #1e1b3a; }
+
+    /* Role color themes */
+    .role-prep   { color: #4a4780; }
+    .role-check  { color: #065f46; }
+    .role-label  { color: #1e40af; }
+    .role-lcheck { color: #b45309; }
+
+    /* Summary role cards */
+    .role-card {
+      border-radius: 16px; padding: 16px; text-align: center;
+      border: 2px solid; transition: all 0.2s;
+    }
+    .role-card-prep    { background: #f5f3ff; border-color: #c4b5fd; }
+    .role-card-check   { background: #ecfdf5; border-color: #6ee7b7; }
+    .role-card-label   { background: #eff6ff; border-color: #93c5fd; }
+    .role-card-lcheck  { background: #fffbeb; border-color: #fcd34d; }
+
+    /* Print styles */
+    @media print {
+      body { background: white !important; }
+      .no-print { display: none !important; }
+      .gradient-header { background: #1e1b3a !important; -webkit-print-color-adjust: exact; }
+    }
   </style>
 </head>
 <body class="p-4 md:p-8">
@@ -191,11 +220,9 @@
   <div id="loginPage" class="min-h-[90vh] flex items-center justify-center hidden">
     <div class="max-w-md w-full bg-white p-10 rounded-3xl shadow-2xl text-center">
       <h1 class="text-xl font-black mb-2" style="color:#1e1b3a;">⚠️ กรุณาเข้าสู่ระบบก่อน</h1>
-      <p class="text-sm text-gray-400 mb-6 font-semibold">โปรดไปที่หน้าหลักเพื่อเข้าสู่ระบบ</p>
-      <a href="index.html" class="btn-primary inline-block">กลับหน้าหลัก 🏠</a>
+      <a href="index.html" class="btn-primary inline-block mt-4">กลับหน้าหลัก 🏠</a>
     </div>
   </div>
-
 
   <!-- MAIN APP -->
   <div id="mainApp" class="max-w-7xl mx-auto hidden">
@@ -221,8 +248,7 @@
             <h1 class="text-2xl font-black uppercase tracking-tight">📊 Dashboard ระบบยาเฉพาะราย</h1>
             <p class="text-base font-medium opacity-80 mt-1">Extemporaneous Preparation · Srinagarind</p>
           </div>
-          <button onclick="loadData()"
-            class="text-sm bg-white/20 px-5 py-3 rounded-2xl hover:bg-white/30 text-white border border-white/20 font-black transition-all active:scale-95">
+          <button onclick="loadData()" class="no-print text-sm bg-white/20 px-5 py-3 rounded-2xl hover:bg-white/30 text-white border border-white/20 font-black transition-all active:scale-95">
             🔄 ดึงข้อมูลใหม่
           </button>
         </div>
@@ -242,27 +268,26 @@
             <div id="pendingCount" class="text-3xl font-black text-white">0</div>
           </div>
           <div class="stat-card">
-            <div class="text-purple-200 text-[10px] font-black uppercase tracking-wider mb-1">ยาที่ผลิตมากสุด</div>
+            <div class="text-purple-200 text-[10px] font-black uppercase tracking-wider mb-1">ยาผลิตมากสุด</div>
             <div id="topProduct" class="text-sm font-black text-white leading-tight pt-1">-</div>
           </div>
         </div>
       </header>
 
-
       <!-- TABS -->
-      <div class="flex gap-3 flex-wrap">
-        <button class="tab-btn active" id="tab-orders" onclick="switchTab('orders')">📋 รายการเตรียมยา</button>
-        <button class="tab-btn" id="tab-workload" onclick="switchTab('workload')">📈 รายงานภาระงาน</button>
+      <div class="flex gap-3 flex-wrap no-print">
+        <button class="tab-btn active" id="tab-orders"   onclick="switchTab('orders')">📋 รายการเตรียมยา</button>
+        <button class="tab-btn"        id="tab-workload" onclick="switchTab('workload')">📈 รายงานภาระงาน</button>
       </div>
 
 
-      <!-- ============================================ -->
-      <!-- TAB 1: รายการเตรียมยา                       -->
-      <!-- ============================================ -->
+      <!-- ======================================== -->
+      <!-- TAB 1: รายการเตรียมยา                    -->
+      <!-- ======================================== -->
       <div id="panel-orders">
 
-        <!-- FILTERS -->
-        <section class="bg-white p-6 rounded-2xl card-shadow space-y-4 mb-6">
+        <!-- Filters -->
+        <section class="bg-white p-6 rounded-2xl card-shadow space-y-4 mb-6 no-print">
           <h2 class="section-title">🔍 ค้นหา / กรองข้อมูล</h2>
           <div class="grid grid-cols-1 md:grid-cols-5 gap-4 items-end">
             <div>
@@ -298,14 +323,14 @@
           </div>
         </section>
 
-        <!-- TABLE -->
+        <!-- Table -->
         <section class="bg-white p-6 rounded-2xl card-shadow">
           <h2 class="section-title mb-4">📋 รายการเตรียมยา</h2>
           <div class="table-container border border-purple-50 rounded-2xl">
             <table>
               <thead>
                 <tr style="background: linear-gradient(135deg, #1e1b3a, #4a4780); color:white;">
-                  <th class="text-center rounded-tl-2xl">#</th>
+                  <th class="rounded-tl-2xl text-center">#</th>
                   <th>วันที่</th>
                   <th>LOT</th>
                   <th>HN / ชื่อคนไข้</th>
@@ -316,7 +341,7 @@
                   <th>ผู้เช็คยา</th>
                   <th>ผู้ทำฉลาก</th>
                   <th>ผู้เช็คฉลาก</th>
-                  <th class="text-center rounded-tr-2xl">จัดการ</th>
+                  <th class="text-center rounded-tr-2xl no-print">จัดการ</th>
                 </tr>
               </thead>
               <tbody id="summaryBody">
@@ -332,15 +357,22 @@
       </div>
 
 
-      <!-- ============================================ -->
-      <!-- TAB 2: รายงานภาระงาน                        -->
-      <!-- ============================================ -->
+      <!-- ======================================== -->
+      <!-- TAB 2: รายงานภาระงาน                    -->
+      <!-- ======================================== -->
       <div id="panel-workload" class="hidden">
         <section class="bg-white p-6 rounded-2xl card-shadow space-y-6">
-          <h2 class="section-title">📈 รายงานภาระงานเภสัชกร</h2>
 
-          <!-- Workload Filters -->
-          <div class="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
+          <!-- Title + Print -->
+          <div class="flex justify-between items-center flex-wrap gap-3">
+            <h2 class="section-title">📈 รายงานภาระงานเภสัชกร</h2>
+            <button onclick="printWorkload()" class="no-print btn-secondary text-sm flex items-center gap-2">
+              🖨️ พิมพ์รายงาน
+            </button>
+          </div>
+
+          <!-- Filters -->
+          <div class="grid grid-cols-1 md:grid-cols-4 gap-4 items-end no-print">
             <div>
               <label class="field-label">วันที่เริ่ม</label>
               <input type="date" id="wl-startDate" class="input-field">
@@ -350,16 +382,15 @@
               <input type="date" id="wl-endDate" class="input-field">
             </div>
             <div>
-              <label class="field-label">เลือกชื่อย่อเภสัชกร</label>
-              <!-- Multi-select -->
+              <label class="field-label">เลือกเภสัชกร</label>
               <div class="multi-select-wrapper" id="wl-person-wrapper">
                 <div class="multi-select-display" id="wl-person-display" onclick="toggleWlDropdown()">
                   <span class="multi-placeholder" id="wl-person-placeholder">ทั้งหมด</span>
                 </div>
                 <div class="multi-select-dropdown hidden" id="wl-person-dropdown">
                   <label class="multi-option">
-                    <input type="checkbox" value="__all__" id="wl-all-cb" onchange="handleWlAllCheck(this)">
-                    <span style="color:#8b85c1; font-style:italic;">ทั้งหมด</span>
+                    <input type="checkbox" id="wl-all-cb" onchange="handleWlAllCheck(this)">
+                    <span style="color:#8b85c1; font-style:italic;">เลือกทั้งหมด</span>
                   </label>
                   <div id="wl-person-options"></div>
                 </div>
@@ -372,26 +403,114 @@
             </div>
           </div>
 
-          <!-- Workload Result -->
+          <!-- ========== WORKLOAD RESULT ========== -->
           <div id="wl-result" class="hidden space-y-6">
 
-            <!-- Summary Cards -->
-            <div id="wl-summary-cards" class="grid grid-cols-2 md:grid-cols-4 gap-4"></div>
+            <!-- Report Title (for print) -->
+            <div id="wl-print-title" class="hidden text-center py-2">
+              <h2 class="text-xl font-black" style="color:#1e1b3a;">รายงานภาระงานเภสัชกร</h2>
+              <p id="wl-print-subtitle" class="text-sm font-bold" style="color:#8b85c1;"></p>
+            </div>
 
-            <!-- Workload Table -->
+            <!-- 4 Role Summary Cards -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+
+              <div class="role-card role-card-prep">
+                <div class="text-2xl mb-1">🧪</div>
+                <div class="text-[10px] font-black uppercase tracking-wider mb-1" style="color:#8b85c1;">ผู้เตรียมยา</div>
+                <div class="text-3xl font-black role-prep" id="total-prep-count">0</div>
+                <div class="text-xs font-bold mt-1" style="color:#8b85c1;">ครั้ง</div>
+                <div class="mt-2 pt-2 border-t border-purple-100">
+                  <div class="text-2xl font-black role-prep" id="total-prep-doses">0</div>
+                  <div class="text-xs font-bold" style="color:#8b85c1;">ขนาน</div>
+                </div>
+              </div>
+
+              <div class="role-card role-card-check">
+                <div class="text-2xl mb-1">✅</div>
+                <div class="text-[10px] font-black uppercase tracking-wider mb-1" style="color:#8b85c1;">ผู้เช็คยา</div>
+                <div class="text-3xl font-black role-check" id="total-check-count">0</div>
+                <div class="text-xs font-bold mt-1" style="color:#8b85c1;">ครั้ง</div>
+                <div class="mt-2 pt-2 border-t border-green-100">
+                  <div class="text-2xl font-black role-check" id="total-check-doses">0</div>
+                  <div class="text-xs font-bold" style="color:#8b85c1;">ขนาน</div>
+                </div>
+              </div>
+
+              <div class="role-card role-card-label">
+                <div class="text-2xl mb-1">🏷️</div>
+                <div class="text-[10px] font-black uppercase tracking-wider mb-1" style="color:#8b85c1;">ผู้ทำฉลาก</div>
+                <div class="text-3xl font-black role-label" id="total-label-count">0</div>
+                <div class="text-xs font-bold mt-1" style="color:#8b85c1;">ครั้ง</div>
+                <div class="mt-2 pt-2 border-t border-blue-100">
+                  <div class="text-2xl font-black role-label" id="total-label-doses">0</div>
+                  <div class="text-xs font-bold" style="color:#8b85c1;">ขนาน</div>
+                </div>
+              </div>
+
+              <div class="role-card role-card-lcheck">
+                <div class="text-2xl mb-1">🔍</div>
+                <div class="text-[10px] font-black uppercase tracking-wider mb-1" style="color:#8b85c1;">ผู้เช็คฉลาก</div>
+                <div class="text-3xl font-black role-lcheck" id="total-lcheck-count">0</div>
+                <div class="text-xs font-bold mt-1" style="color:#8b85c1;">ครั้ง</div>
+                <div class="mt-2 pt-2 border-t border-yellow-100">
+                  <div class="text-2xl font-black role-lcheck" id="total-lcheck-doses">0</div>
+                  <div class="text-xs font-bold" style="color:#8b85c1;">ขนาน</div>
+                </div>
+              </div>
+
+            </div>
+
+            <!-- คำอธิบาย -->
+            <div class="p-3 rounded-xl text-xs font-bold flex gap-2 items-start" style="background:#f0eef8; color:#4a4780;">
+              <span>💡</span>
+              <span>
+                <strong>ครั้ง</strong> = จำนวน LOT / รายการที่รับผิดชอบ &nbsp;|&nbsp;
+                <strong>ขนาน</strong> = จำนวนขวด/ชิ้นที่ผลิต (prepCount) รวมกัน
+                &nbsp;— ถ้า 1 LOT มี 2 คนร่วม ทั้ง 2 คนได้ครั้ง = 1 และขนาน = จำนวนขวด LOT นั้น
+              </span>
+            </div>
+
+            <!-- Main Workload Table -->
             <div>
-              <h3 class="text-sm font-black uppercase mb-3" style="color:#4a4780;">
-                📋 ภาระงานแยกตามบุคคล
-              </h3>
+              <h3 class="text-sm font-black uppercase mb-3" style="color:#4a4780;">📋 ภาระงานแยกตามบุคคล</h3>
               <div class="table-container border border-purple-50 rounded-2xl">
-                <table class="wl-table">
+                <table>
                   <thead>
                     <tr style="background: linear-gradient(135deg, #1e1b3a, #4a4780); color:white;">
-                      <th class="px-4 py-3 rounded-tl-2xl">ชื่อย่อ</th>
-                      <th class="px-4 py-3 text-center">🧪 ผู้เตรียมยา</th>
-                      <th class="px-4 py-3 text-center">✅ ผู้เช็คยา</th>
-                      <th class="px-4 py-3 text-center">🏷️ ผู้ทำฉลาก</th>
-                      <th class="px-4 py-3 text-center rounded-tr-2xl">🔍 ผู้เช็คฉลาก</th>
+                      <th class="px-4 py-3 rounded-tl-2xl" style="min-width:80px;">ชื่อย่อ</th>
+
+                      <!-- ผู้เตรียมยา -->
+                      <th class="wl-role-header" colspan="2" style="border-right: 2px solid rgba(255,255,255,0.15);">
+                        🧪 ผู้เตรียมยา
+                      </th>
+
+                      <!-- ผู้เช็คยา -->
+                      <th class="wl-role-header" colspan="2" style="border-right: 2px solid rgba(255,255,255,0.15);">
+                        ✅ ผู้เช็คยา
+                      </th>
+
+                      <!-- ผู้ทำฉลาก -->
+                      <th class="wl-role-header" colspan="2" style="border-right: 2px solid rgba(255,255,255,0.15);">
+                        🏷️ ผู้ทำฉลาก
+                      </th>
+
+                      <!-- ผู้เช็คฉลาก -->
+                      <th class="wl-role-header rounded-tr-2xl" colspan="2">
+                        🔍 ผู้เช็คฉลาก
+                      </th>
+                    </tr>
+                    <!-- Sub-header row -->
+                    <tr style="background: #2d2b5e; color: rgba(255,255,255,0.75);">
+                      <th class="px-4 py-2 text-left text-[10px] font-black uppercase"></th>
+                      <th class="px-3 py-2 text-center text-[10px] font-black uppercase border-l border-white/10">ครั้ง</th>
+                      <th class="px-3 py-2 text-center text-[10px] font-black uppercase border-r border-white/20">ขนาน</th>
+                      <th class="px-3 py-2 text-center text-[10px] font-black uppercase">ครั้ง</th>
+                      <th class="px-3 py-2 text-center text-[10px] font-black uppercase border-r border-white/20">ขนาน</th>
+                      <th class="px-3 py-2 text-center text-[10px] font-black uppercase">ครั้ง</th>
+                      <th class="px-3 py-2 text-center text-[10px] font-black uppercase border-r border-white/20">ขนาน</th>
+                      <th class="px-3 py-2 text-center text-[10px] font-black uppercase">ครั้ง</th>
+                      <th class="px-3 py-2 text-center text-[10px] font-black uppercase">ขนาน</th>
                     </tr>
                   </thead>
                   <tbody id="wl-table-body"></tbody>
@@ -399,18 +518,22 @@
               </div>
             </div>
 
-            <!-- Date range display -->
-            <div class="text-center">
+            <!-- Date range + order count -->
+            <div class="text-center pt-2">
               <p id="wl-date-range" class="text-xs font-bold uppercase tracking-wider" style="color:#c4a8cb;"></p>
             </div>
-          </div>
 
-          <div id="wl-empty" class="text-center py-12 hidden">
-            <p class="text-gray-400 font-bold text-lg">❌ ไม่พบข้อมูลในช่วงเวลาที่เลือก</p>
+          </div><!-- end wl-result -->
+
+          <!-- Empty state -->
+          <div id="wl-empty" class="text-center py-16 hidden">
+            <div class="text-5xl mb-4">📭</div>
+            <p class="text-gray-400 font-bold text-lg">ไม่พบข้อมูลในช่วงเวลาที่เลือก</p>
+            <p class="text-gray-300 text-sm mt-1">ลองเปลี่ยนช่วงวันที่ หรือกด "ดึงข้อมูลใหม่" ก่อนค่ะ</p>
           </div>
 
         </section>
-      </div>
+      </div><!-- end panel-workload -->
 
       <p class="text-center text-purple-200 text-[10px] py-10 uppercase font-black tracking-[0.2em]">
         Srinagarind Hospital • Pharmacy Dept • Extemporaneous Preparation
@@ -419,32 +542,29 @@
   </div>
 
 
-  <!-- ============================================ -->
-  <!-- MODAL: บันทึกผู้เตรียม/เช็ค                  -->
-  <!-- ============================================ -->
+  <!-- ======================================== -->
+  <!-- MODAL: บันทึกผู้เตรียม/เช็ค              -->
+  <!-- ======================================== -->
   <div id="personModal" class="modal-overlay hidden">
     <div class="modal-box">
       <div class="flex justify-between items-center mb-5">
-        <h3 class="text-lg font-black" style="color:#1e1b3a;">👩‍⚕️ บันทึกผู้เตรียม / ผู้เช็คยา / ผู้ทำฉลาก</h3>
+        <h3 class="text-lg font-black" style="color:#1e1b3a;">👩‍⚕️ บันทึกผู้เตรียม / เช็คยา / ฉลาก</h3>
         <button onclick="closePersonModal()" class="text-2xl font-black leading-none" style="color:#c4a8cb;">×</button>
       </div>
 
-      <!-- Info -->
       <div class="mb-5 p-4 rounded-xl" style="background:#fdf8fc; border:2px solid #e8c4d8;">
         <div class="text-[10px] font-black uppercase mb-1" style="color:#8b85c1;">LOT Number</div>
         <div id="pm-lot" class="lot-badge mb-2"></div>
-        <div id="pm-info" class="text-sm font-bold" style="color:#4a4780;"></div>
+        <div id="pm-info" class="text-sm font-bold mt-1" style="color:#4a4780;"></div>
       </div>
 
       <form onsubmit="savePersons(event)" class="space-y-4">
         <input type="hidden" id="pm-rowIndex">
 
-        <!-- ผู้เตรียม (Multi) -->
         <div>
           <label class="field-label">🧪 ผู้เตรียมยา (เลือกได้หลายคน)</label>
-          <div class="multi-select-wrapper" id="pm-preparer-wrapper">
-            <div class="multi-select-display" id="pm-preparer-display"
-                 onclick="toggleMultiDrop('pm-preparer')">
+          <div class="multi-select-wrapper">
+            <div class="multi-select-display" id="pm-preparer-display" onclick="toggleMultiDrop('pm-preparer')">
               <span class="multi-placeholder" id="pm-preparer-placeholder">-- เลือกผู้เตรียม --</span>
             </div>
             <div class="multi-select-dropdown hidden" id="pm-preparer-dropdown">
@@ -453,12 +573,10 @@
           </div>
         </div>
 
-        <!-- ผู้เช็คยา (Multi) -->
         <div>
           <label class="field-label">✅ ผู้เช็คยา (เลือกได้หลายคน)</label>
-          <div class="multi-select-wrapper" id="pm-checker-wrapper">
-            <div class="multi-select-display" id="pm-checker-display"
-                 onclick="toggleMultiDrop('pm-checker')">
+          <div class="multi-select-wrapper">
+            <div class="multi-select-display" id="pm-checker-display" onclick="toggleMultiDrop('pm-checker')">
               <span class="multi-placeholder" id="pm-checker-placeholder">-- เลือกผู้เช็คยา --</span>
             </div>
             <div class="multi-select-dropdown hidden" id="pm-checker-dropdown">
@@ -467,12 +585,10 @@
           </div>
         </div>
 
-        <!-- ผู้ทำฉลาก (Multi) -->
         <div>
           <label class="field-label">🏷️ ผู้ทำฉลาก (เลือกได้หลายคน)</label>
-          <div class="multi-select-wrapper" id="pm-labelmaker-wrapper">
-            <div class="multi-select-display" id="pm-labelmaker-display"
-                 onclick="toggleMultiDrop('pm-labelmaker')">
+          <div class="multi-select-wrapper">
+            <div class="multi-select-display" id="pm-labelmaker-display" onclick="toggleMultiDrop('pm-labelmaker')">
               <span class="multi-placeholder" id="pm-labelmaker-placeholder">-- เลือกผู้ทำฉลาก --</span>
             </div>
             <div class="multi-select-dropdown hidden" id="pm-labelmaker-dropdown">
@@ -481,12 +597,10 @@
           </div>
         </div>
 
-        <!-- ผู้เช็คฉลาก (Multi) -->
         <div>
           <label class="field-label">🔍 ผู้เช็คฉลาก (เลือกได้หลายคน)</label>
-          <div class="multi-select-wrapper" id="pm-labelchecker-wrapper">
-            <div class="multi-select-display" id="pm-labelchecker-display"
-                 onclick="toggleMultiDrop('pm-labelchecker')">
+          <div class="multi-select-wrapper">
+            <div class="multi-select-display" id="pm-labelchecker-display" onclick="toggleMultiDrop('pm-labelchecker')">
               <span class="multi-placeholder" id="pm-labelchecker-placeholder">-- เลือกผู้เช็คฉลาก --</span>
             </div>
             <div class="multi-select-dropdown hidden" id="pm-labelchecker-dropdown">
@@ -504,17 +618,19 @@
   </div>
 
 
-  <!-- ============================================ -->
-  <!-- JAVASCRIPT                                   -->
-  <!-- ============================================ -->
+  <!-- ======================================== -->
+  <!-- JAVASCRIPT                               -->
+  <!-- ======================================== -->
   <script>
     const SCRIPT_URL = "https://script.google.com/macros/s/YOUR_SCRIPT_ID_HERE/exec";
 
-    // รายชื่อย่อเภสัชกร — แก้ไขได้ตามจริงค่ะ
+    // รายชื่อย่อเภสัชกร — แก้ไขตามจริงได้เลยค่ะ
     const PERSON_OPTIONS = ["OP","SK","NC","TT","MP","SO","PC","CK","KM","ST","LS","MT"];
 
-    let masterData   = [];   // ข้อมูลทั้งหมดจาก server
-    let currentTab   = 'orders';
+    const multiFields = ['pm-preparer','pm-checker','pm-labelmaker','pm-labelchecker'];
+
+    let masterData = [];
+
 
     // =========================================
     // 🔐 SESSION CHECK
@@ -530,15 +646,14 @@
         document.getElementById('demoBadge').classList.remove('hidden');
       }
 
-      // ตั้งวันที่เริ่มต้น = เดือนนี้
-      const today = new Date();
+      const today    = new Date();
       const firstDay = new Date(today.getFullYear(), today.getMonth(), 1).toISOString().split('T')[0];
       const todayStr = today.toISOString().split('T')[0];
 
-      document.getElementById('startDate').value    = firstDay;
-      document.getElementById('endDate').value      = todayStr;
-      document.getElementById('wl-startDate').value = firstDay;
-      document.getElementById('wl-endDate').value   = todayStr;
+      ['startDate','endDate','wl-startDate','wl-endDate'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.value = id.includes('start') ? firstDay : todayStr;
+      });
 
       buildMultiSelects();
       loadData();
@@ -551,7 +666,6 @@
     // 🗂️ TAB SWITCH
     // =========================================
     function switchTab(tab) {
-      currentTab = tab;
       ['orders','workload'].forEach(t => {
         document.getElementById(`tab-${t}`).classList.toggle('active', t === tab);
         document.getElementById(`panel-${t}`).classList.toggle('hidden', t !== tab);
@@ -569,61 +683,51 @@
       return `${d.getDate()}/${d.getMonth()+1}/${d.getFullYear()+543}`;
     }
 
-    // แปลง "OP,SK" → ["OP","SK"]
     function parsePersons(str) {
       if (!str) return [];
       return String(str).split(',').map(s => s.trim()).filter(Boolean);
     }
 
-    // render person pills
     function renderPersons(str) {
       const arr = parsePersons(str);
       if (!arr.length) return `<span class="person-empty">ยังไม่ระบุ</span>`;
       return arr.map(p => `<span class="person-pill">${p}</span>`).join(' ');
     }
 
-    // ตรวจสถานะ row
     function getRowStatus(row) {
-      const hasP  = parsePersons(row.preparer).length > 0;
-      const hasC  = parsePersons(row.checker).length > 0;
-      const hasLM = parsePersons(row.labelMaker).length > 0;
-      const hasLC = parsePersons(row.labelChecker).length > 0;
-      const all   = hasP && hasC && hasLM && hasLC;
-      const none  = !hasP && !hasC && !hasLM && !hasLC;
-      if (all)  return { label: '✅ เช็คครบ',    cls: 'status-done',    key: 'done' };
-      if (none) return { label: '⏳ รอเช็ค',     cls: 'status-pending', key: 'pending' };
-      return         { label: '🔵 เช็คบางส่วน', cls: 'status-partial', key: 'partial' };
+      const hasP  = parsePersons(row.preparer).length    > 0;
+      const hasC  = parsePersons(row.checker).length     > 0;
+      const hasLM = parsePersons(row.labelMaker).length  > 0;
+      const hasLC = parsePersons(row.labelChecker).length> 0;
+      if (hasP && hasC && hasLM && hasLC) return { label:'✅ เช็คครบ',     cls:'status-done',    key:'done'    };
+      if (!hasP && !hasC && !hasLM && !hasLC) return { label:'⏳ รอเช็ค', cls:'status-pending', key:'pending' };
+      return                                    { label:'🔵 บางส่วน',     cls:'status-partial', key:'partial' };
     }
 
 
     // =========================================
     // ✅ MULTI-SELECT COMPONENT
     // =========================================
-    // fields: [ 'pm-preparer', 'pm-checker', 'pm-labelmaker', 'pm-labelchecker' ]
-    const multiFields = ['pm-preparer','pm-checker','pm-labelmaker','pm-labelchecker'];
-
     function buildMultiSelects() {
-      // Build modal multi-selects
       multiFields.forEach(field => {
         const container = document.getElementById(`${field}-options`);
         if (!container) return;
         container.innerHTML = PERSON_OPTIONS.map(p => `
           <label class="multi-option">
-            <input type="checkbox" value="${p}" data-field="${field}" onchange="updateMultiDisplay('${field}')">
+            <input type="checkbox" value="${p}" data-field="${field}"
+                   onchange="updateMultiDisplay('${field}')">
             <span>${p}</span>
-          </label>
-        `).join('');
+          </label>`).join('');
       });
 
-      // Build workload person multi-select
       const wlOpts = document.getElementById('wl-person-options');
       if (wlOpts) {
         wlOpts.innerHTML = PERSON_OPTIONS.map(p => `
           <label class="multi-option">
-            <input type="checkbox" value="${p}" data-field="wl-person" onchange="updateWlPersonDisplay()">
+            <input type="checkbox" value="${p}" data-field="wl-person"
+                   onchange="updateWlPersonDisplay()">
             <span>${p}</span>
-          </label>
-        `).join('');
+          </label>`).join('');
       }
     }
 
@@ -631,16 +735,12 @@
       const dropdown = document.getElementById(`${field}-dropdown`);
       const display  = document.getElementById(`${field}-display`);
       const isOpen   = !dropdown.classList.contains('hidden');
-      // ปิดทุก dropdown ก่อน
       closeAllDropdowns();
-      if (!isOpen) {
-        dropdown.classList.remove('hidden');
-        display.classList.add('open');
-      }
+      if (!isOpen) { dropdown.classList.remove('hidden'); display.classList.add('open'); }
     }
 
     function closeAllDropdowns() {
-      [...multiFields, 'wl-person'].forEach(f => {
+      [...multiFields,'wl-person'].forEach(f => {
         const dd = document.getElementById(`${f}-dropdown`);
         const ds = document.getElementById(`${f}-display`);
         if (dd) dd.classList.add('hidden');
@@ -648,31 +748,27 @@
       });
     }
 
-    // ปิด dropdown เมื่อคลิกข้างนอก
     document.addEventListener('click', e => {
-      const insideModal    = e.target.closest('.modal-box');
-      const insideMulti    = e.target.closest('.multi-select-wrapper');
-      const insideWlFilter = e.target.closest('#wl-person-wrapper');
-      if (!insideModal && !insideMulti && !insideWlFilter) closeAllDropdowns();
+      if (!e.target.closest('.multi-select-wrapper') && !e.target.closest('.modal-box')) {
+        closeAllDropdowns();
+      }
     });
 
     function updateMultiDisplay(field) {
       const checked = [...document.querySelectorAll(
         `#${field}-options input[type="checkbox"]:checked`
       )].map(cb => cb.value);
-
-      const display     = document.getElementById(`${field}-display`);
-      const placeholder = document.getElementById(`${field}-placeholder`);
-
-      if (checked.length === 0) {
+      const display = document.getElementById(`${field}-display`);
+      const ph      = document.getElementById(`${field}-placeholder`);
+      if (!checked.length) {
         display.innerHTML = '';
-        display.appendChild(placeholder);
-        placeholder.style.display = '';
+        ph.style.display = '';
+        display.appendChild(ph);
       } else {
-        placeholder.style.display = 'none';
+        ph.style.display = 'none';
         display.innerHTML = checked.map(p =>
           `<span class="person-pill">${p}</span>`
-        ).join('') + placeholder.outerHTML.replace('style=""','style="display:none"');
+        ).join('') + ph.outerHTML.replace('style=""','style="display:none"');
       }
     }
 
@@ -690,20 +786,13 @@
       updateMultiDisplay(field);
     }
 
-    function clearMultiValues(field) {
-      document.querySelectorAll(`#${field}-options input[type="checkbox"]`).forEach(cb => {
-        cb.checked = false;
-      });
-      updateMultiDisplay(field);
-    }
-
-    // Workload person multi-select
+    // Workload person selector
     function toggleWlDropdown() {
-      const dropdown = document.getElementById('wl-person-dropdown');
-      const display  = document.getElementById('wl-person-display');
+      const dd = document.getElementById('wl-person-dropdown');
+      const ds = document.getElementById('wl-person-display');
+      const isOpen = !dd.classList.contains('hidden');
       closeAllDropdowns();
-      dropdown.classList.toggle('hidden');
-      display.classList.toggle('open');
+      if (!isOpen) { dd.classList.remove('hidden'); ds.classList.add('open'); }
     }
 
     function handleWlAllCheck(cb) {
@@ -716,22 +805,20 @@
       const checked = [...document.querySelectorAll(
         '#wl-person-options input[type="checkbox"]:checked'
       )].map(cb => cb.value);
-      const display     = document.getElementById('wl-person-display');
-      const placeholder = document.getElementById('wl-person-placeholder');
-      const allCb       = document.getElementById('wl-all-cb');
-
-      allCb.checked = checked.length === PERSON_OPTIONS.length;
-
-      if (checked.length === 0 || checked.length === PERSON_OPTIONS.length) {
-        display.innerHTML = '';
-        placeholder.textContent = 'ทั้งหมด';
-        placeholder.style.display = '';
-        display.appendChild(placeholder);
+      const ds  = document.getElementById('wl-person-display');
+      const ph  = document.getElementById('wl-person-placeholder');
+      const all = document.getElementById('wl-all-cb');
+      all.checked = checked.length === PERSON_OPTIONS.length;
+      if (!checked.length || checked.length === PERSON_OPTIONS.length) {
+        ds.innerHTML = '';
+        ph.textContent = 'ทั้งหมด';
+        ph.style.display = '';
+        ds.appendChild(ph);
       } else {
-        placeholder.style.display = 'none';
-        display.innerHTML = checked.map(p =>
+        ph.style.display = 'none';
+        ds.innerHTML = checked.map(p =>
           `<span class="person-pill">${p}</span>`
-        ).join('') + placeholder.outerHTML.replace('style=""','style="display:none"');
+        ).join('') + ph.outerHTML.replace('style=""','style="display:none"');
       }
     }
 
@@ -739,8 +826,7 @@
       const checked = [...document.querySelectorAll(
         '#wl-person-options input[type="checkbox"]:checked'
       )].map(cb => cb.value);
-      // ถ้าไม่ได้เลือกหรือเลือกทั้งหมด → return all
-      return checked.length === 0 || checked.length === PERSON_OPTIONS.length
+      return (!checked.length || checked.length === PERSON_OPTIONS.length)
         ? [...PERSON_OPTIONS]
         : checked;
     }
@@ -756,23 +842,22 @@
       const isDemo = sessionStorage.getItem('rxDemoMode') === 'true';
 
       tbody.innerHTML = `<tr><td colspan="12" class="p-16 text-center font-black text-lg" style="color:#8b85c1;">
-        <span class="spinner" style="border-color:rgba(139,133,193,0.3); border-top-color:#8b85c1;"></span>
-        กำลังโหลดข้อมูล...</td></tr>`;
+        <span class="spinner" style="border-color:rgba(139,133,193,0.3);border-top-color:#8b85c1;"></span>
+        กำลังโหลด...</td></tr>`;
       document.getElementById('statsRow').classList.add('hidden');
 
       if (isDemo) {
         masterData = getDemoData(start);
       } else {
         try {
-          const res = await fetch(`${SCRIPT_URL}?action=getSummary&start=${start}&end=${end}`);
+          const res  = await fetch(`${SCRIPT_URL}?action=getSummary&start=${start}&end=${end}`);
           masterData = await res.json();
         } catch(e) {
-          tbody.innerHTML = `<tr><td colspan="12" class="p-16 text-center text-red-500 font-black text-lg">❌ เกิดข้อผิดพลาดในการดึงข้อมูล</td></tr>`;
+          tbody.innerHTML = `<tr><td colspan="12" class="p-16 text-center text-red-500 font-black">❌ ดึงข้อมูลไม่ได้</td></tr>`;
           return;
         }
       }
 
-      // Populate ward filter
       const wards = [...new Set(masterData.map(r => r.ward))].filter(Boolean).sort();
       document.getElementById('searchWard').innerHTML =
         '<option value="">ทั้งหมด</option>' +
@@ -783,11 +868,13 @@
 
     function getDemoData(dateStr) {
       return [
-        { id:"1", rowIndex:2, date:dateStr, lotNumber:"ET6906001", hn:"123456", name:"นางสมหญิง ใจดี",      ward:"5ก",    productName:"Omeprazole (Losec) — 20 mg/5 ml",     prepVolume:"60",  prepCount:"1", preparer:"SK",     checker:"OP",    labelMaker:"TT",    labelChecker:"NC"   },
-        { id:"2", rowIndex:3, date:dateStr, lotNumber:"ET6906002", hn:"234567", name:"นายสมชาย รักเรียน",   ward:"MICU 1",productName:"Amoxicillin (Amoxil) — 250 mg/5 ml", prepVolume:"100", prepCount:"2", preparer:"OP,SK",  checker:"TT",    labelMaker:"MP",    labelChecker:""     },
-        { id:"3", rowIndex:4, date:dateStr, lotNumber:"ET6906003", hn:"345678", name:"เด็กชายปอนด์ มั่งมี", ward:"PICU",  productName:"Prednisolone — 5 mg/ml",               prepVolume:"30",  prepCount:"1", preparer:"",       checker:"",      labelMaker:"",      labelChecker:""     },
-        { id:"4", rowIndex:5, date:dateStr, lotNumber:"ET6906004", hn:"456789", name:"นางสาวฟ้าใส วันดี",   ward:"6ก",    productName:"Metronidazole (Flagyl) — 40 mg/ml",    prepVolume:"120", prepCount:"1", preparer:"NC",     checker:"MP",    labelMaker:"SK",    labelChecker:"OP"   },
-        { id:"5", rowIndex:6, date:dateStr, lotNumber:"ET6906005", hn:"567890", name:"นายอัมพร สีทอง",      ward:"3ข",    productName:"Phenobarbital — 3 mg/ml",               prepVolume:"50",  prepCount:"1", preparer:"TT",     checker:"SK",    labelMaker:"",      labelChecker:""     },
+        { id:"1", rowIndex:2, date:dateStr, lotNumber:"ET6906001", hn:"100001", name:"นางสมหญิง ใจดี",       ward:"5ก",    productName:"Omeprazole (Losec) — 20 mg/5 ml",     prepVolume:"60",  prepCount:"3", preparer:"SK",     checker:"OP",    labelMaker:"TT",    labelChecker:"NC"  },
+        { id:"2", rowIndex:3, date:dateStr, lotNumber:"ET6906002", hn:"100002", name:"นายสมชาย รักเรียน",    ward:"MICU 1",productName:"Amoxicillin (Amoxil) — 250 mg/5 ml", prepVolume:"100", prepCount:"5", preparer:"OP,SK",  checker:"TT",    labelMaker:"MP",    labelChecker:""    },
+        { id:"3", rowIndex:4, date:dateStr, lotNumber:"ET6906003", hn:"100003", name:"เด็กชายปอนด์ มั่งมี",  ward:"PICU",  productName:"Prednisolone — 5 mg/ml",               prepVolume:"30",  prepCount:"2", preparer:"",       checker:"",      labelMaker:"",      labelChecker:""    },
+        { id:"4", rowIndex:5, date:dateStr, lotNumber:"ET6906004", hn:"100004", name:"นางสาวฟ้าใส วันดี",    ward:"6ก",    productName:"Metronidazole (Flagyl) — 40 mg/ml",    prepVolume:"120", prepCount:"4", preparer:"NC",     checker:"MP",    labelMaker:"SK",    labelChecker:"OP"  },
+        { id:"5", rowIndex:6, date:dateStr, lotNumber:"ET6906005", hn:"100005", name:"นายอัมพร สีทอง",       ward:"3ข",    productName:"Phenobarbital — 3 mg/ml",               prepVolume:"50",  prepCount:"1", preparer:"TT",     checker:"SK",    labelMaker:"",      labelChecker:""    },
+        { id:"6", rowIndex:7, date:dateStr, lotNumber:"ET6906006", hn:"100006", name:"นางมาลี สุขสันต์",     ward:"2ค",    productName:"Omeprazole (Losec) — 20 mg/5 ml",     prepVolume:"60",  prepCount:"6", preparer:"NC,OP",  checker:"SK,TT", labelMaker:"NC",    labelChecker:"MP"  },
+        { id:"7", rowIndex:8, date:dateStr, lotNumber:"ET6906007", hn:"100007", name:"เด็กหญิงดาว มีโชค",   ward:"PICU",  productName:"Prednisolone — 5 mg/ml",               prepVolume:"30",  prepCount:"2", preparer:"MP",     checker:"NC",    labelMaker:"TT",    labelChecker:"SK"  },
       ];
     }
 
@@ -802,33 +889,32 @@
 
       const filtered = masterData.filter(row => {
         const matchSearch = !search ||
-          String(row.hn   || '').toLowerCase().includes(search) ||
-          String(row.name || '').toLowerCase().includes(search) ||
-          String(row.lotNumber || '').toLowerCase().includes(search);
-        const matchWard = !ward || row.ward === ward;
-        const rowStatus = getRowStatus(row).key;
-        const matchStatus = !status || rowStatus === status;
+          String(row.hn||'').toLowerCase().includes(search) ||
+          String(row.name||'').toLowerCase().includes(search) ||
+          String(row.lotNumber||'').toLowerCase().includes(search);
+        const matchWard   = !ward   || row.ward === ward;
+        const matchStatus = !status || getRowStatus(row).key === status;
         return matchSearch && matchWard && matchStatus;
       });
 
-      // Stats
       document.getElementById('statsRow').classList.remove('hidden');
-      document.getElementById('caseCount').textContent  = filtered.length;
-      const doneCount = filtered.filter(r => getRowStatus(r).key === 'done').length;
-      document.getElementById('doneCount').textContent   = doneCount;
+      document.getElementById('caseCount').textContent   = filtered.length;
+      const done = filtered.filter(r => getRowStatus(r).key === 'done').length;
+      document.getElementById('doneCount').textContent    = done;
       document.getElementById('pendingCount').textContent = filtered.filter(r => getRowStatus(r).key === 'pending').length;
 
-      const prodCounts = {};
+      const pc = {};
       filtered.forEach(r => {
         const k = r.productName || '?';
-        prodCounts[k] = (prodCounts[k] || 0) + (parseInt(r.prepCount) || 1);
+        pc[k] = (pc[k]||0) + (parseInt(r.prepCount)||1);
       });
-      const top = Object.entries(prodCounts).sort((a,b) => b[1]-a[1])[0];
-      document.getElementById('topProduct').textContent = top ? `${top[0].split(' — ')[0]} (${top[1]})` : '-';
+      const top = Object.entries(pc).sort((a,b) => b[1]-a[1])[0];
+      document.getElementById('topProduct').textContent = top
+        ? `${top[0].split(' — ')[0]} (${top[1]} ขนาน)` : '-';
 
       if (!filtered.length) {
         document.getElementById('summaryBody').innerHTML =
-          '<tr><td colspan="12" class="p-16 text-center text-gray-400 font-bold text-lg">❌ ไม่พบรายการที่ค้นหา</td></tr>';
+          '<tr><td colspan="12" class="p-16 text-center text-gray-400 font-bold text-lg">❌ ไม่พบรายการ</td></tr>';
         return;
       }
 
@@ -838,28 +924,28 @@
         <tr>
           <td class="text-center font-black" style="color:#8b85c1;">${i+1}</td>
           <td class="whitespace-nowrap font-bold" style="color:#1e1b3a;">${formatThaiDate(row.date)}</td>
-          <td><span class="lot-badge">${row.lotNumber || '-'}</span></td>
+          <td><span class="lot-badge">${row.lotNumber||'-'}</span></td>
           <td>
-            <div class="font-black" style="color:#1e1b3a;">${row.hn || '-'}</div>
-            <div class="text-xs font-bold" style="color:#8b85c1;">${row.name || '-'}</div>
+            <div class="font-black" style="color:#1e1b3a;">${row.hn||'-'}</div>
+            <div class="text-xs font-bold" style="color:#8b85c1;">${row.name||'-'}</div>
           </td>
-          <td class="font-black" style="color:#4a4780;">${row.ward || '-'}</td>
-          <td class="text-sm font-bold" style="color:#1e1b3a; max-width:180px;">${row.productName || '-'}</td>
-          <td class="text-center font-black" style="color:#4a4780;">
-            ${row.prepVolume||'-'} <span style="color:#c4a8cb;">ml ×</span> ${row.prepCount||'1'}
+          <td class="font-black" style="color:#4a4780;">${row.ward||'-'}</td>
+          <td class="text-sm font-bold" style="color:#1e1b3a; max-width:180px;">${row.productName||'-'}</td>
+          <td class="text-center">
+            <span class="font-black" style="color:#4a4780;">${row.prepVolume||'-'} ml</span>
+            <span style="color:#c4a8cb;"> × </span>
+            <span class="font-black" style="color:#8b85c1;">${row.prepCount||'1'} ขนาน</span>
           </td>
           <td>${renderPersons(row.preparer)}</td>
           <td>${renderPersons(row.checker)}</td>
           <td>${renderPersons(row.labelMaker)}</td>
           <td>${renderPersons(row.labelChecker)}</td>
-          <td class="text-center">
+          <td class="text-center no-print">
             <div class="flex justify-center gap-1 items-center flex-wrap">
               <span class="status-pill ${st.cls}">${st.label}</span>
-              <button
-                onclick='openPersonModal(${JSON.stringify(row).replace(/'/g,"&#39;")})'
+              <button onclick='openPersonModal(${JSON.stringify(row).replace(/'/g,"&#39;")})'
                 class="p-2 rounded-xl border-2 shadow-sm transition-all hover:scale-105"
-                style="border-color:#e8c4d8; color:#4a4780; background:white;"
-                title="แก้ไขผู้เตรียม/เช็ค">✏️</button>
+                style="border-color:#e8c4d8; color:#4a4780; background:white;" title="แก้ไข">✏️</button>
               <button onclick="deleteCase('${row.id}','${row.hn}')" class="btn-danger" title="ลบ">🗑️</button>
             </div>
           </td>
@@ -875,12 +961,12 @@
       document.getElementById('pm-rowIndex').value = row.rowIndex || row.id;
       document.getElementById('pm-lot').textContent  = row.lotNumber || '-';
       document.getElementById('pm-info').textContent =
-        `${row.hn || '-'} | ${row.name || '-'} | ${(row.productName||'').split(' — ')[0]}`;
+        `${row.hn||'-'} | ${row.name||'-'} | ${(row.productName||'').split(' — ')[0]} | ${row.prepCount||'1'} ขนาน`;
 
-      setMultiValues('pm-preparer',    row.preparer    || '');
-      setMultiValues('pm-checker',     row.checker     || '');
-      setMultiValues('pm-labelmaker',  row.labelMaker  || '');
-      setMultiValues('pm-labelchecker',row.labelChecker|| '');
+      setMultiValues('pm-preparer',    row.preparer    ||'');
+      setMultiValues('pm-checker',     row.checker     ||'');
+      setMultiValues('pm-labelmaker',  row.labelMaker  ||'');
+      setMultiValues('pm-labelchecker',row.labelChecker||'');
 
       document.getElementById('personModal').classList.remove('hidden');
     }
@@ -890,9 +976,6 @@
       closeAllDropdowns();
     }
 
-    // =========================================
-    // 💾 SAVE PERSONS
-    // =========================================
     async function savePersons(e) {
       e.preventDefault();
       const isDemo   = sessionStorage.getItem('rxDemoMode') === 'true';
@@ -910,19 +993,13 @@
 
       if (isDemo) {
         await new Promise(r => setTimeout(r, 500));
-        // อัพเดทใน masterData
-        const item = masterData.find(x => String(x.rowIndex) === String(rowIndex) || String(x.id) === String(rowIndex));
-        if (item) {
-          item.preparer     = preparer;
-          item.checker      = checker;
-          item.labelMaker   = labelMaker;
-          item.labelChecker = labelChecker;
-        }
+        const item = masterData.find(x => String(x.rowIndex||x.id) === String(rowIndex));
+        if (item) { item.preparer=preparer; item.checker=checker; item.labelMaker=labelMaker; item.labelChecker=labelChecker; }
         filterDisplay();
         closePersonModal();
         saveBtn.disabled = false;
         saveBtn.innerHTML = "💾 บันทึก";
-        alert("⚠️ Demo Mode — บันทึกในเครื่องชั่วคราวค่ะ");
+        alert("⚠️ Demo Mode — บันทึกในเครื่องชั่วคราว");
         return;
       }
 
@@ -934,17 +1011,10 @@
         formData.append("checker",      checker);
         formData.append("labelMaker",   labelMaker);
         formData.append("labelChecker", labelChecker);
-
         await fetch(SCRIPT_URL, { method:'POST', mode:'no-cors', body: formData });
 
-        // อัพเดท local
-        const item = masterData.find(x => String(x.rowIndex) === String(rowIndex));
-        if (item) {
-          item.preparer     = preparer;
-          item.checker      = checker;
-          item.labelMaker   = labelMaker;
-          item.labelChecker = labelChecker;
-        }
+        const item = masterData.find(x => String(x.rowIndex||x.id) === String(rowIndex));
+        if (item) { item.preparer=preparer; item.checker=checker; item.labelMaker=labelMaker; item.labelChecker=labelChecker; }
         filterDisplay();
         closePersonModal();
         alert(`✅ บันทึกสำเร็จค่ะ! (LOT: ${lotNo})`);
@@ -961,28 +1031,20 @@
     // 🗑️ DELETE
     // =========================================
     async function deleteCase(id, hn) {
-      if (!confirm(`ยืนยันการลบ HN: ${hn} ?\n(ไม่สามารถกู้คืนได้)`)) return;
+      if (!confirm(`ยืนยันลบ HN: ${hn} ?\n(ไม่สามารถกู้คืนได้)`)) return;
       const isDemo = sessionStorage.getItem('rxDemoMode') === 'true';
-
       if (isDemo) {
         masterData = masterData.filter(x => x.id !== id);
         filterDisplay();
         alert("⚠️ Demo Mode — ลบในเครื่องชั่วคราว");
         return;
       }
-
       try {
-        const res = await fetch(`${SCRIPT_URL}?action=deleteOrder&id=${id}`);
+        const res    = await fetch(`${SCRIPT_URL}?action=deleteOrder&id=${id}`);
         const result = await res.json();
-        if (result.success) {
-          alert("✅ ลบเรียบร้อยแล้วค่ะ");
-          loadData();
-        } else {
-          alert("❌ ไม่พบข้อมูลหรือเกิดข้อผิดพลาด");
-        }
-      } catch(e) {
-        alert("⚠️ เกิดข้อผิดพลาดในการเชื่อมต่อ");
-      }
+        if (result.success) { alert("✅ ลบเรียบร้อยค่ะ"); loadData(); }
+        else alert("❌ เกิดข้อผิดพลาด");
+      } catch(e) { alert("⚠️ เชื่อมต่อไม่ได้"); }
     }
 
 
@@ -990,22 +1052,19 @@
     // 📈 WORKLOAD REPORT
     // =========================================
     function generateWorkloadReport() {
-      const start    = document.getElementById('wl-startDate').value;
-      const end      = document.getElementById('wl-endDate').value;
-      const persons  = getWlPersons();
-      const isDemo   = sessionStorage.getItem('rxDemoMode') === 'true';
+      const start   = document.getElementById('wl-startDate').value;
+      const end     = document.getElementById('wl-endDate').value;
+      const persons = getWlPersons();
+      const isDemo  = sessionStorage.getItem('rxDemoMode') === 'true';
 
-      // กรองข้อมูลตามวันที่
+      // กรองตามวันที่
       let filtered = masterData.filter(row => {
         if (!row.date) return false;
-        const d = row.date.split('T')[0];
+        const d = (row.date+'').split('T')[0];
         return d >= start && d <= end;
       });
 
-      // ถ้า Demo และไม่มีข้อมูล ใช้ Demo data
-      if (isDemo && filtered.length === 0) {
-        filtered = getDemoData(start);
-      }
+      if (isDemo && !filtered.length) filtered = getDemoData(start);
 
       if (!filtered.length) {
         document.getElementById('wl-result').classList.add('hidden');
@@ -1016,94 +1075,167 @@
       document.getElementById('wl-empty').classList.add('hidden');
       document.getElementById('wl-result').classList.remove('hidden');
 
-      // ===== คำนวณภาระงาน =====
-      // โครงสร้าง: { "OP": { preparer:3, checker:2, labelMaker:1, labelChecker:4 }, ... }
+      // ============================================
+      // 📊 คำนวณภาระงาน
+      // โครงสร้าง workload[person][role] = { count, doses }
+      // count = จำนวนครั้ง (จำนวน LOT ที่รับผิดชอบ)
+      // doses = จำนวนขนาน (prepCount รวม)
+      // ============================================
+      const roles = ['preparer','checker','labelMaker','labelChecker'];
+
       const workload = {};
       persons.forEach(p => {
-        workload[p] = { preparer:0, checker:0, labelMaker:0, labelChecker:0 };
+        workload[p] = {};
+        roles.forEach(r => { workload[p][r] = { count:0, doses:0 }; });
       });
 
       filtered.forEach(row => {
-        // แต่ละ role เก็บเป็น "OP,SK" → แยก แล้วนับ
-        const roles = {
-          preparer:     parsePersons(row.preparer),
-          checker:      parsePersons(row.checker),
-          labelMaker:   parsePersons(row.labelMaker),
-          labelChecker: parsePersons(row.labelChecker),
-        };
-        Object.entries(roles).forEach(([role, peopleArr]) => {
-          peopleArr.forEach(p => {
-            if (persons.includes(p)) {
-              if (!workload[p]) workload[p] = { preparer:0, checker:0, labelMaker:0, labelChecker:0 };
-              workload[p][role]++;
+        const doses = parseInt(row.prepCount) || 1;  // จำนวนขนานยาของ LOT นี้
+
+        roles.forEach(role => {
+          const fieldMap = {
+            preparer:     row.preparer,
+            checker:      row.checker,
+            labelMaker:   row.labelMaker,
+            labelChecker: row.labelChecker,
+          };
+          const peopleInRole = parsePersons(fieldMap[role]);
+
+          peopleInRole.forEach(person => {
+            if (persons.includes(person)) {
+              if (!workload[person]) {
+                workload[person] = {};
+                roles.forEach(r => { workload[person][r] = { count:0, doses:0 }; });
+              }
+              workload[person][role].count++;   // +1 ครั้ง
+              workload[person][role].doses += doses / peopleInRole.length;
             }
           });
         });
       });
 
-      // ===== Summary Cards =====
-      const totals = { preparer:0, checker:0, labelMaker:0, labelChecker:0 };
-      Object.values(workload).forEach(w => {
-        totals.preparer     += w.preparer;
-        totals.checker      += w.checker;
-        totals.labelMaker   += w.labelMaker;
-        totals.labelChecker += w.labelChecker;
+      // ============================================
+      // Grand totals (สรุปรวม)
+      // ============================================
+      const totals = {};
+      roles.forEach(r => { totals[r] = { count:0, doses:0 }; });
+      persons.forEach(p => {
+        roles.forEach(r => {
+          totals[r].count += workload[p]?.[r]?.count || 0;
+          totals[r].doses += workload[p]?.[r]?.doses || 0;
+        });
       });
 
-      const cardDefs = [
-        { key:'preparer',     icon:'🧪', label:'ครั้งเตรียมยา (รวม)',   color:'#4a4780' },
-        { key:'checker',      icon:'✅', label:'ครั้งเช็คยา (รวม)',      color:'#065f46' },
-        { key:'labelMaker',   icon:'🏷️', label:'ครั้งทำฉลาก (รวม)',     color:'#1e40af' },
-        { key:'labelChecker', icon:'🔍', label:'ครั้งเช็คฉลาก (รวม)',   color:'#b45309' },
-      ];
+// Helper แสดงทศนิยมเฉพาะเมื่อจำเป็น
+const fmtD = (d) => (d % 1 === 0) ? String(Math.round(d)) : d.toFixed(1);
 
-      document.getElementById('wl-summary-cards').innerHTML = cardDefs.map(c => `
-        <div class="p-5 rounded-2xl border-2 text-center" style="background:#fdf8fc; border-color:#e8c4d8;">
-          <div class="text-2xl mb-1">${c.icon}</div>
-          <div class="text-[10px] font-black uppercase tracking-wider mb-2" style="color:#8b85c1;">${c.label}</div>
-          <div class="text-4xl font-black" style="color:${c.color};">${totals[c.key]}</div>
-        </div>
-      `).join('');
+// Summary Cards
+document.getElementById('total-prep-count').textContent   = totals.preparer.count;
+document.getElementById('total-prep-doses').textContent   = fmtD(totals.preparer.doses);
+document.getElementById('total-check-count').textContent  = totals.checker.count;
+document.getElementById('total-check-doses').textContent  = fmtD(totals.checker.doses);
+document.getElementById('total-label-count').textContent  = totals.labelMaker.count;
+document.getElementById('total-label-doses').textContent  = fmtD(totals.labelMaker.doses);
+document.getElementById('total-lcheck-count').textContent = totals.labelChecker.count;
+document.getElementById('total-lcheck-doses').textContent = fmtD(totals.labelChecker.doses);
 
-      // ===== Workload Table =====
-      const tableRows = persons
-        .filter(p => {
-          const w = workload[p] || {};
-          return (w.preparer||0)+(w.checker||0)+(w.labelMaker||0)+(w.labelChecker||0) > 0;
-        })
-        .sort((a,b) => {
-          const sumA = Object.values(workload[a]||{}).reduce((s,v)=>s+v,0);
-          const sumB = Object.values(workload[b]||{}).reduce((s,v)=>s+v,0);
-          return sumB - sumA;
-        });
+      // ============================================
+      // Render Table Rows
+      // เรียงจากมากไปน้อย (ตาม count รวมทุก role)
+      // ============================================
+      const activePersons = persons.filter(p => {
+        return roles.some(r => (workload[p]?.[r]?.count||0) > 0);
+      }).sort((a,b) => {
+        const sumA = roles.reduce((s,r) => s+(workload[a]?.[r]?.count||0), 0);
+        const sumB = roles.reduce((s,r) => s+(workload[b]?.[r]?.count||0), 0);
+        return sumB - sumA;
+      });
 
-      if (!tableRows.length) {
-        document.getElementById('wl-table-body').innerHTML =
-          `<tr><td colspan="5" class="p-12 text-center text-gray-400 font-bold">ไม่มีข้อมูลภาระงานในช่วงนี้</td></tr>`;
-      } else {
-        document.getElementById('wl-table-body').innerHTML = tableRows.map(p => {
-          const w = workload[p] || {};
-          const numCell = (n) => n > 0
-            ? `<span class="wl-number">${n}</span>`
-            : `<span class="wl-zero">0</span>`;
-          return `
-          <tr class="border-b border-purple-50 hover:bg-purple-50/30 transition-colors">
-            <td class="px-4 py-4">
-              <span class="font-black text-lg px-3 py-1 rounded-xl"
-                style="background: linear-gradient(135deg,#1e1b3a,#4a4780); color:#e8c4d8;
-                       font-family:'Courier New',monospace; letter-spacing:0.08em;">${p}</span>
-            </td>
-            <td class="px-4 py-4 text-center">${numCell(w.preparer||0)}</td>
-            <td class="px-4 py-4 text-center">${numCell(w.checker||0)}</td>
-            <td class="px-4 py-4 text-center">${numCell(w.labelMaker||0)}</td>
-            <td class="px-4 py-4 text-center">${numCell(w.labelChecker||0)}</td>
-          </tr>`;
-        }).join('');
-      }
+      // cell helper
+      const cell = (role, person, colorClass) => {
+        const c = workload[person]?.[role]?.count || 0;
+        const d = workload[person]?.[role]?.doses || 0;
+        const dStr = (d % 1 === 0) ? d.toFixed(0) : d.toFixed(1);
+        if (c === 0) return `
+          <td class="wl-cell" style="border-left:1px solid #f0eef8;">
+            <span class="wl-zero-big">0</span>
+            <span class="wl-zero-small">0 ขนาน</span>
+          </td>`;
+        return `
+          <td class="wl-cell" style="border-left:1px solid #f0eef8;">
+            <span class="wl-num-big ${colorClass}">${c}</span>
+            <span class="wl-num-small" style="color:#8b85c1;">${dStr} ขนาน</span>
+          </td>`;
+      };
 
-      // Date range display
+      // สรุปแถว Total
+      const totalCell = (role, colorClass) => {
+        const c = totals[role].count;
+        const d = totals[role].doses;
+        return `
+          <td class="wl-cell" style="border-left:1px solid #c4a8cb;">
+            <span class="wl-num-big ${colorClass}">${c}</span>
+           <span class="wl-num-small" style="color:#8b85c1;">${dStr} ขนาน</span>
+          </td>`;
+      };
+
+      const rows = activePersons.map(p => `
+        <tr class="border-b border-purple-50 hover:bg-purple-50/30 transition-colors">
+          <td class="px-4 py-3">
+            <span style="background:linear-gradient(135deg,#1e1b3a,#4a4780); color:#e8c4d8;
+                  font-family:'Courier New',monospace; font-weight:900; letter-spacing:0.08em;
+                  padding:4px 12px; border-radius:10px; display:inline-block;">${p}</span>
+          </td>
+          ${cell('preparer',     p, 'role-prep')}
+          ${cell('preparer',     p, 'role-prep').replace('count','doses')}
+          ${cell('checker',      p, 'role-check')}
+          ${cell('checker',      p, 'role-check').replace('count','doses')}
+          ${cell('labelMaker',   p, 'role-label')}
+          ${cell('labelMaker',   p, 'role-label').replace('count','doses')}
+          ${cell('labelChecker', p, 'role-lcheck')}
+          ${cell('labelChecker', p, 'role-lcheck').replace('count','doses')}
+        </tr>`).join('');
+
+      // แถว Total
+      const totalRow = `
+        <tr class="wl-total-row">
+          <td class="px-4 py-3 font-black text-sm" style="color:#4a4780;">รวมทั้งหมด</td>
+          ${totalCell('preparer',    'role-prep')}
+          ${totalCell('preparer',    'role-prep')}
+          ${totalCell('checker',     'role-check')}
+          ${totalCell('checker',     'role-check')}
+          ${totalCell('labelMaker',  'role-label')}
+          ${totalCell('labelMaker',  'role-label')}
+          ${totalCell('labelChecker','role-lcheck')}
+          ${totalCell('labelChecker','role-lcheck')}
+        </tr>`;
+
+      document.getElementById('wl-table-body').innerHTML =
+        (rows || `<tr><td colspan="9" class="p-12 text-center text-gray-400 font-bold">ไม่มีข้อมูลภาระงาน</td></tr>`) +
+        (activePersons.length ? totalRow : '');
+
+      // Date range
+      const selectedNames = getWlPersons().length === PERSON_OPTIONS.length
+        ? 'ทั้งหมด'
+        : getWlPersons().join(', ');
       document.getElementById('wl-date-range').textContent =
-        `ช่วงเวลา: ${formatThaiDate(start)} — ${formatThaiDate(end)} | จำนวน order: ${filtered.length} รายการ`;
+        `ช่วงเวลา: ${formatThaiDate(start)} — ${formatThaiDate(end)}  |  เภสัชกร: ${selectedNames}  |  Order ทั้งหมด: ${filtered.length} รายการ`;
+
+      // Print title
+      document.getElementById('wl-print-subtitle').textContent =
+        `${formatThaiDate(start)} — ${formatThaiDate(end)} | Order: ${filtered.length} รายการ`;
+    }
+
+
+    // =========================================
+    // 🖨️ PRINT
+    // =========================================
+    function printWorkload() {
+      document.getElementById('wl-print-title').classList.remove('hidden');
+      window.print();
+      setTimeout(() => {
+        document.getElementById('wl-print-title').classList.add('hidden');
+      }, 500);
     }
 
   </script>
