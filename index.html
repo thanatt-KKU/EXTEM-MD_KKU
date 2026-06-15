@@ -252,16 +252,8 @@
           </div>
         </div>
 
-        <!-- Row 2: อายุ น้ำหนัก วันนัดถัดไป -->
+        <!-- Row 2: น้ำหนัก วันนัดถัดไป -->
         <div class="grid grid-cols-2 md:grid-cols-4 gap-4 pt-3 border-t border-purple-50">
-          <div>
-            <label class="field-label">อายุ</label>
-            <div class="relative">
-              <input type="number" id="patientAge" placeholder="0"
-                class="input-field" style="padding-right:40px;">
-              <span class="absolute right-3 top-2.5 text-xs font-black" style="color:#c4a8cb;">ปี</span>
-            </div>
-          </div>
           <div>
             <label class="field-label">น้ำหนัก</label>
             <div class="relative">
@@ -271,8 +263,8 @@
             </div>
           </div>
 
-          <!-- วันนัดถัดไป — span 2 cols on md -->
-          <div class="col-span-2">
+          <!-- วันนัดถัดไป — span 3 cols on md -->
+          <div class="col-span-2 md:col-span-3">
             <label class="field-label">
               📅 วันนัดถัดไป
               <span class="normal-case font-normal text-[10px] ml-1" style="color:#c4a8cb;">(Next Appointment)</span>
@@ -815,7 +807,6 @@
       const isDemo     = sessionStorage.getItem('rxDemoMode') === 'true';
 
       if (isDemo) {
-        // ✅ Demo data รองรับ field ใหม่ครบ
         productData = [
           {
             id:"1", genericName:"Omeprazole",   brandName:"Losec",
@@ -873,7 +864,6 @@
         const res  = await fetch(`${SCRIPT_URL}?action=getProductList`);
         const data = await res.json();
         if (data && data.length > 0) {
-          // กรองเฉพาะ active
           productData = data.filter(p => p.status !== 'inactive');
           populateProductDropdown(productData);
           loadingMsg.textContent = `✅ โหลดรายการยาสำเร็จ (${productData.length} รายการ)`;
@@ -895,7 +885,6 @@
         const opt = document.createElement('option');
         opt.value = p.id;
         opt.textContent = `${p.genericName} (${p.brandName}) — ${p.strength}`;
-        // เก็บข้อมูลทุก field ที่ต้องใช้
         opt.dataset.generic     = p.genericName    || '';
         opt.dataset.brand       = p.brandName      || '';
         opt.dataset.strength    = p.strength       || '';
@@ -910,7 +899,7 @@
 
 
     // =========================================
-    // 📦 ON PRODUCT CHANGE — ดึงค่าทุก field
+    // 📦 ON PRODUCT CHANGE
     // =========================================
     function onProductChange() {
       const select   = document.getElementById('productSelect');
@@ -930,13 +919,11 @@
         return;
       }
 
-      // ดึงค่าจาก data attributes
       const productUnit = opt.dataset.productUnit || 'ml';
       const packageUnit = opt.dataset.packageUnit || 'ขวด';
       const warning     = opt.dataset.warning     || '';
       const storage     = opt.dataset.storage     || '-';
 
-      // Info card
       infoCard.classList.remove('hidden');
       document.getElementById('info-generic').textContent     = opt.dataset.generic   || '-';
       document.getElementById('info-brand').textContent       = opt.dataset.brand     || '-';
@@ -944,24 +931,20 @@
       document.getElementById('info-expiry-days').textContent = opt.dataset.expiry    || '-';
       document.getElementById('info-storage').textContent     = storage;
 
-      // อัพเดทหน่วยทุกจุด
       document.getElementById('rawUnitBadge').textContent   = opt.dataset.generic ? (opt.dataset.packageUnit || '—') : '—';
       document.getElementById('prepVolumeUnit').textContent = productUnit;
       document.getElementById('prepCountUnit').textContent  = packageUnit;
       document.getElementById('sum-pkg-unit').textContent   = ` ${packageUnit}`;
       document.getElementById('doseUnit').textContent       = productUnit;
 
-      // Summary
       document.getElementById('sum-product').textContent = opt.textContent;
 
-      // ===== ดึงคำเตือนมาตรฐานจาก Product =====
       const autoBox  = document.getElementById('autoWarningBox');
       const autoText = document.getElementById('autoWarningText');
 
       if (warning && warning.trim()) {
         autoBox.classList.remove('hidden');
         autoText.textContent = warning;
-        // ใส่ลง textarea ให้แก้ไขได้
         document.getElementById('labelWarning').value = warning;
       } else {
         autoBox.classList.add('hidden');
@@ -1000,7 +983,6 @@
         if (data && data.hn) {
           cachedPatientOrder = data;
           document.getElementById('patientName').value   = data.patientName   || "";
-          document.getElementById('patientAge').value    = data.patientAge    || "";
           document.getElementById('patientWeight').value = data.patientWeight || "";
           if (data.ward)            document.getElementById('wardInput').value       = data.ward;
           if (data.nextAppointment) document.getElementById('nextAppointment').value = data.nextAppointment;
@@ -1140,17 +1122,16 @@
       formData.append("lotNumber",       lotNumber);
       formData.append("hn",              hn);
       formData.append("patientName",     pName);
-      formData.append("patientAge",      v('patientAge'));
       formData.append("patientWeight",   v('patientWeight'));
       formData.append("ward",            v('wardInput'));
-      formData.append("nextAppointment", v('nextAppointment'));   // ✅ วันนัดใหม่
+      formData.append("nextAppointment", v('nextAppointment'));
       formData.append("productId",       productSel.value);
       formData.append("productName",     opt.textContent);
       formData.append("genericName",     opt.dataset.generic);
       formData.append("brandName",       opt.dataset.brand);
       formData.append("strength",        opt.dataset.strength);
-      formData.append("productUnit",     opt.dataset.productUnit);// ✅ หน่วย ml/g
-      formData.append("packageUnit",     opt.dataset.packageUnit);// ✅ หน่วย ขวด/ซอง
+      formData.append("productUnit",     opt.dataset.productUnit);
+      formData.append("packageUnit",     opt.dataset.packageUnit);
       formData.append("expiryDays",      opt.dataset.expiry);
       formData.append("storage",         opt.dataset.storage);
       formData.append("rawAmount",       v('rawAmount'));
