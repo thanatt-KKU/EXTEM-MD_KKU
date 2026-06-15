@@ -7,147 +7,77 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
-    body { 
-      font-family: 'Sarabun', sans-serif; 
+    body {
+      font-family: 'Sarabun', sans-serif;
       background: linear-gradient(135deg, #1e1b3a 0%, #2d2b5e 50%, #6b64a8 100%);
       min-height: 100vh;
     }
-    .gradient-header { 
-      background: linear-gradient(135deg, #1e1b3a 0%, #4a4780 50%, #8b85c1 100%); 
+    .gradient-header { background: linear-gradient(135deg, #1e1b3a 0%, #4a4780 50%, #8b85c1 100%); }
+    .card-shadow { box-shadow: 0 10px 30px -5px rgba(30,27,58,0.3); }
+    .section-title {
+      border-left: 5px solid #8b85c1; padding-left: 12px;
+      font-weight: 800; color: #1e1b3a; font-size: 1.1rem;
     }
-    .card-shadow { 
-      box-shadow: 0 10px 30px -5px rgba(30, 27, 58, 0.3); 
-    }
-    .section-title { 
-      border-left: 5px solid #8b85c1; 
-      padding-left: 12px; 
-      font-weight: 800; 
-      color: #1e1b3a; 
-      font-size: 1.1rem; 
-    }
-    .ward-dropdown { 
-      max-height: 250px; 
-      overflow-y: auto; 
-      z-index: 100; 
-    }
-    input[type="number"]::-webkit-outer-spin-button, 
-    input[type="number"]::-webkit-inner-spin-button { 
-      -webkit-appearance: none; 
-      margin: 0; 
-    }
+    .ward-dropdown { max-height: 250px; overflow-y: auto; z-index: 100; }
+    input[type="number"]::-webkit-outer-spin-button,
+    input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
     .input-field {
-      width: 100%;
-      padding: 10px 14px;
-      border: 2px solid #e8c4d8;
-      border-radius: 12px;
-      outline: none;
-      transition: all 0.2s;
-      background: #fdf8fc;
-      color: #1e1b3a;
-      font-family: 'Sarabun', sans-serif;
-      font-weight: 600;
+      width: 100%; padding: 10px 14px;
+      border: 2px solid #e8c4d8; border-radius: 12px;
+      outline: none; transition: all 0.2s;
+      background: #fdf8fc; color: #1e1b3a;
+      font-family: 'Sarabun', sans-serif; font-weight: 600;
     }
-    .input-field:focus {
-      border-color: #8b85c1;
-      background: white;
-      box-shadow: 0 0 0 3px rgba(139, 133, 193, 0.15);
-    }
-    .input-field::placeholder {
-      color: #c4a8cb;
-      font-weight: 400;
-    }
+    .input-field:focus { border-color: #8b85c1; background: white; box-shadow: 0 0 0 3px rgba(139,133,193,0.15); }
+    .input-field::placeholder { color: #c4a8cb; font-weight: 400; }
     .field-label {
-      display: block;
-      font-size: 0.8rem;
-      font-weight: 700;
-      color: #4a4780;
-      margin-bottom: 4px;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
+      display: block; font-size: 0.8rem; font-weight: 700; color: #4a4780;
+      margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.05em;
     }
     .select-field {
-      width: 100%;
-      padding: 10px 14px;
-      border: 2px solid #e8c4d8;
-      border-radius: 12px;
-      outline: none;
-      background: #fdf8fc;
-      color: #1e1b3a;
-      font-family: 'Sarabun', sans-serif;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.2s;
+      width: 100%; padding: 10px 14px;
+      border: 2px solid #e8c4d8; border-radius: 12px;
+      outline: none; background: #fdf8fc; color: #1e1b3a;
+      font-family: 'Sarabun', sans-serif; font-weight: 600;
+      cursor: pointer; transition: all 0.2s;
     }
-    .select-field:focus {
-      border-color: #8b85c1;
-      box-shadow: 0 0 0 3px rgba(139, 133, 193, 0.15);
-    }
+    .select-field:focus { border-color: #8b85c1; box-shadow: 0 0 0 3px rgba(139,133,193,0.15); }
     .btn-primary {
       background: linear-gradient(135deg, #4a4780, #8b85c1);
-      color: white;
-      padding: 14px 28px;
-      border-radius: 14px;
-      font-weight: 800;
-      font-size: 1rem;
-      transition: all 0.2s;
-      border: none;
-      cursor: pointer;
-      font-family: 'Sarabun', sans-serif;
+      color: white; padding: 14px 28px; border-radius: 14px;
+      font-weight: 800; font-size: 1rem; transition: all 0.2s;
+      border: none; cursor: pointer; font-family: 'Sarabun', sans-serif;
     }
-    .btn-primary:hover {
-      background: linear-gradient(135deg, #3d3a70, #7a74b0);
-      transform: translateY(-1px);
-      box-shadow: 0 8px 20px rgba(74, 71, 128, 0.4);
-    }
+    .btn-primary:hover { background: linear-gradient(135deg, #3d3a70, #7a74b0); transform: translateY(-1px); }
     .btn-primary:active { transform: scale(0.97); }
     .freq-radio:checked + label {
       background: linear-gradient(135deg, #4a4780, #8b85c1);
-      color: white;
-      border-color: #4a4780;
-      transform: scale(1.02);
-      box-shadow: 0 4px 12px rgba(74, 71, 128, 0.3);
+      color: white; border-color: #4a4780;
+      transform: scale(1.02); box-shadow: 0 4px 12px rgba(74,71,128,0.3);
     }
     .highlight-box {
       background: linear-gradient(135deg, #1e1b3a, #4a4780);
-      border-radius: 24px;
-      padding: 32px;
-      color: white;
+      border-radius: 24px; padding: 32px; color: white;
     }
     .nav-btn {
-      font-size: 0.7rem;
-      font-weight: 800;
-      padding: 6px 14px;
-      border-radius: 10px;
-      border: 2px solid;
-      background: white;
-      cursor: pointer;
-      transition: all 0.2s;
-      text-decoration: none;
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
+      font-size: 0.7rem; font-weight: 800; padding: 6px 14px;
+      border-radius: 10px; border: 2px solid; background: white;
+      cursor: pointer; transition: all 0.2s; text-decoration: none;
+      display: inline-flex; align-items: center; gap: 4px;
     }
     .hidden { display: none; }
     @keyframes spin { to { transform: rotate(360deg); } }
     .spinner {
-      display: inline-block;
-      width: 16px; height: 16px;
-      border: 3px solid rgba(255,255,255,0.3);
-      border-top-color: white;
-      border-radius: 50%;
-      animation: spin 0.8s linear infinite;
-      vertical-align: middle;
-      margin-right: 6px;
+      display: inline-block; width: 16px; height: 16px;
+      border: 3px solid rgba(255,255,255,0.3); border-top-color: white;
+      border-radius: 50%; animation: spin 0.8s linear infinite;
+      vertical-align: middle; margin-right: 6px;
     }
     .unit-badge {
       display: inline-block;
       background: linear-gradient(135deg, #8b85c1, #c4a8cb);
-      color: white;
-      padding: 4px 14px;
-      border-radius: 20px;
-      font-size: 0.85rem;
-      font-weight: 800;
-      white-space: nowrap;
+      color: white; padding: 4px 14px; border-radius: 20px;
+      font-size: 0.85rem; font-weight: 800; white-space: nowrap;
     }
     .ward-dropdown::-webkit-scrollbar { width: 4px; }
     .ward-dropdown::-webkit-scrollbar-track { background: #f0eef8; }
@@ -155,72 +85,64 @@
     .demo-badge {
       display: inline-block;
       background: linear-gradient(135deg, #f59e0b, #fbbf24);
-      color: #1e1b3a;
-      font-size: 0.6rem;
-      font-weight: 900;
-      padding: 2px 8px;
-      border-radius: 20px;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      vertical-align: middle;
-      margin-left: 4px;
+      color: #1e1b3a; font-size: 0.6rem; font-weight: 900;
+      padding: 2px 8px; border-radius: 20px; letter-spacing: 0.1em;
+      text-transform: uppercase; vertical-align: middle; margin-left: 4px;
     }
-
-    /* LOT Number Display */
+    /* LOT Display */
     .lot-display {
       background: linear-gradient(135deg, #0f0d1f, #1e1b3a);
-      border: 2px solid #4a4780;
-      border-radius: 20px;
-      padding: 24px;
-      text-align: center;
-      position: relative;
-      overflow: hidden;
+      border: 2px solid #4a4780; border-radius: 20px;
+      padding: 24px; text-align: center; position: relative; overflow: hidden;
     }
     .lot-display::before {
-      content: '';
-      position: absolute;
-      top: -50%;
-      left: -50%;
-      width: 200%;
-      height: 200%;
+      content: ''; position: absolute; top: -50%; left: -50%;
+      width: 200%; height: 200%;
       background: radial-gradient(circle, rgba(139,133,193,0.08) 0%, transparent 60%);
       pointer-events: none;
     }
     .lot-number-text {
-      font-family: 'Courier New', monospace;
-      font-size: 2.5rem;
-      font-weight: 900;
-      letter-spacing: 0.15em;
+      font-family: 'Courier New', monospace; font-size: 2.5rem;
+      font-weight: 900; letter-spacing: 0.15em;
       background: linear-gradient(135deg, #c4a8cb, #e8c4d8, #8b85c1);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
       background-clip: text;
     }
-    @keyframes lotPulse {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.6; }
-    }
-    .lot-loading {
-      animation: lotPulse 1.2s ease-in-out infinite;
-      color: #8b85c1;
+    @keyframes lotPulse { 0%,100% { opacity:1; } 50% { opacity:0.6; } }
+    .lot-loading { animation: lotPulse 1.2s ease-in-out infinite; color: #8b85c1; }
+    .lot-pill {
+      display: inline-flex; flex-direction: column; align-items: center;
+      padding: 8px 16px; border-radius: 12px;
+      background: rgba(139,133,193,0.15); border: 1px solid rgba(139,133,193,0.3);
     }
 
-    /* LOT breakdown pills */
-    .lot-pill {
-      display: inline-flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 8px 16px;
-      border-radius: 12px;
-      background: rgba(139,133,193,0.15);
-      border: 1px solid rgba(139,133,193,0.3);
+    /* Warning box ที่ดึงจาก product */
+    .auto-warning-box {
+      border-radius: 14px; padding: 12px 16px;
+      border: 2px solid #fcd34d;
+      background: linear-gradient(135deg, #fffbeb, #fef9ee);
+      display: flex; align-items: flex-start; gap: 10px;
+    }
+    .auto-warning-box .warning-icon { font-size: 1.2rem; flex-shrink: 0; margin-top: 1px; }
+    .auto-warning-badge {
+      display: inline-block; font-size: 0.6rem; font-weight: 900;
+      padding: 2px 7px; border-radius: 20px;
+      background: linear-gradient(135deg, #f59e0b, #fbbf24);
+      color: white; letter-spacing: 0.08em; text-transform: uppercase;
+      vertical-align: middle; margin-left: 6px;
+    }
+
+    /* Next appointment date highlight */
+    .appt-highlight {
+      background: linear-gradient(135deg, #eff6ff, #f0eef8);
+      border: 2px solid #c4b5fd; border-radius: 14px; padding: 12px 16px;
     }
   </style>
 </head>
 <body class="p-4 md:p-8">
 
   <!-- ========================================= -->
-  <!-- 🔐 LOGIN PAGE                             -->
+  <!-- 🔐 LOGIN PAGE -->
   <!-- ========================================= -->
   <div id="loginPage" class="min-h-[90vh] flex items-center justify-center">
     <div class="max-w-md w-full bg-white p-10 rounded-3xl shadow-2xl border border-purple-100 text-center">
@@ -229,14 +151,14 @@
            style="background: linear-gradient(135deg, #1e1b3a, #8b85c1);">
         <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-            d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+            d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
         </svg>
       </div>
 
-      <h1 class="text-2xl font-black mb-1 uppercase tracking-tight" style="color: #1e1b3a;">
+      <h1 class="text-2xl font-black mb-1 uppercase tracking-tight" style="color:#1e1b3a;">
         ระบบยาเฉพาะราย
       </h1>
-      <p class="text-sm font-semibold mb-2" style="color: #8b85c1;">
+      <p class="text-sm font-semibold mb-2" style="color:#8b85c1;">
         Extemporaneous Preparation System
       </p>
       <p class="text-xs font-bold mb-6 text-gray-400 uppercase tracking-widest">
@@ -261,50 +183,36 @@
           เข้าสู่ระบบ 🚀
         </button>
       </form>
-
       <p class="text-[10px] text-gray-300 mt-6 font-bold">Demo: admin / 1234</p>
     </div>
   </div>
 
 
   <!-- ========================================= -->
-  <!-- 🏠 MAIN APP                               -->
+  <!-- 🏠 MAIN APP -->
   <!-- ========================================= -->
   <div id="mainApp" class="max-w-4xl mx-auto hidden">
 
     <!-- Top Bar -->
     <div class="flex flex-wrap items-center gap-2 mb-4">
       <span class="text-xs font-bold text-purple-200 uppercase tracking-tight">ผู้บันทึก:</span>
-      <span id="displayUserName"
-        class="text-sm font-black px-3 py-1 bg-white rounded-xl shadow-sm"
-        style="color: #4a4780;"></span>
+      <span id="displayUserName" class="text-sm font-black px-3 py-1 bg-white rounded-xl shadow-sm" style="color:#4a4780;"></span>
       <span id="demoBadge" class="demo-badge hidden">Demo Mode</span>
-
       <div class="flex gap-2 ml-auto flex-wrap">
-        <a href="dashboard.html" class="nav-btn" style="color: #4a4780; border-color: #c4a8cb;">
-          📊 Dashboard
-        </a>
-        <a href="productlist.html" class="nav-btn" style="color: #8b85c1; border-color: #8b85c1;">
-          💊 จัดการรายการยา
-        </a>
-        <button onclick="logout()"
-          class="text-[10px] font-black text-red-400 hover:text-red-600 uppercase underline ml-1">
-          Logout
-        </button>
+        <a href="dashboard.html" class="nav-btn" style="color:#4a4780; border-color:#c4a8cb;">📊 Dashboard</a>
+        <a href="productlist.html" class="nav-btn" style="color:#8b85c1; border-color:#8b85c1;">💊 จัดการรายการยา</a>
+        <button onclick="logout()" class="text-[10px] font-black text-red-400 hover:text-red-600 uppercase underline ml-1">Logout</button>
       </div>
     </div>
 
-
     <div class="space-y-6">
 
-      <!-- ===== HEADER ===== -->
+      <!-- HEADER -->
       <header class="gradient-header p-8 rounded-3xl shadow-xl">
         <div class="flex justify-between items-center text-white">
           <div>
             <h1 class="text-2xl font-black uppercase tracking-tight">💊 ระบบยาเฉพาะราย</h1>
-            <p class="text-base font-medium opacity-80 mt-1">
-              Extemporaneous Preparation · Srinagarind
-            </p>
+            <p class="text-base font-medium opacity-80 mt-1">Extemporaneous Preparation · Srinagarind</p>
           </div>
           <button onclick="location.reload()"
             class="text-xs bg-white/20 px-3 py-2 rounded-xl hover:bg-white/30 text-white border border-white/20 font-bold">
@@ -318,6 +226,7 @@
       <section class="bg-white p-6 rounded-2xl card-shadow space-y-4">
         <h2 class="section-title">📋 ข้อมูลทั่วไป</h2>
 
+        <!-- Row 1: วันที่ HN ชื่อ Ward -->
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           <div>
             <label class="field-label">วันที่ Order</label>
@@ -336,14 +245,14 @@
           <div class="relative">
             <label class="field-label">Ward</label>
             <input type="text" id="wardInput" placeholder="ค้นหา Ward..."
-              class="input-field"
-              onfocus="showWards()" oninput="filterWards()" autocomplete="off">
+              class="input-field" onfocus="showWards()" oninput="filterWards()" autocomplete="off">
             <div id="wardList"
               class="hidden absolute left-0 right-0 mt-1 bg-white border border-purple-100 rounded-xl shadow-2xl ward-dropdown"
               style="z-index:100;"></div>
           </div>
         </div>
 
+        <!-- Row 2: อายุ น้ำหนัก วันนัดถัดไป -->
         <div class="grid grid-cols-2 md:grid-cols-4 gap-4 pt-3 border-t border-purple-50">
           <div>
             <label class="field-label">อายุ</label>
@@ -361,9 +270,19 @@
               <span class="absolute right-3 top-2.5 text-xs font-black" style="color:#c4a8cb;">kg</span>
             </div>
           </div>
+
+          <!-- วันนัดถัดไป — span 2 cols on md -->
           <div class="col-span-2">
-            <label class="field-label">โรคประจำตัว / หมายเหตุ</label>
-            <input type="text" id="patientNote" placeholder="ระบุ (ถ้ามี)" class="input-field">
+            <label class="field-label">
+              📅 วันนัดถัดไป
+              <span class="normal-case font-normal text-[10px] ml-1" style="color:#c4a8cb;">(Next Appointment)</span>
+            </label>
+            <div class="appt-highlight flex items-center gap-3">
+              <span class="text-lg">📅</span>
+              <input type="date" id="nextAppointment" class="input-field" style="background:transparent; border-color:transparent; padding:4px 8px; flex:1;"
+                onchange="onNextApptChange()">
+              <span id="nextApptDisplay" class="text-xs font-black whitespace-nowrap" style="color:#4a4780;"></span>
+            </div>
           </div>
         </div>
 
@@ -383,14 +302,12 @@
 
 
       <!-- ===== SECTION 2: เลือกผลิตภัณฑ์ ===== -->
-      <section class="bg-white p-6 rounded-2xl card-shadow space-y-5 border-t-8"
-               style="border-color: #8b85c1;">
+      <section class="bg-white p-6 rounded-2xl card-shadow space-y-5 border-t-8" style="border-color:#8b85c1;">
         <h2 class="section-title">📦 เลือกผลิตภัณฑ์</h2>
 
         <div>
           <label class="field-label">รายการยา</label>
-          <select id="productSelect" class="select-field text-base font-black"
-                  onchange="onProductChange()">
+          <select id="productSelect" class="select-field text-base font-black" onchange="onProductChange()">
             <option value="">-- กรุณาเลือกรายการยา --</option>
           </select>
           <p id="product-loading" class="text-xs font-bold mt-1 ml-1" style="color:#8b85c1;">
@@ -399,9 +316,8 @@
         </div>
 
         <!-- Product Info Card -->
-        <div id="productInfoCard" class="hidden rounded-2xl p-4 border-2"
-             style="background:#fdf8fc; border-color:#e8c4d8;">
-          <div class="grid grid-cols-2 md:grid-cols-4 gap-3 text-center">
+        <div id="productInfoCard" class="hidden rounded-2xl p-4 border-2" style="background:#fdf8fc; border-color:#e8c4d8;">
+          <div class="grid grid-cols-2 md:grid-cols-5 gap-3 text-center">
             <div class="p-3 bg-white rounded-xl border" style="border-color:#e8c4d8;">
               <div class="text-[10px] font-black uppercase" style="color:#8b85c1;">ชื่อสามัญ</div>
               <div id="info-generic" class="text-sm font-black mt-1" style="color:#1e1b3a;">-</div>
@@ -420,9 +336,14 @@
                 <span id="info-expiry-days">-</span> วัน
               </div>
             </div>
+            <div class="p-3 bg-white rounded-xl border" style="border-color:#e8c4d8;">
+              <div class="text-[10px] font-black uppercase" style="color:#8b85c1;">เก็บที่</div>
+              <div id="info-storage" class="text-sm font-black mt-1" style="color:#4a4780;">-</div>
+            </div>
           </div>
         </div>
 
+        <!-- จำนวนวัตถุดิบ -->
         <div>
           <label class="field-label">จำนวนยาวัตถุดิบที่ใช้</label>
           <div class="flex items-center gap-3">
@@ -431,9 +352,7 @@
               style="max-width:160px; color:#4a4780;">
             <span id="rawUnitBadge" class="unit-badge">—</span>
           </div>
-          <p class="text-xs font-bold mt-1" style="color:#c4a8cb;">
-            * หน่วยจะปรับตามผลิตภัณฑ์ที่เลือก
-          </p>
+          <p class="text-xs font-bold mt-1" style="color:#c4a8cb;">* หน่วยจะปรับตามผลิตภัณฑ์ที่เลือก</p>
         </div>
       </section>
 
@@ -449,7 +368,8 @@
               <input type="number" id="prepVolume" placeholder="0" step="1"
                 class="input-field text-3xl font-black text-center"
                 style="color:#4a4780;" oninput="updateSummary()">
-              <span class="font-black text-xl" style="color:#8b85c1;">ml</span>
+              <!-- หน่วยดึงจาก product -->
+              <span id="prepVolumeUnit" class="font-black text-xl" style="color:#8b85c1;">ml</span>
             </div>
           </div>
           <div>
@@ -459,13 +379,12 @@
               <button onclick="changePrepCount(-1)"
                 class="w-12 h-12 bg-white rounded-full shadow-md text-2xl font-black transition-all active:scale-90"
                 style="color:#8b85c1; border:2px solid #e8c4d8;">−</button>
-              <span id="prepCountDisplay"
-                class="text-4xl font-black w-16 text-center"
-                style="color:#1e1b3a;">1</span>
+              <span id="prepCountDisplay" class="text-4xl font-black w-16 text-center" style="color:#1e1b3a;">1</span>
               <button onclick="changePrepCount(1)"
                 class="w-12 h-12 bg-white rounded-full shadow-md text-2xl font-black transition-all active:scale-90"
                 style="color:#8b85c1; border:2px solid #e8c4d8;">+</button>
               <input type="hidden" id="prepCount" value="1">
+              <!-- หน่วย package ดึงจาก product -->
               <span id="prepCountUnit" class="font-black ml-2 text-lg" style="color:#8b85c1;">ขวด</span>
             </div>
           </div>
@@ -477,11 +396,11 @@
       <section class="bg-white p-6 rounded-2xl card-shadow space-y-5">
         <h2 class="section-title">📝 วิธีบริหารยา</h2>
 
+        <!-- Frequency Presets -->
         <div>
           <label class="field-label mb-3 block">เลือกความถี่ในการใช้ยา</label>
-
-          <!-- Row 1 -->
           <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+
             <input type="radio" name="freq" id="freq-1x1-hs" value="1x1 hs" class="hidden freq-radio">
             <label for="freq-1x1-hs"
               class="flex flex-col items-center justify-center p-3 border-2 rounded-xl cursor-pointer font-bold transition-all text-center"
@@ -515,8 +434,8 @@
             </label>
           </div>
 
-          <!-- Row 2 -->
           <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mt-3">
+
             <input type="radio" name="freq" id="freq-1x2-ac" value="1x2 ac" class="hidden freq-radio">
             <label for="freq-1x2-ac"
               class="flex flex-col items-center justify-center p-3 border-2 rounded-xl cursor-pointer font-bold transition-all text-center"
@@ -552,18 +471,20 @@
         </div>
 
         <!-- Sig Input -->
-        <div class="rounded-2xl p-5 border-2 space-y-4"
-             style="background:#fdf8fc; border-color:#e8c4d8;">
-          <p class="text-xs font-black uppercase tracking-widest" style="color:#8b85c1;">
-            📋 รายละเอียดวิธีใช้ยา
-          </p>
+        <div class="rounded-2xl p-5 border-2 space-y-4" style="background:#fdf8fc; border-color:#e8c4d8;">
+          <p class="text-xs font-black uppercase tracking-widest" style="color:#8b85c1;">📋 รายละเอียดวิธีใช้ยา</p>
+
+          <!-- ครั้งละ -->
           <div class="flex items-center gap-3 flex-wrap">
             <span class="text-sm font-bold whitespace-nowrap" style="color:#4a4780;">รับประทานครั้งละ</span>
             <input type="number" id="dosePerTime" placeholder="0" step="0.5"
               class="input-field text-xl font-black text-center"
               style="max-width:100px; color:#4a4780;" oninput="buildSigText()">
-            <span class="text-sm font-bold" style="color:#4a4780;">ml</span>
+            <!-- หน่วยดึงจาก product -->
+            <span id="doseUnit" class="text-sm font-black" style="color:#4a4780;">ml</span>
           </div>
+
+          <!-- วันละ -->
           <div class="flex items-center gap-3 flex-wrap">
             <span class="text-sm font-bold whitespace-nowrap" style="color:#4a4780;">วันละ</span>
             <input type="number" id="timesPerDay" placeholder="0" min="1" max="6"
@@ -573,35 +494,53 @@
             <input type="text" id="timingText" placeholder="เช่น หลังอาหาร, ก่อนนอน"
               class="input-field" style="flex:1; min-width:180px;" oninput="buildSigText()">
           </div>
+
+          <!-- Preview -->
           <div class="p-4 rounded-xl border-2 border-dashed" style="border-color:#c4a8cb;">
-            <p class="text-[10px] font-black uppercase mb-2" style="color:#c4a8cb;">
-              👁️ Preview คำสั่งยาบนฉลาก:
-            </p>
+            <p class="text-[10px] font-black uppercase mb-2" style="color:#c4a8cb;">👁️ Preview คำสั่งยาบนฉลาก:</p>
             <p id="sigPreview" class="text-base font-black leading-relaxed" style="color:#1e1b3a;">
               — กรุณากรอกข้อมูลวิธีใช้ยา —
             </p>
           </div>
         </div>
 
+        <!-- ⚠️ คำเตือนบนฉลาก — ดึงจาก Product -->
         <div>
-          <label class="field-label">⚠️ คำเตือน / หมายเหตุบนฉลาก</label>
+          <label class="field-label">
+            ⚠️ คำเตือน / หมายเหตุบนฉลาก
+          </label>
+
+          <!-- Auto-filled warning box (แสดงเมื่อมีข้อมูลจาก product) -->
+          <div id="autoWarningBox" class="auto-warning-box mb-3 hidden">
+            <span class="warning-icon">⚠️</span>
+            <div class="flex-1">
+              <div class="text-[10px] font-black uppercase mb-1" style="color:#b45309;">
+                ดึงอัตโนมัติจากรายการยา
+                <span class="auto-warning-badge">Auto</span>
+              </div>
+              <div id="autoWarningText" class="text-sm font-bold" style="color:#1e1b3a;"></div>
+            </div>
+          </div>
+
+          <!-- Textarea สำหรับแก้ไข / เพิ่มเติม -->
           <textarea id="labelWarning" rows="2"
-            placeholder="เช่น เขย่าขวดก่อนใช้, เก็บในตู้เย็น, ระวังแสง"
+            placeholder="คำเตือนจะถูกดึงมาจากรายการยาอัตโนมัติ หรือพิมพ์เพิ่มเติมได้เลยค่ะ"
             class="input-field resize-none" oninput="buildSigText()"></textarea>
+          <p class="text-[10px] font-bold mt-1 ml-1" style="color:#c4a8cb;">
+            💡 แก้ไขหรือเพิ่มเติมคำเตือนได้ที่ช่องนี้ค่ะ
+          </p>
         </div>
       </section>
 
 
-      <!-- ===== SECTION 5: LOT Number + Summary + Save ===== -->
+      <!-- ===== SECTION 5: LOT + Summary + Save ===== -->
       <section class="highlight-box shadow-2xl border-b-[12px]" style="border-color:#4a4780;">
 
-        <!-- Summary Grid -->
+        <!-- Summary -->
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6 text-center">
           <div class="bg-white/10 p-4 rounded-2xl border border-white/20">
             <div class="text-purple-200 text-xs font-black uppercase tracking-wider mb-2">ผลิตภัณฑ์</div>
-            <div id="sum-product" class="text-base font-black text-white leading-tight">
-              — ยังไม่ได้เลือก —
-            </div>
+            <div id="sum-product" class="text-base font-black text-white leading-tight">— ยังไม่ได้เลือก —</div>
           </div>
           <div class="bg-white/10 p-4 rounded-2xl border border-white/20">
             <div class="text-purple-200 text-xs font-black uppercase tracking-wider mb-2">ปริมาตร × จำนวน</div>
@@ -609,31 +548,21 @@
               <span id="sum-volume">0</span>
               <span class="text-lg text-purple-300"> ml × </span>
               <span id="sum-count">1</span>
-              <span class="text-lg text-purple-300"> ขวด</span>
+              <span id="sum-pkg-unit" class="text-lg text-purple-300"> ขวด</span>
             </div>
           </div>
           <div class="bg-white/10 p-4 rounded-2xl border border-white/20">
             <div class="text-purple-200 text-xs font-black uppercase tracking-wider mb-2">วิธีใช้</div>
-            <div id="sum-sig" class="text-sm font-black text-white leading-snug">
-              — ยังไม่ได้ระบุ —
-            </div>
+            <div id="sum-sig" class="text-sm font-black text-white leading-snug">— ยังไม่ได้ระบุ —</div>
           </div>
         </div>
 
-        <!-- ===== LOT NUMBER DISPLAY ===== -->
+        <!-- LOT Number Display -->
         <div class="lot-display mb-6">
-
-          <p class="text-[10px] font-black uppercase tracking-[0.25em] mb-3"
-             style="color:#8b85c1;">
+          <p class="text-[10px] font-black uppercase tracking-[0.25em] mb-3" style="color:#8b85c1;">
             🏷️ Lot Number (Auto Generated)
           </p>
-
-          <!-- ตัวเลข LOT หลัก -->
-          <div id="lotDisplay" class="lot-number-text mb-4">
-            ET______
-          </div>
-
-          <!-- LOT breakdown -->
+          <div id="lotDisplay" class="lot-number-text mb-4">ET______</div>
           <div class="flex justify-center gap-3 flex-wrap mt-2">
             <div class="lot-pill">
               <span class="text-[10px] font-black uppercase" style="color:#8b85c1;">Prefix</span>
@@ -652,13 +581,7 @@
               <span id="lot-seq" class="text-sm font-black text-white mt-1">___</span>
             </div>
           </div>
-
-          <!-- Status -->
-          <p id="lot-status" class="text-xs font-bold mt-3" style="color:#8b85c1;">
-            ⏳ รอโหลดลำดับจาก Server...
-          </p>
-
-          <!-- Hidden input เก็บค่า LOT -->
+          <p id="lot-status" class="text-xs font-bold mt-3" style="color:#8b85c1;">⏳ รอโหลดลำดับจาก Server...</p>
           <input type="hidden" id="lotNumber" value="">
         </div>
 
@@ -668,7 +591,6 @@
           style="background: linear-gradient(135deg, #8b85c1, #c4a8cb); color:white; font-family:'Sarabun',sans-serif;">
           💾 บันทึกและพิมพ์ฉลาก
         </button>
-
       </section>
 
       <p class="text-center text-purple-200 text-[10px] py-10 uppercase font-black tracking-[0.2em]">
@@ -680,192 +602,165 @@
 
 
   <!-- ========================================= -->
-  <!-- 📜 JAVASCRIPT                             -->
+  <!-- JAVASCRIPT -->
   <!-- ========================================= -->
   <script>
+    const SCRIPT_URL = "https://script.google.com/macros/s/YOUR_SCRIPT_ID_HERE/exec";
 
     // =========================================
-    // ⚙️ CONFIG
-    // =========================================
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzbnYSw8D9ZdTmrX8as_SBUbkhNXaa32jd-giE4qFgyflhYmLLkSPbQV5eAdDp43N-X/exec";
-
-
-    // =========================================
-    // 🔐 LOGIN — Dual Mode
+    // 🔐 LOGIN
     // =========================================
     async function handleLogin(e) {
       if (e) e.preventDefault();
-
-      const u = document.getElementById('username').value.trim();
-      const p = document.getElementById('password').value.trim();
+      const u   = document.getElementById('username').value.trim();
+      const p   = document.getElementById('password').value.trim();
       const btn = document.getElementById('loginBtn');
-      const errMsg = document.getElementById('loginError');
+      const err = document.getElementById('loginError');
 
       if (!u || !p) {
-        errMsg.textContent = "⚠️ กรุณากรอกรหัสพนักงานและ Password ค่ะ";
-        errMsg.classList.remove('hidden');
-        return;
+        err.textContent = "⚠️ กรุณากรอกรหัสพนักงานและ Password ค่ะ";
+        err.classList.remove('hidden'); return;
       }
 
       btn.disabled = true;
       btn.innerHTML = `<span class="spinner"></span> กำลังตรวจสอบ...`;
-      errMsg.classList.add('hidden');
+      err.classList.add('hidden');
 
-      // ✅ ทางที่ 1: Admin Local (Demo Mode)
+      // Demo mode
       if (u === "admin" && p === "1234") {
         sessionStorage.setItem('rxUser', 'Admin');
         sessionStorage.setItem('rxDemoMode', 'true');
-        showMainApp();
-        return;
+        showMainApp(); return;
       }
 
-      // ✅ ทางที่ 2: Google Apps Script
       try {
-        const formData = new URLSearchParams();
-        formData.append("action", "login");
-        formData.append("username", u);
-        formData.append("password", p);
-
-        const response = await fetch(SCRIPT_URL, { method: 'POST', body: formData });
-        const result = await response.json();
-
+        const fd = new URLSearchParams();
+        fd.append("action","login"); fd.append("username",u); fd.append("password",p);
+        const res    = await fetch(SCRIPT_URL, { method:'POST', body:fd });
+        const result = await res.json();
         if (result.success) {
           sessionStorage.setItem('rxUser', result.name);
           sessionStorage.setItem('rxDemoMode', 'false');
           showMainApp();
         } else {
-          showLoginError(errMsg, btn, "❌ รหัสผิดพลาด กรุณาตรวจสอบอีกครั้งค่ะ");
+          err.textContent = "❌ รหัสผิดพลาด กรุณาตรวจสอบอีกครั้งค่ะ";
+          err.classList.remove('hidden');
+          btn.disabled = false;
+          btn.innerHTML = "เข้าสู่ระบบ 🚀";
         }
-      } catch (err) {
-        showLoginError(errMsg, btn, "❌ เชื่อมต่อเซิร์ฟเวอร์ไม่ได้ กรุณาลองใหม่ค่ะ");
+      } catch (ex) {
+        err.textContent = "❌ เชื่อมต่อเซิร์ฟเวอร์ไม่ได้";
+        err.classList.remove('hidden');
+        btn.disabled = false;
+        btn.innerHTML = "เข้าสู่ระบบ 🚀";
       }
-    }
-
-    function showLoginError(errMsg, btn, text) {
-      errMsg.textContent = text;
-      errMsg.classList.remove('hidden');
-      btn.disabled = false;
-      btn.innerHTML = "เข้าสู่ระบบ 🚀";
     }
 
     function showMainApp() {
       document.getElementById('loginPage').classList.add('hidden');
       document.getElementById('mainApp').classList.remove('hidden');
-
       const isDemo = sessionStorage.getItem('rxDemoMode') === 'true';
       document.getElementById('displayUserName').textContent = sessionStorage.getItem('rxUser');
       if (isDemo) document.getElementById('demoBadge').classList.remove('hidden');
-
-      // ตั้งค่าวันที่วันนี้
       document.getElementById('orderDate').valueAsDate = new Date();
-
       fetchProductList();
-      generateLotNumber(); // 🏷️ Gen LOT ทันทีที่เปิดแอป
+      generateLotNumber();
     }
 
     function logout() { sessionStorage.clear(); location.reload(); }
-
-    window.onload = () => {
-      if (sessionStorage.getItem('rxUser')) showMainApp();
-    };
+    window.onload = () => { if (sessionStorage.getItem('rxUser')) showMainApp(); };
 
 
     // =========================================
-    // 🏷️ LOT NUMBER SYSTEM
+    // 📅 NEXT APPOINTMENT — แสดงวันไทย
     // =========================================
+    function onNextApptChange() {
+      const val     = document.getElementById('nextAppointment').value;
+      const display = document.getElementById('nextApptDisplay');
+      if (!val) { display.textContent = ''; return; }
 
-    // แปลงวันที่ AD → พ.ศ.
-    function getThaiYear2Digit(dateStr) {
-      // dateStr: "2025-06-15" หรือ Date object
-      const d = dateStr ? new Date(dateStr) : new Date();
-      const buddhistYear = d.getFullYear() + 543;
-      return String(buddhistYear).slice(-2); // เอาแค่ 2 หลักท้าย
+      const d  = new Date(val);
+      const dd = d.getDate();
+      const mm = d.getMonth() + 1;
+      const yy = d.getFullYear() + 543;
+      const months = ['','ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.',
+                      'ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'];
+
+      // คำนวณว่าอีกกี่วัน
+      const today = new Date(); today.setHours(0,0,0,0);
+      const appt  = new Date(val); appt.setHours(0,0,0,0);
+      const diff  = Math.round((appt - today) / (1000*60*60*24));
+
+      let diffText = '';
+      if (diff === 0)       diffText = '(วันนี้)';
+      else if (diff > 0)    diffText = `(อีก ${diff} วัน)`;
+      else                  diffText = `(ผ่านมา ${Math.abs(diff)} วัน)`;
+
+      display.textContent = `${dd} ${months[mm]} ${yy} ${diffText}`;
+      display.style.color = diff < 0 ? '#ef4444' : diff === 0 ? '#f59e0b' : '#4a4780';
     }
 
+
+    // =========================================
+    // 🏷️ LOT NUMBER
+    // =========================================
+    function getThaiYear2Digit(dateStr) {
+      const d = dateStr ? new Date(dateStr) : new Date();
+      return String(d.getFullYear() + 543).slice(-2);
+    }
     function getMonthStr(dateStr) {
       const d = dateStr ? new Date(dateStr) : new Date();
-      return String(d.getMonth() + 1).padStart(2, '0'); // "06"
+      return String(d.getMonth() + 1).padStart(2, '0');
     }
-
-    // สร้าง LOT prefix จากวันที่ เช่น "ET6906"
     function getLotPrefix(dateStr) {
-      const yy = getThaiYear2Digit(dateStr);
-      const mm = getMonthStr(dateStr);
-      return `ET${yy}${mm}`;
+      return `ET${getThaiYear2Digit(dateStr)}${getMonthStr(dateStr)}`;
     }
 
-    // ดึงลำดับถัดไปจาก Server
     async function fetchNextSequence(prefix) {
-      const isDemo = sessionStorage.getItem('rxDemoMode') === 'true';
-
-      if (isDemo) {
-        // Demo: สุ่มเลขระหว่าง 1-5 เพื่อจำลอง
+      if (sessionStorage.getItem('rxDemoMode') === 'true') {
         return Math.floor(Math.random() * 5) + 1;
       }
-
       try {
-        const response = await fetch(
-          `${SCRIPT_URL}?action=getNextLotSeq&prefix=${prefix}`
-        );
-        const data = await response.json();
+        const res  = await fetch(`${SCRIPT_URL}?action=getNextLotSeq&prefix=${prefix}`);
+        const data = await res.json();
         return data.nextSeq || 1;
-      } catch (e) {
-        console.warn("ดึง LOT Seq ไม่ได้:", e);
-        return 1; // fallback
-      }
+      } catch(e) { return 1; }
     }
 
-    // ฟังก์ชันหลัก: สร้าง LOT Number
     async function generateLotNumber(dateStr) {
       const lotDisplay = document.getElementById('lotDisplay');
       const lotStatus  = document.getElementById('lot-status');
       const lotInput   = document.getElementById('lotNumber');
-      const lotYear    = document.getElementById('lot-year');
-      const lotMonth   = document.getElementById('lot-month');
-      const lotSeq     = document.getElementById('lot-seq');
 
-      // ใช้วันที่จาก input ถ้ามี
       const selectedDate = dateStr || document.getElementById('orderDate')?.value || null;
-
       const prefix = getLotPrefix(selectedDate);
       const yy = getThaiYear2Digit(selectedDate);
       const mm = getMonthStr(selectedDate);
 
-      // แสดง loading
       lotDisplay.textContent = `${prefix}...`;
       lotDisplay.classList.add('lot-loading');
-      lotStatus.textContent = "⏳ กำลังโหลดลำดับจาก Server...";
-      lotStatus.style.color = "#8b85c1";
+      lotStatus.textContent = "⏳ กำลังโหลดลำดับ...";
 
-      // ดึงลำดับ
-      const seq = await fetchNextSequence(prefix);
-      const seqStr = String(seq).padStart(3, '0'); // "001"
-
+      const seq    = await fetchNextSequence(prefix);
+      const seqStr = String(seq).padStart(3, '0');
       const fullLot = `${prefix}${seqStr}`;
 
-      // อัพเดท UI
       lotDisplay.textContent = fullLot;
       lotDisplay.classList.remove('lot-loading');
-
-      lotYear.textContent  = yy;
-      lotMonth.textContent = mm;
-      lotSeq.textContent   = seqStr;
-
-      lotInput.value = fullLot; // เก็บค่าสำหรับ submit
+      document.getElementById('lot-year').textContent  = yy;
+      document.getElementById('lot-month').textContent = mm;
+      document.getElementById('lot-seq').textContent   = seqStr;
+      lotInput.value = fullLot;
 
       const isDemo = sessionStorage.getItem('rxDemoMode') === 'true';
-      if (isDemo) {
-        lotStatus.textContent = `⚠️ Demo Mode — LOT นี้ไม่ได้บันทึกจริง`;
-        lotStatus.style.color = "#f59e0b";
-      } else {
-        lotStatus.textContent = `✅ LOT พร้อมใช้งาน (ลำดับที่ ${seq} ของเดือนนี้)`;
-        lotStatus.style.color = "#a78bfa";
-      }
+      lotStatus.textContent = isDemo
+        ? "⚠️ Demo Mode — LOT นี้ไม่ได้บันทึกจริง"
+        : `✅ LOT พร้อมใช้งาน (ลำดับที่ ${seq} ของเดือนนี้)`;
+      lotStatus.style.color = isDemo ? "#f59e0b" : "#a78bfa";
 
       return fullLot;
     }
 
-    // เมื่อเปลี่ยนวันที่ → สร้าง LOT ใหม่
     function onDateChange() {
       const dateVal = document.getElementById('orderDate').value;
       generateLotNumber(dateVal);
@@ -876,26 +771,19 @@
     // 🏥 WARD LIST
     // =========================================
     const wards = [
-      "2ก","2ข","2ค","2ง","2จ","2ฉ",
-      "3ก","3ข","3ค","3ง","3จ","3ฉ",
-      "4ก","4ข","4ค","4ง","4จ","4ฉ",
-      "5ก","5ข","5ค","5ง","5จ","5ฉ",
+      "2ก","2ข","2ค","2ง","2จ","2ฉ","3ก","3ข","3ค","3ง","3จ","3ฉ",
+      "4ก","4ข","4ค","4ง","4จ","4ฉ","5ก","5ข","5ค","5ง","5จ","5ฉ",
       "6ก","6ข","6ค","6ง","6จ","6ฉ",
       "8A (ACRO)","AE1","AE2","AE3","AE4","Burn Unit",
-      "CCU","CVT ICU","LR",
-      "MICU 1","MICU 2","MICU 3","NSICU","NICU","PICU","SCTU",
-      "SICU 1","SICU 2","SICU 3",
+      "CCU","CVT ICU","LR","MICU 1","MICU 2","MICU 3",
+      "NSICU","NICU","PICU","SCTU","SICU 1","SICU 2","SICU 3",
       "IMC 2ง","IMC 3ข","IMC 3จ","IMC 4ก","IMC 4ข","IMC 4ค",
       "กว.6/1","กว.6/2","กว.7/1","กว.7/2",
       "สว.1/8B","สว.1/8C","สว.1/9A","สว.1/9B","สว.1/9C",
       "สว.1/11","สว.1/12","สว.1/13","สว.1/14","สว.1/15",
       "จิตเวช","สงฆ์อาพาธ","Nursing Home","OPD"
     ];
-
-    function showWards() {
-      document.getElementById('wardList').classList.remove('hidden');
-      renderWards(wards);
-    }
+    function showWards() { document.getElementById('wardList').classList.remove('hidden'); renderWards(wards); }
     function renderWards(items) {
       document.getElementById('wardList').innerHTML = items.map(w =>
         `<div class="p-3 hover:bg-purple-50 cursor-pointer border-b border-purple-50 font-black text-center text-sm"
@@ -910,12 +798,10 @@
       document.getElementById('wardInput').value = w;
       document.getElementById('wardList').classList.add('hidden');
     }
-    document.addEventListener('click', function(e) {
-      const wardList  = document.getElementById('wardList');
-      const wardInput = document.getElementById('wardInput');
-      if (wardList && !wardList.contains(e.target) && e.target !== wardInput) {
-        wardList.classList.add('hidden');
-      }
+    document.addEventListener('click', e => {
+      const wl = document.getElementById('wardList');
+      const wi = document.getElementById('wardInput');
+      if (wl && !wl.contains(e.target) && e.target !== wi) wl.classList.add('hidden');
     });
 
 
@@ -926,36 +812,77 @@
 
     async function fetchProductList() {
       const loadingMsg = document.getElementById('product-loading');
-      const isDemo = sessionStorage.getItem('rxDemoMode') === 'true';
+      const isDemo     = sessionStorage.getItem('rxDemoMode') === 'true';
 
       if (isDemo) {
-        const demoData = [
-          { id:"1", genericName:"Omeprazole",    brandName:"Losec",   strength:"20 mg/5 ml",  unit:"Syr",  expiryDays:"30" },
-          { id:"2", genericName:"Amoxicillin",   brandName:"Amoxil",  strength:"250 mg/5 ml", unit:"Syr",  expiryDays:"14" },
-          { id:"3", genericName:"Prednisolone",  brandName:"-",       strength:"5 mg/ml",     unit:"Syr",  expiryDays:"7"  },
-          { id:"4", genericName:"Phenobarbital", brandName:"-",       strength:"3 mg/ml",     unit:"Syr",  expiryDays:"14" },
-          { id:"5", genericName:"Metronidazole", brandName:"Flagyl",  strength:"40 mg/ml",    unit:"Syr",  expiryDays:"30" },
+        // ✅ Demo data รองรับ field ใหม่ครบ
+        productData = [
+          {
+            id:"1", genericName:"Omeprazole",   brandName:"Losec",
+            strength:"20 mg/cap",  dosageForm:"แคปซูล",
+            outputType:"ยาน้ำแขวนตะกอน",
+            productUnit:"ml",      packageUnit:"ขวด",
+            expiryDays:"30",       storage:"ตู้เย็น (2-8°C)",
+            status:"active",
+            defaultWarning:"เขย่าขวดก่อนใช้, เก็บในตู้เย็น (2-8°C)"
+          },
+          {
+            id:"2", genericName:"Amoxicillin",  brandName:"Amoxil",
+            strength:"500 mg/cap", dosageForm:"แคปซูล",
+            outputType:"ยาน้ำแขวนตะกอน",
+            productUnit:"ml",      packageUnit:"ขวด",
+            expiryDays:"14",       storage:"ตู้เย็น (2-8°C)",
+            status:"active",
+            defaultWarning:"เขย่าขวดก่อนใช้"
+          },
+          {
+            id:"3", genericName:"Prednisolone", brandName:"-",
+            strength:"5 mg/tab",   dosageForm:"เม็ด",
+            outputType:"สารละลาย",
+            productUnit:"ml",      packageUnit:"ขวด",
+            expiryDays:"7",        storage:"อุณหภูมิห้อง",
+            status:"active",
+            defaultWarning:""
+          },
+          {
+            id:"4", genericName:"Tacrolimus",   brandName:"Prograf",
+            strength:"1 mg/cap",   dosageForm:"แคปซูล",
+            outputType:"ยาน้ำแขวนตะกอน",
+            productUnit:"ml",      packageUnit:"ขวด",
+            expiryDays:"56",       storage:"ตู้เย็น (2-8°C)",
+            status:"active",
+            defaultWarning:"เขย่าขวดก่อนใช้, เก็บในตู้เย็น (2-8°C), ป้องกันแสง"
+          },
+          {
+            id:"5", genericName:"Metronidazole",brandName:"Flagyl",
+            strength:"250 mg/tab", dosageForm:"เม็ด",
+            outputType:"ยาน้ำแขวนตะกอน",
+            productUnit:"ml",      packageUnit:"Syringe",
+            expiryDays:"30",       storage:"อุณหภูมิห้อง",
+            status:"active",
+            defaultWarning:"เขย่าขวดก่อนใช้, ป้องกันแสง"
+          },
         ];
-        productData = demoData;
-        populateProductDropdown(demoData);
-        loadingMsg.textContent = `⚠️ Demo Mode — ข้อมูลตัวอย่าง (${demoData.length} รายการ)`;
+        populateProductDropdown(productData);
+        loadingMsg.textContent = `⚠️ Demo Mode — ข้อมูลตัวอย่าง (${productData.length} รายการ)`;
         loadingMsg.style.color = "#f59e0b";
         return;
       }
 
       try {
-        const response = await fetch(`${SCRIPT_URL}?action=getProductList`);
-        const data = await response.json();
+        const res  = await fetch(`${SCRIPT_URL}?action=getProductList`);
+        const data = await res.json();
         if (data && data.length > 0) {
-          productData = data;
-          populateProductDropdown(data);
-          loadingMsg.textContent = `✅ โหลดรายการยาสำเร็จ (${data.length} รายการ)`;
+          // กรองเฉพาะ active
+          productData = data.filter(p => p.status !== 'inactive');
+          populateProductDropdown(productData);
+          loadingMsg.textContent = `✅ โหลดรายการยาสำเร็จ (${productData.length} รายการ)`;
           loadingMsg.style.color = "#8b85c1";
         } else {
           loadingMsg.textContent = "⚠️ ไม่พบรายการยา";
           loadingMsg.style.color = "#c4a8cb";
         }
-      } catch (e) {
+      } catch(e) {
         loadingMsg.textContent = "❌ โหลดรายการยาไม่ได้";
         loadingMsg.style.color = "#ef4444";
       }
@@ -968,18 +895,22 @@
         const opt = document.createElement('option');
         opt.value = p.id;
         opt.textContent = `${p.genericName} (${p.brandName}) — ${p.strength}`;
-        opt.setAttribute('data-generic',  p.genericName);
-        opt.setAttribute('data-brand',    p.brandName);
-        opt.setAttribute('data-strength', p.strength);
-        opt.setAttribute('data-unit',     p.unit);
-        opt.setAttribute('data-expiry',   p.expiryDays);
+        // เก็บข้อมูลทุก field ที่ต้องใช้
+        opt.dataset.generic     = p.genericName    || '';
+        opt.dataset.brand       = p.brandName      || '';
+        opt.dataset.strength    = p.strength       || '';
+        opt.dataset.productUnit = p.productUnit    || 'ml';
+        opt.dataset.packageUnit = p.packageUnit    || 'ขวด';
+        opt.dataset.expiry      = p.expiryDays     || '';
+        opt.dataset.storage     = p.storage        || '';
+        opt.dataset.warning     = p.defaultWarning || '';
         select.appendChild(opt);
       });
     }
 
 
     // =========================================
-    // 📦 ON PRODUCT CHANGE
+    // 📦 ON PRODUCT CHANGE — ดึงค่าทุก field
     // =========================================
     function onProductChange() {
       const select   = document.getElementById('productSelect');
@@ -988,18 +919,56 @@
 
       if (!select.value) {
         infoCard.classList.add('hidden');
-        document.getElementById('rawUnitBadge').textContent = '—';
-        document.getElementById('sum-product').textContent = '— ยังไม่ได้เลือก —';
+        document.getElementById('rawUnitBadge').textContent      = '—';
+        document.getElementById('sum-product').textContent       = '— ยังไม่ได้เลือก —';
+        document.getElementById('prepVolumeUnit').textContent    = 'ml';
+        document.getElementById('prepCountUnit').textContent     = 'ขวด';
+        document.getElementById('sum-pkg-unit').textContent      = ' ขวด';
+        document.getElementById('doseUnit').textContent          = 'ml';
+        document.getElementById('autoWarningBox').classList.add('hidden');
+        document.getElementById('labelWarning').value            = '';
         return;
       }
 
+      // ดึงค่าจาก data attributes
+      const productUnit = opt.dataset.productUnit || 'ml';
+      const packageUnit = opt.dataset.packageUnit || 'ขวด';
+      const warning     = opt.dataset.warning     || '';
+      const storage     = opt.dataset.storage     || '-';
+
+      // Info card
       infoCard.classList.remove('hidden');
-      document.getElementById('info-generic').textContent      = opt.getAttribute('data-generic')  || '-';
-      document.getElementById('info-brand').textContent        = opt.getAttribute('data-brand')    || '-';
-      document.getElementById('info-strength').textContent     = opt.getAttribute('data-strength') || '-';
-      document.getElementById('info-expiry-days').textContent  = opt.getAttribute('data-expiry')   || '-';
-      document.getElementById('rawUnitBadge').textContent      = opt.getAttribute('data-unit')     || '—';
-      document.getElementById('sum-product').textContent       = opt.textContent;
+      document.getElementById('info-generic').textContent     = opt.dataset.generic   || '-';
+      document.getElementById('info-brand').textContent       = opt.dataset.brand     || '-';
+      document.getElementById('info-strength').textContent    = opt.dataset.strength  || '-';
+      document.getElementById('info-expiry-days').textContent = opt.dataset.expiry    || '-';
+      document.getElementById('info-storage').textContent     = storage;
+
+      // อัพเดทหน่วยทุกจุด
+      document.getElementById('rawUnitBadge').textContent   = opt.dataset.generic ? (opt.dataset.packageUnit || '—') : '—';
+      document.getElementById('prepVolumeUnit').textContent = productUnit;
+      document.getElementById('prepCountUnit').textContent  = packageUnit;
+      document.getElementById('sum-pkg-unit').textContent   = ` ${packageUnit}`;
+      document.getElementById('doseUnit').textContent       = productUnit;
+
+      // Summary
+      document.getElementById('sum-product').textContent = opt.textContent;
+
+      // ===== ดึงคำเตือนมาตรฐานจาก Product =====
+      const autoBox  = document.getElementById('autoWarningBox');
+      const autoText = document.getElementById('autoWarningText');
+
+      if (warning && warning.trim()) {
+        autoBox.classList.remove('hidden');
+        autoText.textContent = warning;
+        // ใส่ลง textarea ให้แก้ไขได้
+        document.getElementById('labelWarning').value = warning;
+      } else {
+        autoBox.classList.add('hidden');
+        document.getElementById('labelWarning').value = '';
+      }
+
+      buildSigText();
     }
 
 
@@ -1015,40 +984,39 @@
       const isDemo  = sessionStorage.getItem('rxDemoMode') === 'true';
 
       if (!hn) { status.innerText = ""; return; }
-
       status.innerText = "⏳ กำลังค้นหา...";
       status.style.color = "#8b85c1";
       section.classList.add('hidden');
 
       if (isDemo) {
-        status.innerText = "⚠️ Demo Mode — ไม่ค้นหา HN";
+        status.innerText = "⚠️ Demo Mode";
         status.style.color = "#f59e0b";
         return;
       }
 
       try {
-        const response = await fetch(`${SCRIPT_URL}?action=getLatestOrder&hn=${hn}`);
-        const data = await response.json();
-
+        const res  = await fetch(`${SCRIPT_URL}?action=getLatestOrder&hn=${hn}`);
+        const data = await res.json();
         if (data && data.hn) {
           cachedPatientOrder = data;
           document.getElementById('patientName').value   = data.patientName   || "";
           document.getElementById('patientAge').value    = data.patientAge    || "";
           document.getElementById('patientWeight').value = data.patientWeight || "";
-          if (data.ward) document.getElementById('wardInput').value = data.ward;
+          if (data.ward)            document.getElementById('wardInput').value       = data.ward;
+          if (data.nextAppointment) document.getElementById('nextAppointment').value = data.nextAppointment;
           status.innerText = "✅ พบข้อมูลเดิม";
           status.style.color = "#8b85c1";
           section.classList.remove('hidden');
+          onNextApptChange();
         } else {
           cachedPatientOrder = null;
           status.innerText = "🔹 คนไข้รายใหม่";
           status.style.color = "#c4a8cb";
           section.classList.add('hidden');
         }
-      } catch (e) {
+      } catch(e) {
         status.innerText = "❌ เกิดข้อผิดพลาด";
         status.style.color = "#ef4444";
-        section.classList.add('hidden');
       }
     }
 
@@ -1062,17 +1030,19 @@
       }
       onProductChange();
 
-      document.getElementById('rawAmount').value    = o.rawAmount    || "";
-      document.getElementById('prepVolume').value   = o.prepVolume   || "";
-      document.getElementById('dosePerTime').value  = o.dosePerTime  || "";
-      document.getElementById('timesPerDay').value  = o.timesPerDay  || "";
-      document.getElementById('timingText').value   = o.timingText   || "";
-      document.getElementById('labelWarning').value = o.labelWarning || "";
+      document.getElementById('rawAmount').value     = o.rawAmount        || "";
+      document.getElementById('prepVolume').value    = o.prepVolume       || "";
+      document.getElementById('dosePerTime').value   = o.dosePerTime      || "";
+      document.getElementById('timesPerDay').value   = o.timesPerDay      || "";
+      document.getElementById('timingText').value    = o.timingText       || "";
+      document.getElementById('labelWarning').value  = o.labelWarning     || "";
+      document.getElementById('nextAppointment').value = o.nextAppointment || "";
 
       const count = parseInt(o.prepCount) || 1;
       document.getElementById('prepCount').value = count;
       document.getElementById('prepCountDisplay').textContent = count;
 
+      onNextApptChange();
       buildSigText();
       updateSummary();
       alert("✅ ดึงข้อมูลเดิมสำเร็จ! กรุณาตรวจสอบก่อนบันทึกนะคะ");
@@ -1083,14 +1053,14 @@
     // 💊 FREQUENCY PRESET
     // =========================================
     const freqMap = {
-      '1x1-hs': { times: 1, timing: 'ก่อนนอน' },
-      '1x1-ac': { times: 1, timing: 'ก่อนอาหาร' },
-      '1x2-pc': { times: 2, timing: 'หลังอาหาร เช้า-เย็น' },
-      '1x3-pc': { times: 3, timing: 'หลังอาหาร เช้า-กลางวัน-เย็น' },
-      '1x2-ac': { times: 2, timing: 'ก่อนอาหาร เช้า-เย็น' },
-      '1x3-ac': { times: 3, timing: 'ก่อนอาหาร เช้า-กลางวัน-เย็น' },
-      'prn':    { times: '', timing: 'เมื่อมีอาการ' },
-      'custom': { times: '', timing: '' },
+      '1x1-hs': { times:1, timing:'ก่อนนอน' },
+      '1x1-ac': { times:1, timing:'ก่อนอาหาร' },
+      '1x2-pc': { times:2, timing:'หลังอาหาร เช้า-เย็น' },
+      '1x3-pc': { times:3, timing:'หลังอาหาร เช้า-กลางวัน-เย็น' },
+      '1x2-ac': { times:2, timing:'ก่อนอาหาร เช้า-เย็น' },
+      '1x3-ac': { times:3, timing:'ก่อนอาหาร เช้า-กลางวัน-เย็น' },
+      'prn':    { times:'', timing:'เมื่อมีอาการ' },
+      'custom': { times:'', timing:'' },
     };
 
     function applyFrequency(key) {
@@ -1107,12 +1077,13 @@
     // =========================================
     function buildSigText() {
       const dose    = document.getElementById('dosePerTime').value;
+      const unit    = document.getElementById('doseUnit').textContent;
       const times   = document.getElementById('timesPerDay').value;
       const timing  = document.getElementById('timingText').value;
       const warning = document.getElementById('labelWarning').value;
 
       let sig = "";
-      if (dose)    sig += `รับประทานครั้งละ ${dose} ml`;
+      if (dose)    sig += `รับประทานครั้งละ ${dose} ${unit}`;
       if (times)   sig += ` วันละ ${times} ครั้ง`;
       if (timing)  sig += ` ${timing}`;
       if (warning) sig += `\n⚠️ ${warning}`;
@@ -1134,15 +1105,9 @@
       document.getElementById('sum-count').textContent = newVal;
     }
 
-
-    // =========================================
-    // 📊 UPDATE SUMMARY
-    // =========================================
     function updateSummary() {
-      document.getElementById('sum-volume').textContent =
-        document.getElementById('prepVolume').value || '0';
-      document.getElementById('sum-count').textContent =
-        document.getElementById('prepCount').value || '1';
+      document.getElementById('sum-volume').textContent = document.getElementById('prepVolume').value || '0';
+      document.getElementById('sum-count').textContent  = document.getElementById('prepCount').value  || '1';
     }
 
 
@@ -1153,7 +1118,6 @@
       const saveBtn = document.getElementById('saveBtn');
       const isDemo  = sessionStorage.getItem('rxDemoMode') === 'true';
 
-      // Validation
       const hn          = document.getElementById('hn').value.trim();
       const pName       = document.getElementById('patientName').value.trim();
       const productSel  = document.getElementById('productSelect');
@@ -1161,57 +1125,47 @@
       const dosePerTime = document.getElementById('dosePerTime').value;
       const lotNumber   = document.getElementById('lotNumber').value;
 
-      if (!hn || !pName) {
-        alert("⚠️ กรุณาระบุ HN และชื่อคนไข้ค่ะ"); return;
-      }
-      if (!productSel.value) {
-        alert("⚠️ กรุณาเลือกรายการยาค่ะ"); return;
-      }
-      if (!prepVolume) {
-        alert("⚠️ กรุณาระบุปริมาตรที่ผลิตค่ะ"); return;
-      }
-      if (!dosePerTime) {
-        alert("⚠️ กรุณาระบุขนาดยาต่อครั้งค่ะ"); return;
-      }
-      if (!lotNumber) {
-        alert("⚠️ ยังไม่มีเลข LOT กรุณารอสักครู่ค่ะ"); return;
-      }
+      if (!hn || !pName)       { alert("⚠️ กรุณาระบุ HN และชื่อคนไข้ค่ะ"); return; }
+      if (!productSel.value)   { alert("⚠️ กรุณาเลือกรายการยาค่ะ"); return; }
+      if (!prepVolume)         { alert("⚠️ กรุณาระบุปริมาตรที่ผลิตค่ะ"); return; }
+      if (!dosePerTime)        { alert("⚠️ กรุณาระบุขนาดยาต่อครั้งค่ะ"); return; }
+      if (!lotNumber)          { alert("⚠️ ยังไม่มีเลข LOT กรุณารอสักครู่ค่ะ"); return; }
 
-      const v   = (id) => document.getElementById(id).value;
+      const v   = id => document.getElementById(id).value;
       const opt = productSel.options[productSel.selectedIndex];
-      const sigText = document.getElementById('sigPreview').textContent;
 
       const formData = new URLSearchParams();
-      formData.append("action",        "saveRxOrder");
-      formData.append("orderDate",     v('orderDate'));
-      formData.append("lotNumber",     lotNumber);          // 🏷️ LOT Number
-      formData.append("hn",            hn);
-      formData.append("patientName",   pName);
-      formData.append("patientAge",    v('patientAge'));
-      formData.append("patientWeight", v('patientWeight'));
-      formData.append("ward",          v('wardInput'));
-      formData.append("patientNote",   v('patientNote'));
-      formData.append("productId",     productSel.value);
-      formData.append("productName",   opt.textContent);
-      formData.append("genericName",   opt.getAttribute('data-generic'));
-      formData.append("brandName",     opt.getAttribute('data-brand'));
-      formData.append("strength",      opt.getAttribute('data-strength'));
-      formData.append("unit",          opt.getAttribute('data-unit'));
-      formData.append("expiryDays",    opt.getAttribute('data-expiry'));
-      formData.append("rawAmount",     v('rawAmount'));
-      formData.append("prepVolume",    prepVolume);
-      formData.append("prepCount",     v('prepCount'));
-      formData.append("dosePerTime",   dosePerTime);
-      formData.append("timesPerDay",   v('timesPerDay'));
-      formData.append("timingText",    v('timingText'));
-      formData.append("sigText",       sigText);
-      formData.append("labelWarning",  v('labelWarning'));
-      formData.append("recordedBy",    sessionStorage.getItem('rxUser'));
+      formData.append("action",          "saveRxOrder");
+      formData.append("orderDate",       v('orderDate'));
+      formData.append("lotNumber",       lotNumber);
+      formData.append("hn",              hn);
+      formData.append("patientName",     pName);
+      formData.append("patientAge",      v('patientAge'));
+      formData.append("patientWeight",   v('patientWeight'));
+      formData.append("ward",            v('wardInput'));
+      formData.append("nextAppointment", v('nextAppointment'));   // ✅ วันนัดใหม่
+      formData.append("productId",       productSel.value);
+      formData.append("productName",     opt.textContent);
+      formData.append("genericName",     opt.dataset.generic);
+      formData.append("brandName",       opt.dataset.brand);
+      formData.append("strength",        opt.dataset.strength);
+      formData.append("productUnit",     opt.dataset.productUnit);// ✅ หน่วย ml/g
+      formData.append("packageUnit",     opt.dataset.packageUnit);// ✅ หน่วย ขวด/ซอง
+      formData.append("expiryDays",      opt.dataset.expiry);
+      formData.append("storage",         opt.dataset.storage);
+      formData.append("rawAmount",       v('rawAmount'));
+      formData.append("prepVolume",      prepVolume);
+      formData.append("prepCount",       v('prepCount'));
+      formData.append("dosePerTime",     dosePerTime);
+      formData.append("timesPerDay",     v('timesPerDay'));
+      formData.append("timingText",      v('timingText'));
+      formData.append("sigText",         document.getElementById('sigPreview').textContent);
+      formData.append("labelWarning",    v('labelWarning'));
+      formData.append("recordedBy",      sessionStorage.getItem('rxUser'));
 
       saveBtn.disabled = true;
       saveBtn.innerHTML = `<span class="spinner"></span> กำลังบันทึก...`;
 
-      // Demo Mode
       if (isDemo) {
         await new Promise(r => setTimeout(r, 900));
         window.open("label.html?" + formData.toString(), "_blank");
@@ -1221,19 +1175,17 @@
         return;
       }
 
-      // Production Mode
       try {
-        await fetch(SCRIPT_URL, { method: 'POST', mode: 'no-cors', body: formData });
+        await fetch(SCRIPT_URL, { method:'POST', mode:'no-cors', body: formData });
         window.open("label.html?" + formData.toString(), "_blank");
         alert(`✅ บันทึกสำเร็จค่ะ!\n🏷️ LOT: ${lotNumber}`);
         location.reload();
-      } catch (e) {
+      } catch(e) {
         alert("❌ เกิดข้อผิดพลาด: " + e.message);
         saveBtn.disabled = false;
         saveBtn.innerHTML = "💾 บันทึกและพิมพ์ฉลาก";
       }
     }
-
   </script>
 </body>
 </html>
