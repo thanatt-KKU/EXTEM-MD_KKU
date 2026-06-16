@@ -264,17 +264,6 @@
             </div>
           </div>
         </div>
-
-        <div id="reorderSection" class="hidden pt-2">
-          <div class="flex items-center gap-3 p-3 rounded-xl border-2 border-dashed" style="border-color:#c4a8cb; background:#fdf8fc;">
-            <span class="text-sm font-bold" style="color:#4a4780;">✅ พบประวัติคนไข้รายนี้</span>
-            <button onclick="applyLatestOrder()"
-              class="ml-auto text-sm font-black px-4 py-2 rounded-xl border-2 transition-all active:scale-95"
-              style="background:#e8c4d8; color:#4a4780; border-color:#c4a8cb;">
-              🔄 ดึงข้อมูล Order เดิม
-            </button>
-          </div>
-        </div>
       </section>
 
 
@@ -912,48 +901,41 @@
     // =========================================
     let cachedPatientOrder = null;
 
+    // 🔄 HN LOOKUP (ดึงเฉพาะชื่อ-นามสกุล อัตโนมัติทันที)
+    // =========================================
     async function fetchPatientData() {
       const hn      = document.getElementById('hn').value.trim();
       const status  = document.getElementById('hn-status');
-      const section = document.getElementById('reorderSection');
       const isDemo  = sessionStorage.getItem('rxDemoMode') === 'true';
+      
       if (!hn) { status.innerText = ""; return; }
       status.innerText = "⏳ กำลังค้นหา...";
       status.style.color = "#8b85c1";
-      section.classList.add('hidden');
+      
       if (isDemo) { status.innerText = "⚠️ Demo Mode"; status.style.color = "#f59e0b"; return; }
+      
       try {
         const res  = await fetch(`${SCRIPT_URL}?action=getLatestOrder&hn=${hn}`);
         const data = await res.json();
+        
         if (data && data.hn) {
-          cachedPatientOrder = data;
-          document.getElementById('patientName').value   = data.patientName   || "";
-          document.getElementById('patientWeight').value = data.patientWeight || "";
-          if (data.ward)            document.getElementById('wardInput').value        = data.ward;
-          if (data.nextAppointment) document.getElementById('nextAppointment').value  = data.nextAppointment;
-          status.innerText = "✅ พบข้อมูลเดิม";
-          status.style.color = "#8b85c1";
-          section.classList.remove('hidden');
-          onNextApptChange();
+          //   ดึงเฉพาะชื่อ-นามสกุล มาใส่ในฟอร์มให้โดยอัตโนมัติ
+          document.getElementById('patientName').value = data.patientName || "";
+          
+          // (ส่วนน้ำหนัก และ Ward จะไม่ถูกดึงมา เพื่อให้ผู้ใช้งานระบุใหม่เองตามหน้างานจริง)
+          
+          status.innerText = "✅ พบประวัติคนไข้ (ดึงชื่อเรียบร้อย)";
+          status.style.color = "#10b981"; 
         } else {
-          cachedPatientOrder = null;
-          status.innerText = "🔹 คนไข้รายใหม่";
+          status.innerText = "🔹 คนไข้รายใหม่ (กรอกข้อมูลได้เลย)";
           status.style.color = "#c4a8cb";
-          section.classList.add('hidden');
         }
       } catch(e) {
-        status.innerText = "❌ เกิดข้อผิดพลาด";
+        status.innerText = "❌ เกิดข้อผิดพลาดในการเชื่อมต่อ";
         status.style.color = "#ef4444";
       }
     }
 
-    function applyLatestOrder() {
-      if (!cachedPatientOrder) return;
-      const o = cachedPatientOrder;
-      const select = document.getElementById('productSelect');
-      for (let i = 0; i < select.options.length; i++) {
-        if (select.options[i].value === o.productId) { select.selectedIndex = i; break; }
-      }
       onProductChange();
       document.getElementById('rawAmount').value       = o.rawAmount        || "";
       document.getElementById('prepVolume').value      = o.prepVolume       || "";
