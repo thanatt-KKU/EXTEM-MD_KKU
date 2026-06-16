@@ -9,7 +9,6 @@
   <style>
     * { 
       font-family: 'Sarabun', sans-serif; 
-      color: #000000 !important; 
       line-height: 1.2; 
     }
     body {
@@ -35,13 +34,20 @@
       }
     }
 
+    /* ── บังคับสไตล์เฉพาะตัวกล่องฉลากยาให้เป็น ขาว-ดำ สนิท เพื่อพิมพ์ความร้อน ── */
+    .label-box-thermal {
+      background: #ffffff !important;
+      border: 1px solid #000000 !important;
+    }
+    .label-box-thermal * {
+      color: #000000 !important; /* ตัวอักษรดำสนิทเฉพาะในสติกเกอร์ */
+    }
+
     /* ── ขนาดฉลากติดถุงและติดขวดยา (3.5x2.48 นิ้ว) ดันขอบบนลงมา 1.1 cm ── */
     .label-standard { 
       width: 3.5in; 
       height: 2.48in; 
       padding: 1.1cm 0.2in 0.15in 0.2in; 
-      background: #ffffff; 
-      border: 1px solid #000000; 
       margin: 15px auto; 
       box-sizing: border-box; 
       position: relative; 
@@ -56,8 +62,6 @@
       width: 5.0cm;
       height: 2.5cm;
       padding: 1.5mm 2mm;
-      background: #ffffff;
-      border: 1px solid #000000;
       margin: 15px auto;
       box-sizing: border-box;
       position: relative;
@@ -81,7 +85,7 @@
   <nav class="no-print sticky top-0 z-50 bg-slate-900 text-white shadow-lg py-3 px-4 mb-6">
     <div class="max-w-5xl mx-auto flex justify-between items-center">
       <button onclick="history.back()" class="flex items-center gap-2 px-4 py-2 bg-slate-700 hover:bg-slate-600 rounded-xl transition-all font-bold text-sm text-white">
-        แก้ไขข้อมูล (ย้อนกลับ)
+        <span>⬅️</span> แก้ไขข้อมูล (ย้อนกลับ)
       </button>
       <div class="text-center hidden md:block">
         <p class="text-xs font-bold text-purple-300 tracking-widest uppercase">Extemporaneous Preparation System</p>
@@ -89,10 +93,10 @@
       </div>
       <div class="flex gap-2">
         <a href="index.html" class="flex items-center gap-2 px-4 py-2 bg-indigo-600 hover:bg-indigo-500 rounded-xl transition-all font-bold text-sm text-white">
-          เพิ่มเคสใหม่
+          <span>➕</span> เพิ่มเคสใหม่
         </a>
         <a href="dashboard.html" class="flex items-center gap-2 px-4 py-2 bg-emerald-600 hover:bg-emerald-500 rounded-xl transition-all font-bold text-sm text-white">
-          Dashboard
+          <span>📊</span> Dashboard
         </a>
       </div>
     </div>
@@ -100,7 +104,7 @@
 
   <div class="max-w-4xl mx-auto py-2 px-4 no-print text-center">
     <div class="mb-6 bg-white p-4 rounded-2xl shadow-sm border border-slate-200">
-      <h1 class="text-xl font-black text-slate-800 uppercase tracking-tight">จัดการพิมพ์ฉลากยาเฉพาะราย</h1>
+      <h1 class="text-xl font-black text-slate-800 uppercase tracking-tight">🖨️ จัดการพิมพ์ฉลากยาเฉพาะราย</h1>
       <p class="text-sm text-slate-500 mt-1">
         ผู้ป่วย: <span id="topPatientInfo" class="font-black text-indigo-600">กำลังโหลดข้อมูลจากคลัง...</span>
       </p>
@@ -109,16 +113,19 @@
     <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
       
       <div id="card-bag" onclick="selectSection('bag')" class="bg-white p-5 rounded-2xl border-4 border-slate-200 cursor-pointer transition-all hover:border-indigo-400 shadow-sm">
+        <div class="text-3xl mb-1">🛍️</div>
         <h3 class="font-black text-indigo-700 text-base">1. ฉลากใหญ่ติดถุง</h3>
         <p class="text-xs text-slate-400 mt-1">พิมพ์ออกเพียง 1 ฉลาก สรุปยอด packageUnit รวม</p>
       </div>
       
       <div id="card-product" onclick="selectSection('product')" class="bg-white p-5 rounded-2xl border-4 border-slate-200 cursor-pointer transition-all hover:border-purple-400 shadow-sm">
+        <div class="text-3xl mb-1">🍾</div>
         <h3 class="font-black text-purple-700 text-base">2. ฉลากติดขวดยา / ซองยา</h3>
         <p class="text-xs text-slate-400 mt-1">พิมพ์ออกเท่ากับจำนวนขวดยาจริงที่เตรียม</p>
       </div>
 
       <div id="card-syringe" onclick="selectSection('syringe')" class="bg-white p-5 rounded-2xl border-4 border-slate-200 cursor-pointer transition-all hover:border-amber-400 shadow-sm">
+        <div class="text-3xl mb-1">💉</div>
         <h3 class="font-black text-amber-700 text-base">3. ฉลากเล็กติด Syringe</h3>
         <p class="text-xs text-slate-400 mt-1">ขนาดเล็กพิเศษ 5.0 × 2.5 cm แยกบรรทัดชื่อรองรับคนไทย</p>
       </div>
@@ -127,7 +134,7 @@
 
     <div id="action-btns" class="hidden mb-6">
       <button onclick="window.print()" class="bg-slate-900 text-white py-4 px-16 rounded-2xl font-black text-lg shadow-lg hover:bg-slate-800 hover:scale-[1.02] active:scale-[0.98] transition-all">
-        สั่งพิมพ์ฉลากที่เลือก
+        🖨️ สั่งพิมพ์ฉลากที่เลือก
       </button>
       <p class="text-xs text-slate-400 mt-2">* สามารถคลิกข้อความบนตัวอย่างฉลากด้านล่างเพื่อพิมพ์แก้ไขข้อความสดได้ก่อนพิมพ์จริงค่ะ</p>
     </div>
@@ -274,7 +281,7 @@
       const pUnit = o.productUnit || 'mL';
       const packUnit = o.packageUnit || 'ขวด';
       return `
-        <div class="label-box label-standard text-xs font-black" contenteditable="true">
+        <div class="label-box label-standard label-box-thermal text-xs font-black" contenteditable="true">
           <div class="text-center text-sm tracking-tight text-thermal-black mb-1">
             ${o.genericName}
           </div>
@@ -301,7 +308,7 @@
     function createProductLabelHTML(o) {
       const pUnit = o.productUnit || 'mL';
       return `
-        <div class="label-box label-standard text-xs font-black" contenteditable="true">
+        <div class="label-box label-standard label-box-thermal text-xs font-black" contenteditable="true">
           <div class="text-center text-sm tracking-tight text-thermal-black mb-1">
             ${o.genericName}
           </div>
@@ -324,10 +331,10 @@
       `;
     }
 
-    // 💉 3. HTML Template: ฉลากเล็กติด Syringe (ขนาดเล็กพิเศษ 5.0 x 2.5 cm ปรับเอา ward / lot ออก และแยกบรรทัดชื่อ)
+    // 💉 3. HTML Template: ฉลากเล็กติด Syringe 
     function createSyringeLabelHTML(o) {
       return `
-        <div class="label-box label-syringe text-[9px] font-black" contenteditable="true">
+        <div class="label-box label-syringe label-box-thermal text-[9px] font-black" contenteditable="true">
           <div class="border-b border-black pb-0.5 leading-none text-thermal-black">
             HN: ${o.hn}
           </div>
