@@ -142,8 +142,7 @@
 
 
   <script>
-    // URL ของ Web App API
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyAGp49vUz-7cpWrCcNogKmKbBH4WZw9OfqDj1bHptfgKcHLDSkhchLS2mEtEx_PFfP/exec";
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxJxw_4xrRedz7VA4W-wdZdD4pib8LZYjI32fEyIgw88X7_8vFhLCJjCpUVeYsoPoDf/exec";
 
     if (!sessionStorage.getItem('rxUser')) {
       alert("⚠️ กรุณาเข้าสู่ระบบในหน้าแรกก่อนนะคะ");
@@ -155,13 +154,11 @@
     document.addEventListener('DOMContentLoaded', async () => {
       const urlParams = new URLSearchParams(window.location.search);
       
-      // ✅ ตรวจสอบว่าเปิดมาจากหน้า Dashboard หรือไม่
       if (urlParams.get('fromDashboard') === 'true') {
          const lotNumber = urlParams.get('lotNumber');
          document.getElementById('topPatientInfo').innerText = `กำลังดึงข้อมูลประวัติยาของ LOT: ${lotNumber}...`;
          
          try {
-            // ดึงข้อมูลเต็มผ่าน API จากชีตหลักด้วยคีย์ LOT Number
             const response = await fetch(`${SCRIPT_URL}?action=getOrderByLot&lotNumber=${lotNumber}`);
             rxData = await response.json();
             
@@ -170,18 +167,17 @@
                return;
             }
             
-            // เปลี่ยนชนิดข้อมูลของวันหมดอายุและจำนวนขวดให้เป็น Int ป้องกัน Bug การวน Loop
             rxData.expiryDays = parseInt(rxData.expiryDays) || 7;
             rxData.prepCount = parseInt(rxData.prepCount) || 1;
 
-            document.getElementById('topPatientInfo').innerText = `HN: ${rxData.hn} - ${rxData.patientName} (Ward: ${rxData.ward || '-'}) [ประวัติเก่าทางคลัง]`;
+            // ✅ ปรับแก้จุดนี้: เพิ่มเลข LOT หน้าข้อความประวัติเก่าทางคลังตามภาพแนบ image_3c795f.png
+            document.getElementById('topPatientInfo').innerHTML = `HN: ${rxData.hn} - ${rxData.patientName} (Ward: ${rxData.ward || '-'}) <span class="text-purple-700 font-bold ml-1">[LOT: ${rxData.lotNumber}] [ประวัติเก่าทางคลัง]</span>`;
             renderLabels();
          } catch(err) {
             document.getElementById('topPatientInfo').innerText = "❌ การเชื่อมต่อล้มเหลวไม่สามารถเรียกข้อมูลได้";
             alert("เกิดข้อผิดพลาดในการดึงข้อมูล: " + err.message);
          }
       } 
-      // หากส่งมาจากหน้าฟอร์มปกติ (index.html) ให้ทำงานแบบเดิม
       else if (urlParams.has('hn')) {
         rxData = {
           orderDate: urlParams.get('orderDate') || '',
