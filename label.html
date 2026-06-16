@@ -9,14 +9,14 @@
   <style>
     * { 
       font-family: 'Sarabun', sans-serif; 
-      line-height: 1.2; 
+      line-height: 1.25; 
     }
     body {
       background-color: #f1f5f9;
     }
     [contenteditable="true"]:hover { 
       background: #fff9c4; 
-      outline: 1px dashed #000000; 
+      outline: 2px solid #000000; 
       cursor: text; 
     }
 
@@ -34,26 +34,27 @@
       }
     }
 
-    /* ── บังคับสไตล์เฉพาะตัวกล่องฉลากยาให้เป็น ขาว-ดำ สนิท เพื่อพิมพ์ความร้อน ── */
+    /* ── บังคับสไตล์ตัวกล่องฉลากยาให้เป็น ขาว-ดำ สนิท ตัวอักษรหนาพิเศษสำหรับพิมพ์ความร้อน ── */
     .label-box-thermal {
       background: #ffffff !important;
-      border: 1px solid #000000 !important;
+      border: 2px solid #000000 !important;
     }
     .label-box-thermal * {
-      color: #000000 !important; /* ตัวอักษรดำสนิทเฉพาะในสติกเกอร์ */
+      color: #000000 !important; /* บังคับตัวอักษรดำสนิท 100% ในบริเวณพิมพ์ */
+      font-weight: 800 !important;
     }
 
-    /* ── ขนาดฉลากติดถุงและติดขวดยา (3.5x2.48 นิ้ว) ดันขอบบนลงมา 1.1 cm ── */
+    /* ── ขนาดฉลากติดถุงและติดขวดยา (3.5x2.48 นิ้ว) ดันขอบบนหลบหัวสติกเกอร์ รพ. ออกมา 1.4 cm ── */
     .label-standard { 
       width: 3.5in; 
       height: 2.48in; 
-      padding: 1.1cm 0.2in 0.15in 0.2in; 
+      padding: 1.4cm 0.25in 0.15in 0.25in; 
       margin: 15px auto; 
       box-sizing: border-box; 
       position: relative; 
       display: flex;
       flex-direction: column;
-      justify-content: flex-start;
+      justify-content: space-between;
       border-radius: 0px;
     }
 
@@ -61,7 +62,7 @@
     .label-syringe {
       width: 5.0cm;
       height: 2.5cm;
-      padding: 1.5mm 2mm;
+      padding: 1.5mm 2.5mm;
       margin: 15px auto;
       box-sizing: border-box;
       position: relative;
@@ -72,11 +73,9 @@
       border-radius: 0px;
     }
 
-    .text-thermal-bold {
-      font-weight: 800;
-    }
-    .text-thermal-black {
-      font-weight: 900;
+    /* คลาสเสริมเพิ่มระดับความหนาพิเศษให้ฉลากยา */
+    .text-thermal-heavy {
+      font-weight: 900 !important;
     }
   </style>
 </head>
@@ -239,7 +238,7 @@
       if (!dateStr) return "-";
       const d = new Date(dateStr);
       if (isNaN(d.getTime())) return dateStr;
-      const months = ["ม.ค.","ก.พ.","มี.ค.","เม.ย.","พ.ค.","มิ.ย.","ก.ค.","ส.ค.","ก.ย.","ต.ค.","พ.ย.","ธ.ค."];
+      const months = ["มิ.ย.","ก.พ.","มี.ค.","เม.ย.","พ.ค.","มิ.ย.","ก.ค.","ส.ค.","ก.ย.","ต.ค.","พ.ย.","ธ.ค."];
       return `${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear() + 543}`;
     }
 
@@ -262,90 +261,87 @@
 
       const totalCount = rxData.prepCount;
 
-      // 1. บังคับให้ออกมาแค่ 1 ฉลากเท่านั้นสำหรับติดถุงยา ไม่ว่าจะผลิตกี่ขวดก็ตาม
       bagArea.innerHTML = createBagLabelHTML(rxData, totalCount);
 
-      // 2. ฉลากติดขวด ออกมาเท่ากับจำนวนแพ็กเกจขวดยาจริงที่สั่งผลิต
       for (let i = 1; i <= totalCount; i++) {
         productArea.innerHTML += createProductLabelHTML(rxData);
       }
 
-      // 3. ฉลากเล็กติด Syringe ออกมาเท่ากับจำนวนที่สั่งผลิต
       for (let i = 1; i <= totalCount; i++) {
         syringeArea.innerHTML += createSyringeLabelHTML(rxData);
       }
     }
 
-    // 📦 1. HTML Template: ฉลากใหญ่ติดถุงยา (ออกมาเพียง 1 ใบเสมอ ไม่ลูป)
+    // 📦 1. HTML Template: ฉลากใหญ่ติดถุงยา (ปรับขยายขนาดอักษรและโครงสร้างสมดุลตามภาพแนบ)
     function createBagLabelHTML(o, total) {
       const pUnit = o.productUnit || 'mL';
       const packUnit = o.packageUnit || 'ขวด';
       return `
-        <div class="label-box label-standard label-box-thermal text-xs font-black" contenteditable="true">
-          <div class="text-center text-sm tracking-tight text-thermal-black mb-1">
+        <div class="label-box label-standard label-box-thermal" contenteditable="true">
+          <div class="text-center text-lg text-thermal-heavy leading-tight">
             ${o.genericName}
           </div>
-          <div class="text-center text-[11px] text-thermal-bold mb-1">
-            (${o.strength}) ${o.prepVolume} ${pUnit} จำนวน <span class="underline">${total} ${packUnit}</span>
+          <div class="text-center text-sm text-thermal-heavy mt-0.5">
+            (${o.strength}) ${o.prepVolume} ${pUnit} จำนวน <span class="underline border-b-2 border-black font-black">${total} ${packUnit}</span>
           </div>
-          <div class="text-center text-xs text-thermal-bold mb-1">
-            HN: ${o.hn}  ${o.patientName}
+          <div class="text-center text-sm text-thermal-heavy mt-1">
+            HN: ${o.hn} &nbsp;&nbsp; ${o.patientName}
           </div>
-          <div class="text-center text-[11px] text-thermal-bold mb-1">
+          <div class="text-center text-xs text-thermal-heavy mt-1 bg-gray-100 p-0.5 rounded">
             วิธีใช้: ${o.dosePerTime ? `รับประทานครั้งละ ${o.dosePerTime} mL` : ''} ${o.timesPerDay ? `วันละ ${o.timesPerDay} ครั้ง` : ''} ${o.timingText || ''}
           </div>
-          <div class="grid grid-cols-2 text-[10px] text-thermal-bold mt-2 pt-1 border-t border-black">
-            <div>วันที่เตรียม: ${formatThaiDate(o.orderDate)}</div>
+          <div class="grid grid-cols-2 text-[11px] mt-2 pt-1 border-t border-black leading-snug">
+            <div>วันเริ่มเตรียม: ${formatThaiDate(o.orderDate)}</div>
             <div class="text-right">วันหมดอายุ: ${calculateExpiryDate(o.orderDate, o.expiryDays)}</div>
-            <div class="col-span-2 mt-0.5">การเก็บรักษา: ${o.storage || 'เก็บในตู้เย็น (2-8 °C)'}</div>
-            ${o.labelWarning ? `<div class="col-span-2 text-red-600 mt-0.5 leading-tight">คำเตือน: ${o.labelWarning.replace(/\n/g, ' ')}</div>` : ''}
+            <div class="col-span-2">การเก็บรักษา: ${o.storage || 'ตู้เย็น (2-8°C)'}</div>
+            ${o.labelWarning ? `<div class="col-span-2 text-red-600 text-xs leading-tight">คำเตือน: ${o.labelWarning.replace(/\n/g, ' ')}</div>` : ''}
           </div>
         </div>
       `;
     }
 
-    // 🍾 2. HTML Template: ฉลากติดขวดยา / ซองยา (ออกมาเท่ากับจำนวนขวด)
+    // 🍾 2. HTML Template: ฉลากติดขวดยา / ซองยา (ปรับขยายขนาด Layout บาลานซ์สมดุลสวยงาม)
     function createProductLabelHTML(o) {
       const pUnit = o.productUnit || 'mL';
       return `
-        <div class="label-box label-standard label-box-thermal text-xs font-black" contenteditable="true">
-          <div class="text-center text-sm tracking-tight text-thermal-black mb-1">
+        <div class="label-box label-standard label-box-thermal" contenteditable="true">
+          <div class="text-center text-lg text-thermal-heavy leading-tight">
             ${o.genericName}
           </div>
-          <div class="text-center text-[11px] text-thermal-bold mb-1">
+          <div class="text-center text-sm text-thermal-heavy mt-0.5">
             (${o.strength}) ${o.prepVolume} ${pUnit}
           </div>
-          <div class="text-center text-xs text-thermal-bold mb-1">
-            HN: ${o.hn}  ${o.patientName}
+          <div class="text-center text-sm text-thermal-heavy mt-1">
+            HN: ${o.hn} &nbsp;&nbsp; ${o.patientName}
           </div>
-          <div class="text-center text-[11px] text-thermal-bold mb-1">
+          <div class="text-center text-xs text-thermal-heavy mt-1 bg-gray-100 p-0.5 rounded">
             วิธีใช้: ${o.dosePerTime ? `รับประทานครั้งละ ${o.dosePerTime} mL` : ''} ${o.timesPerDay ? `วันละ ${o.timesPerDay} ครั้ง` : ''} ${o.timingText || ''}
           </div>
-          <div class="grid grid-cols-2 text-[10px] text-thermal-bold mt-2 pt-1 border-t border-black">
-            <div>วันที่เตรียม: ${formatThaiDate(o.orderDate)}</div>
+          <div class="grid grid-cols-2 text-[11px] mt-2 pt-1 border-t border-black leading-snug">
+            <div>วันเริ่มเตรียม: ${formatThaiDate(o.orderDate)}</div>
             <div class="text-right">วันหมดอายุ: ${calculateExpiryDate(o.orderDate, o.expiryDays)}</div>
-            <div class="col-span-2 mt-0.5">การเก็บรักษา: ${o.storage || 'เก็บในตู้เย็น (2-8 °C)'}</div>
-            ${o.labelWarning ? `<div class="col-span-2 text-red-600 mt-0.5 leading-tight">คำเตือน: ${o.labelWarning.replace(/\n/g, ' ')}</div>` : ''}
+            <div class="col-span-2">การเก็บรักษา: ${o.storage || 'ตู้เย็น (2-8°C)'}</div>
+            ${o.labelWarning ? `<div class="col-span-2 text-red-600 text-xs leading-tight">คำเตือน: ${o.labelWarning.replace(/\n/g, ' ')}</div>` : ''}
           </div>
         </div>
       `;
     }
 
-    // 💉 3. HTML Template: ฉลากเล็กติด Syringe 
+    // 💉 3. HTML Template: ฉลากเล็กติด Syringe (แยกบรรทัดชื่อชัดเจน ตัวหนารองรับเครื่อง Thermal)
     function createSyringeLabelHTML(o) {
       return `
-        <div class="label-box label-syringe label-box-thermal text-[9px] font-black" contenteditable="true">
-          <div class="border-b border-black pb-0.5 leading-none text-thermal-black">
+        <div class="label-box label-syringe label-box-thermal text-[9.5px]" contenteditable="true">
+          <div class="border-b border-black pb-0.5 leading-none text-thermal-heavy text-[10px]">
             HN: ${o.hn}
           </div>
-          <div class="truncate text-thermal-bold leading-none py-0.5">
+          <div class="truncate text-thermal-heavy text-[10px] leading-tight py-0.5">
             ${o.patientName}
           </div>
           <div class="leading-tight my-0.5">
-            <p class="font-black text-[9.5px] truncate text-thermal-black leading-none">${o.genericName}</p>
-            <p class="font-bold text-[8.5px] leading-none mt-1">Dose: <span class="underline">${o.dosePerTime || '-'} mL</span> (${o.timingText || 'ตามสั่ง'})</p>
+            <p class="text-[10px] text-thermal-heavy truncate leading-none mb-0.5">${o.genericName}</p>
+            <p class="text-[9px] text-thermal-heavy leading-none">Dose: <span class="underline border-b border-black">${o.dosePerTime || '-'} mL</span> (${o.timingText || 'ตามสั่ง'})</p>
           </div>
-          <div class="border-t border-black pt-0.5 font-bold text-[8px] leading-none">
+          <div class="border-t border-black pt-0.5 text-[8.5px] leading-none text-thermal-heavy">
             Exp: ${calculateExpiryDate(o.orderDate, o.expiryDays)}
           </div>
         </div>
