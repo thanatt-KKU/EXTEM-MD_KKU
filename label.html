@@ -21,7 +21,6 @@
       cursor: text; 
     }
 
-    /* สไตล์สำหรับการควบคุมหน้าจอและการพิมพ์ */
     @media print {
       .no-print { display: none !important; }
       @page { size: auto; margin: 0mm; }
@@ -35,7 +34,7 @@
       }
     }
 
-    /* ── 📦 1 & 2: ขนาดฉลากติดถุงและติดขวดยา (อิงจากขนาดฉลากหน้าถุงเดิม 3.5x2.48 นิ้ว) ── */
+    /* ── 📦 1 & 2: ขนาดฉลากติดถุงและติดขวดยา (3.5x2.48 นิ้ว) ── */
     .label-standard { 
       width: 3.5in; 
       height: 2.48in; 
@@ -68,7 +67,6 @@
       border-radius: 2px;
     }
 
-    /* Utility classes สำหรับฉลากย่อย */
     .header-accent {
       border-bottom: 2px solid #1e1b3a;
       padding-bottom: 2px;
@@ -102,7 +100,7 @@
     <div class="mb-6 bg-white p-4 rounded-2xl shadow-sm border border-slate-200">
       <h1 class="text-xl font-black text-slate-800 uppercase tracking-tight">🖨️ จัดการพิมพ์ฉลากยาเฉพาะราย</h1>
       <p class="text-sm text-slate-500 mt-1">
-        ผู้ป่วย: <span id="topPatientInfo" class="font-black text-indigo-600">กำลังโหลดข้อมูล...</span>
+        ผู้ป่วย: <span id="topPatientInfo" class="font-black text-indigo-600">กำลังโหลดข้อมูลจากคลัง...</span>
       </p>
     </div>
 
@@ -144,7 +142,9 @@
 
 
   <script>
-    // ตรวจสอบสถานะการ Login
+    // URL ของ Web App API
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyAGp49vUz-7cpWrCcNogKmKbBH4WZw9OfqDj1bHptfgKcHLDSkhchLS2mEtEx_PFfP/exec";
+
     if (!sessionStorage.getItem('rxUser')) {
       alert("⚠️ กรุณาเข้าสู่ระบบในหน้าแรกก่อนนะคะ");
       window.location.href = "index.html";
@@ -152,12 +152,37 @@
 
     let rxData = {};
 
-    document.addEventListener('DOMContentLoaded', () => {
-      // ดึงข้อมูลผ่าน URL Parameters ที่ส่งมาจากหน้า index.html
+    document.addEventListener('DOMContentLoaded', async () => {
       const urlParams = new URLSearchParams(window.location.search);
       
-      if (urlParams.has('hn')) {
-        // Mapping ข้อมูลจากฟอร์มส่งตัวแปร
+      // ✅ ตรวจสอบว่าเปิดมาจากหน้า Dashboard หรือไม่
+      if (urlParams.get('fromDashboard') === 'true') {
+         const lotNumber = urlParams.get('lotNumber');
+         document.getElementById('topPatientInfo').innerText = `กำลังดึงข้อมูลประวัติยาของ LOT: ${lotNumber}...`;
+         
+         try {
+            // ดึงข้อมูลเต็มผ่าน API จากชีตหลักด้วยคีย์ LOT Number
+            const response = await fetch(`${SCRIPT_URL}?action=getOrderByLot&lotNumber=${lotNumber}`);
+            rxData = await response.json();
+            
+            if(!rxData || !rxData.hn){
+               document.getElementById('topPatientInfo').innerText = "❌ ไม่พบข้อมูลประวัติยาของ LOT นี้ในฐานข้อมูล";
+               return;
+            }
+            
+            // เปลี่ยนชนิดข้อมูลของวันหมดอายุและจำนวนขวดให้เป็น Int ป้องกัน Bug การวน Loop
+            rxData.expiryDays = parseInt(rxData.expiryDays) || 7;
+            rxData.prepCount = parseInt(rxData.prepCount) || 1;
+
+            document.getElementById('topPatientInfo').innerText = `HN: ${rxData.hn} - ${rxData.patientName} (Ward: ${rxData.ward || '-'}) [ประวัติเก่าทางคลัง]`;
+            renderLabels();
+         } catch(err) {
+            document.getElementById('topPatientInfo').innerText = "❌ การเชื่อมต่อล้มเหลวไม่สามารถเรียกข้อมูลได้";
+            alert("เกิดข้อผิดพลาดในการดึงข้อมูล: " + err.message);
+         }
+      } 
+      // หากส่งมาจากหน้าฟอร์มปกติ (index.html) ให้ทำงานแบบเดิม
+      else if (urlParams.has('hn')) {
         rxData = {
           orderDate: urlParams.get('orderDate') || '',
           lotNumber: urlParams.get('lotNumber') || 'ET------',
@@ -185,17 +210,13 @@
           recordedBy: urlParams.get('recordedBy') || ''
         };
 
-        // แสดงพรีวิวข้อมูลผู้ป่วยด้านบนแผงควบคุม
         document.getElementById('topPatientInfo').innerText = `HN: ${rxData.hn} - ${rxData.patientName} (Ward: ${rxData.ward || '-'})`;
-        
-        // รันการแสดงผลฉลากทั้งหมดลงในพรีวิวกล่อง
         renderLabels();
       } else {
         document.getElementById('topPatientInfo').innerText = "❌ ไม่พบข้อมูลกรุณากลับไปทำรายการใหม่ค่ะ";
       }
     });
 
-    // เลือกประเภทฉลากที่จะจัดแสดงและสั่งพิมพ์
     function selectSection(type) {
       document.querySelectorAll('.print-area').forEach(el => el.classList.remove('active'));
       document.getElementById(`${type}-area`).classList.add('active');
@@ -213,7 +234,6 @@
       document.getElementById('action-btns').classList.remove('hidden');
     }
 
-    // ฟังก์ชันจัดฟอร์แมตวันที่ไทย (ว.ม.ย. +543)
     function formatThaiDate(dateStr) {
       if (!dateStr) return "-";
       const d = new Date(dateStr);
@@ -222,7 +242,6 @@
       return `${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear() + 543}`;
     }
 
-    // คำนวณวันหมดอายุสะท้อนกลับ (เล็ดเจอร์แก้ไข: วันสั่งผลิต + Expiry Days ของยา)
     function calculateExpiryDate(dateStr, days) {
       if (!dateStr) return "-";
       const d = new Date(dateStr);
@@ -231,7 +250,6 @@
       return formatThaiDate(d);
     }
 
-    // ฟังก์ชันประกอบ Component ตัวฉลากทั้งหมด
     function renderLabels() {
       const bagArea = document.getElementById('bag-area');
       const productArea = document.getElementById('product-area');
@@ -243,23 +261,19 @@
 
       const totalBags = rxData.prepCount;
 
-      // 1. วนลูปสร้างฉลากติดถุง (ระบุจำนวนขวดสะสม เช่น 1/3, 2/3)
       for (let i = 1; i <= totalBags; i++) {
         bagArea.innerHTML += createBagLabelHTML(rxData, i, totalBags);
       }
 
-      // 2. วนลูปสร้างฉลากติดขวดยา (ไม่ระบุขวดสะสม แยกชิ้นอิสระ)
       for (let i = 1; i <= totalBags; i++) {
         productArea.innerHTML += createProductLabelHTML(rxData);
       }
 
-      // 3. วนลูปสร้างฉลากเล็กติด Syringe
       for (let i = 1; i <= totalBags; i++) {
         syringeArea.innerHTML += createSyringeLabelHTML(rxData);
       }
     }
 
-    // 🛍️ HTML Template: ฉลากใหญ่ติดถุง (Bag Label)
     function createBagLabelHTML(o, current, total) {
       return `
         <div class="label-box label-standard shadow-md text-xs" contenteditable="true">
@@ -293,9 +307,7 @@
       `;
     }
 
-    // 🍾 HTML Template: ฉลากติดขวดยา/ซองยา (Product Label - ไม่ระบุจำนวนขวด)
     function createProductLabelHTML(o) {
-      // ตัดอักขระขึ้นบรรทัดใหม่ของคำเตือนเพื่อจัดระเบียบ Text
       const cleanWarning = o.labelWarning ? o.labelWarning.replace(/\n/g, ' ') : '';
       return `
         <div class="label-box label-standard shadow-md text-xs" contenteditable="true">
@@ -335,7 +347,6 @@
       `;
     }
 
-    // 💉 HTML Template: ฉลากเล็กติด Syringe (Syringe Label - 5.0 x 2.5 cm)
     function createSyringeLabelHTML(o) {
       return `
         <div class="label-box label-syringe shadow-sm text-[8px]" contenteditable="true">
