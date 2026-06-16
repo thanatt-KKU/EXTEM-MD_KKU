@@ -56,7 +56,7 @@
        ==================================================== */
     .freq-radio:checked + label {
       background: linear-gradient(135deg, #4a4780, #8b85c1) !important;
-      color: white !important;           /* ← แก้ตรงนี้ */
+      color: white !important;
       border-color: #4a4780 !important;
       transform: scale(1.02);
       box-shadow: 0 4px 12px rgba(74,71,128,0.3);
@@ -607,7 +607,7 @@
     // 📅 NEXT APPOINTMENT
     // =========================================
     function onNextApptChange() {
-      const val     = document.getElementById('nextAppointment').value;
+      const val = document.getElementById('nextAppointment').value;
       const display = document.getElementById('nextApptDisplay');
       if (!val) { display.textContent = ''; return; }
       const d  = new Date(val);
@@ -762,7 +762,7 @@
         opt.dataset.generic     = p.genericName    || '';
         opt.dataset.brand       = p.brandName      || '';
         opt.dataset.strength    = p.strength       || '';
-        opt.dataset.dosageForm  = p.dosageForm     || ''; // ✅ เพิ่ม dosageForm
+        opt.dataset.dosageForm  = p.dosageForm     || '';
         opt.dataset.productUnit = p.productUnit    || 'ml';
         opt.dataset.packageUnit = p.packageUnit    || 'ขวด';
         opt.dataset.expiry      = p.expiryDays     || '';
@@ -776,20 +776,11 @@
     // =========================================
     // 📦 ON PRODUCT CHANGE
     // =========================================
-
-    // ====================================================
-    // ✅ FIX 2: Auto-calc rules (ขยายได้ในอนาคต)
-    // key = genericName (lowercase, trim)
-    // prepVolumeFixed: ถ้ากำหนด จะ auto-fill prepVolume
-    // prepCountDivisor: prepCount = rawAmount / divisor
-    // ====================================================
     const AUTO_CALC_RULES = {
       "6-mercaptopurine": {
-        prepVolumeFixed: 50,   // ml ต่อขวด
-        prepCountDivisor: 5    // prepCount = rawAmount / 5
+        prepVolumeFixed: 50,
+        prepCountDivisor: 5
       },
-      // เพิ่มยาอื่นๆ ได้เลยค่ะ เช่น:
-      // "tacrolimus": { prepVolumeFixed: 60, prepCountDivisor: 6 },
     };
 
     function getAutoCalcRule(genericName) {
@@ -816,14 +807,13 @@
         return;
       }
 
-      const dosageForm  = opt.dataset.dosageForm  || '—';   // ✅ FIX 1: หน่วยวัตถุดิบ
+      const dosageForm  = opt.dataset.dosageForm  || '—';
       const productUnit = opt.dataset.productUnit || 'ml';
       const packageUnit = opt.dataset.packageUnit || 'ขวด';
       const warning     = opt.dataset.warning     || '';
       const storage     = opt.dataset.storage     || '-';
       const genericName = opt.dataset.generic     || '';
 
-      // Info Card
       infoCard.classList.remove('hidden');
       document.getElementById('info-generic').textContent     = genericName;
       document.getElementById('info-brand').textContent       = opt.dataset.brand    || '-';
@@ -831,17 +821,14 @@
       document.getElementById('info-expiry-days').textContent = opt.dataset.expiry   || '-';
       document.getElementById('info-storage').textContent     = storage;
 
-      // ✅ FIX 1: rawUnitBadge ใช้ dosageForm แทน packageUnit
       document.getElementById('rawUnitBadge').textContent   = dosageForm;
 
-      // อัพเดทหน่วย
       document.getElementById('prepVolumeUnit').textContent = productUnit;
       document.getElementById('prepCountUnit').textContent  = packageUnit;
       document.getElementById('sum-pkg-unit').textContent   = ` ${packageUnit}`;
       document.getElementById('doseUnit').textContent       = productUnit;
       document.getElementById('sum-product').textContent    = opt.textContent;
 
-      // Warning
       const autoBox  = document.getElementById('autoWarningBox');
       const autoText = document.getElementById('autoWarningText');
       if (warning && warning.trim()) {
@@ -853,7 +840,6 @@
         document.getElementById('labelWarning').value = '';
       }
 
-      // ✅ FIX 2: Auto-calc rule
       const rule = getAutoCalcRule(genericName);
       const noteEl = document.getElementById('autoCalcNote');
       const noteUnit = document.getElementById('prepCountUnit2');
@@ -861,12 +847,10 @@
       if (rule) {
         noteEl.classList.remove('hidden');
         noteUnit.textContent = packageUnit;
-        // Auto-fill prepVolume ถ้ากำหนดไว้
         if (rule.prepVolumeFixed) {
           document.getElementById('prepVolume').value = rule.prepVolumeFixed;
           updateSummary();
         }
-        // ถ้ามี rawAmount อยู่แล้ว คำนวณเลย
         onRawAmountChange();
       } else {
         noteEl.classList.add('hidden');
@@ -877,7 +861,7 @@
 
 
     // =========================================
-    // ✅ FIX 2: onRawAmountChange — auto-calc prepCount
+    // 🔢 AUTO-CALC PREP COUNT
     // =========================================
     function onRawAmountChange() {
       const select      = document.getElementById('productSelect');
@@ -897,11 +881,7 @@
 
 
     // =========================================
-    // 🔄 HN LOOKUP
-    // =========================================
-    let cachedPatientOrder = null;
-
-    // 🔄 HN LOOKUP (ดึงเฉพาะชื่อ-นามสกุล อัตโนมัติทันที)
+    // 🔄 HN LOOKUP (ดึงเฉพาะชื่อ-นามสกุล อัตโนมัติและไม่ดึงยาเดิม)
     // =========================================
     async function fetchPatientData() {
       const hn      = document.getElementById('hn').value.trim();
@@ -919,38 +899,18 @@
         const data = await res.json();
         
         if (data && data.hn) {
-          //   ดึงเฉพาะชื่อ-นามสกุล มาใส่ในฟอร์มให้โดยอัตโนมัติ
+          // ดึงเฉพาะชื่อ-นามสกุล มาใส่ให้โดยอัตโนมัติ (ข้ามน้ำหนัก และวอร์ด เพื่อให้กรอกใหม่ตามความจริง)
           document.getElementById('patientName').value = data.patientName || "";
-          
-          // (ส่วนน้ำหนัก และ Ward จะไม่ถูกดึงมา เพื่อให้ผู้ใช้งานระบุใหม่เองตามหน้างานจริง)
-          
-          status.innerText = "✅ พบประวัติคนไข้ (ดึงชื่อเรียบร้อย)";
+          status.innerText = "✅ พบคนไข้ (ดึงชื่อเรียบร้อย)";
           status.style.color = "#10b981"; 
         } else {
-          status.innerText = "🔹 คนไข้รายใหม่ (กรอกข้อมูลได้เลย)";
+          status.innerText = "🔹 คนไข้ใหม่ (กรอกข้อมูลปกติ)";
           status.style.color = "#c4a8cb";
         }
       } catch(e) {
-        status.innerText = "❌ เกิดข้อผิดพลาดในการเชื่อมต่อ";
+        status.innerText = "❌ เชื่อมเซิร์ฟเวอร์ผิดพลาด";
         status.style.color = "#ef4444";
       }
-    }
-
-      onProductChange();
-      document.getElementById('rawAmount').value       = o.rawAmount        || "";
-      document.getElementById('prepVolume').value      = o.prepVolume       || "";
-      document.getElementById('dosePerTime').value     = o.dosePerTime      || "";
-      document.getElementById('timesPerDay').value     = o.timesPerDay      || "";
-      document.getElementById('timingText').value      = o.timingText       || "";
-      document.getElementById('labelWarning').value    = o.labelWarning     || "";
-      document.getElementById('nextAppointment').value = o.nextAppointment  || "";
-      const count = parseInt(o.prepCount) || 1;
-      document.getElementById('prepCount').value = count;
-      document.getElementById('prepCountDisplay').textContent = count;
-      onNextApptChange();
-      buildSigText();
-      updateSummary();
-      alert("✅ ดึงข้อมูลเดิมสำเร็จ! กรุณาตรวจสอบก่อนบันทึกนะคะ");
     }
 
 
@@ -1046,7 +1006,7 @@
       formData.append("genericName",     opt.dataset.generic);
       formData.append("brandName",       opt.dataset.brand);
       formData.append("strength",        opt.dataset.strength);
-      formData.append("dosageForm",      opt.dataset.dosageForm);  // ✅ เพิ่ม
+      formData.append("dosageForm",      opt.dataset.dosageForm);
       formData.append("productUnit",     opt.dataset.productUnit);
       formData.append("packageUnit",     opt.dataset.packageUnit);
       formData.append("expiryDays",      opt.dataset.expiry);
