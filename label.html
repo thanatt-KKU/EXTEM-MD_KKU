@@ -155,6 +155,40 @@
 
     let rxData = {};
 
+    // ════════════════════════════════════════════════════════════════
+    // 🔧 จุดที่ 1: ตารางบังคับคำต่อท้ายเฉพาะ "ชื่อยาสามัญ" (Generic Name)
+    // ════════════════════════════════════════════════════════════════
+    // ถ้าชื่อยาสามัญตรงกับคีย์ในตารางนี้ ระบบจะ "บังคับ" ใช้คำต่อท้ายที่กำหนด
+    // โดยไม่ต้องสนใจค่า outputType/productName เลย (ตัดหน้าการสแกนคีย์เวิร์ดแบบเดิม)
+    //
+    // 👉 วิธีเพิ่มยาตัวใหม่ในอนาคต:
+    //    เพิ่มแถวใหม่ในรูปแบบ  "ชื่อยาสามัญ": "คำต่อท้ายที่ต้องการ",
+    //    - พิมพ์ตัวพิมพ์เล็ก/ใหญ่อย่างไรก็ได้ ระบบจะเทียบแบบไม่สนตัวพิมพ์ (case-insensitive)
+    //    - เว้นวรรค/เครื่องหมายขีดต้องตรงกับชื่อที่บันทึกในระบบจริง
+    //    ตัวอย่าง:
+    //      "Amoxicillin": "Suspension",
+    //      "Phenobarbital": "Elixir",
+    //      "Omeprazole": "Suspension",
+    const GENERIC_NAME_SUFFIX_MAP = {
+      "6-mercaptopurine": "Suspension",
+      "Sirolimus": "Suspension",
+      "Valganciclovir": "Suspension",
+      "Temozolomide": "Suspension",
+      "Diazoxide": "Suspension",
+      "Insulin": "Eye Drops",
+      "0.02% Atropine": "Eye Drops",
+      "0.2% Linezolid": "Eye Drops",
+      "Azithromycin": "Eye Drops",
+      "1% Voriconazole": "Eye Drops",
+      "0.05% Voriconazole": "Injection",   
+    };
+
+    // ค้นหาคำต่อท้ายที่ "บังคับ" จากชื่อยาสามัญ (คืนค่าว่างถ้าไม่พบในตาราง)
+    function getForcedSuffixByGenericName(genericName) {
+      const key = genericName ? genericName.toString().trim().toLowerCase() : "";
+      return GENERIC_NAME_SUFFIX_MAP[key] || "";
+    }
+
     // ✅ ฟังก์ชันตรวจเช็กและคัดกรองแปลงรูปแบบยาสำเร็จรูปให้เสถียร (ดักแก้ปัญหากรณีหลุดคำว่า เม็ด/ขวด)
     function getEngOutputType(thaiText, fallbackProdName) {
       const t = thaiText ? thaiText.toString().trim() : "";
@@ -173,6 +207,18 @@
       if (combined.includes("ยาฉีด") || combined.includes("Injection")) return "Injection";
       
       return ""; // ถ้าสแกนไม่เจอรูปแบบที่ถูกต้อง จะไม่แสดงต่อท้าย เพื่อป้องกันคำว่า เม็ด/ขวด โผล่
+    }
+
+    // ════════════════════════════════════════════════════════════════
+    // 🔧 จุดที่ 2: ฟังก์ชันกลางที่ตัดสินใจว่าจะแสดงคำต่อท้ายอะไรบนฉลาก
+    // ════════════════════════════════════════════════════════════════
+    // ลำดับการตัดสินใจ:
+    //   1) เช็คตาราง GENERIC_NAME_SUFFIX_MAP ก่อนเสมอ (ตามชื่อยาสามัญ) ถ้าพบ ใช้เลย
+    //   2) ถ้าไม่พบในตาราง ค่อยกลับไปใช้การสแกนคีย์เวิร์ดแบบเดิม (getEngOutputType)
+    function getDosageFormSuffix(o) {
+      const forced = getForcedSuffixByGenericName(o.genericName);
+      if (forced) return forced;
+      return getEngOutputType(o.outputType, o.productName || o.genericName);
     }
 
     document.addEventListener('DOMContentLoaded', async () => {
@@ -313,8 +359,8 @@
       const pUnit = o.productUnit || 'ml';
       const packUnit = o.packageUnit || 'ขวด';
       
-      // เรียกใช้ตัวสแกนหาฟอร์มยาแบบเสถียร
-      const formText = getEngOutputType(o.outputType, o.productName || o.genericName);
+      // เรียกใช้ฟังก์ชันกลาง: เช็คตารางบังคับตามชื่อยาสามัญก่อน แล้วค่อย fallback ไปสแกนคีย์เวิร์ด
+      const formText = getDosageFormSuffix(o);
       const dForm = formText ? ` ${formText}` : '';
       const warningText = o.labelWarning ? `${o.labelWarning.replace(/\n/g, ' ')}` : '';
       
@@ -352,7 +398,8 @@
     // 🍾 2. HTML Template: ฉลากติดขวดยา / ซองยา
     function createProductLabelHTML(o) {
       const pUnit = o.productUnit || 'ml';
-      const formText = getEngOutputType(o.outputType, o.productName || o.genericName);
+      // เรียกใช้ฟังก์ชันกลาง: เช็คตารางบังคับตามชื่อยาสามัญก่อน แล้วค่อย fallback ไปสแกนคีย์เวิร์ด
+      const formText = getDosageFormSuffix(o);
       const dForm = formText ? ` ${formText}` : '';
       const warningText = o.labelWarning ? `${o.labelWarning.replace(/\n/g, ' ')}` : '';
 
