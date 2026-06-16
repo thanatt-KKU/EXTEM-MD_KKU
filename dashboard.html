@@ -304,7 +304,7 @@
                   <th style="min-width:160px;">ผลิตภัณฑ์</th>
                   <th class="text-center" style="min-width:130px;">จำนวน</th>
                   <th class="text-center" style="min-width:120px;">ความคืบหน้า</th>
-                  <th class="text-center rounded-tr-2xl no-print" style="min-width:90px;">จัดการ</th>
+                  <th class="text-center rounded-tr-2xl no-print" style="min-width:180px;">จัดการ</th>
                 </tr>
               </thead>
               <tbody id="summaryBody">
@@ -491,7 +491,7 @@
 
 
   <script>
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxJxw_4xrRedz7VA4W-wdZdD4pib8LZYjI32fEyIgw88X7_8vFhLCJjCpUVeYsoPoDf/exec";
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyAGp49vUz-7cpWrCcNogKmKbBH4WZw9OfqDj1bHptfgKcHLDSkhchLS2mEtEx_PFfP/exec";
 
     // รายชื่อย่อเภสัชกร
     const PERSON_OPTIONS = ["OP","SK","NC","TT","MP","SO","PC","CK","KM","ST","LS","MT"];
@@ -716,7 +716,7 @@
         { id:"3", rowIndex:4, date:dateStr, lotNumber:"ET6906003", hn:"100003", name:"เด็กชายปอนด์ มั่งมี", ward:"PICU",  productName:"Prednisolone — 5 mg/ml",               prepVolume:"30",  prepCount:"2", prepUnit:"ml", preparer:"",       checker:"",      labelMaker:"",      labelChecker:""    },
         { id:"4", rowIndex:5, date:dateStr, lotNumber:"ET6906004", hn:"100004", name:"นางสาวฟ้าใส วันดี",   ward:"6ก",    productName:"Metronidazole (Flagyl) — 40 mg/ml",    prepVolume:"120", prepCount:"4", prepUnit:"ml", preparer:"NC",      checker:"MP",    labelMaker:"SK",    labelChecker:"OP"  },
         { id:"5", rowIndex:6, date:dateStr, lotNumber:"ET6906005", hn:"100005", name:"นายอัมพร สีทอง",      ward:"3ข",    productName:"Phenobarbital — 3 mg/ml",               prepVolume:"50",  prepCount:"1", prepUnit:"ml", preparer:"TT",      checker:"SK",    labelMaker:"",      labelChecker:""    },
-        { id:"6", rowIndex:7, date:dateStr, lotNumber:"ET6906006", hn:"100006", name:"นางมาลี สุขสันต์",    ward:"2ค",    productName:"Omeprazole (Losec) — 20 mg/5 ml",      prepVolume:"60",  prepCount:"6", prepUnit:"ml", preparer:"NC,OP",  checker:"SK,TT", labelMaker:"NC",    labelChecker:"MP"  },
+        { id:"6", rowIndex:7, date:dateStr, lotNumber:"ET6906006", hn:"100006", name:"นางมาลี สุขสันต์",     ward:"2ค",    productName:"Omeprazole (Losec) — 20 mg/5 ml",      prepVolume:"60",  prepCount:"6", prepUnit:"ml", preparer:"NC,OP",  checker:"SK,TT", labelMaker:"NC",    labelChecker:"MP"  },
         { id:"7", rowIndex:8, date:dateStr, lotNumber:"ET6906007", hn:"100007", name:"เด็กหญิงดาว มีโชค",  ward:"PICU",  productName:"Prednisolone — 5 mg/ml",               prepVolume:"30",  prepCount:"2", prepUnit:"ml", preparer:"MP",      checker:"NC",    labelMaker:"TT",    labelChecker:"SK"  },
       ];
     }
@@ -765,7 +765,6 @@
       document.getElementById('summaryBody').innerHTML = filtered.map((row, i) => {
         const st = getRowStatus(row);
         const productShort = (row.productName||'-').split(' — ')[0];
-        // column จำนวน: "60 ml × 3 ขวด" (ใช้ prepUnit ถ้ามี)
         const unit  = row.prepUnit || 'ml';
         const vol   = row.prepVolume || '-';
         const count = row.prepCount  || '1';
@@ -795,6 +794,8 @@
           </td>
           <td class="text-center no-print">
             <div class="flex justify-center gap-1 items-center">
+              <button onclick="openLabelPrint('${row.lotNumber}')"
+                class="px-3 py-2 rounded-xl border-2 shadow-sm transition-all hover:scale-105 text-sm font-black bg-sky-50 text-sky-700 border-sky-200" title="พิมพ์ฉลาก">🖨️ ฉลาก</button>
               <button onclick='openPersonModal(${JSON.stringify(row).replace(/'/g,"&#39;").replace(/"/g,'&quot;')})'
                 class="px-3 py-2 rounded-xl border-2 shadow-sm transition-all hover:scale-105 text-sm font-black"
                 style="border-color:#e8c4d8; color:#4a4780; background:white;" title="แก้ไข">✏️ บันทึก</button>
@@ -804,11 +805,15 @@
         </tr>`;
       }).join('');
 
-      // เจนตารางสรุปยอดรวมยาแยกตามรายการ (สำหรับเก็บสถิติ)
       generateAggregateSummary(filtered);
     }
 
-    // ฟังก์ชันสร้างตารางรวมยอดสถิติยาแยกตามรายการ
+    // ✅ ฟังก์ชันเปิดหน้าพิมพ์ฉลากยา ยิงระบุตาม LOT Number ปลอดภัยแม้ HN ซ้ำ
+    function openLabelPrint(lotNumber){
+       if(!lotNumber || lotNumber === '-') { alert("⚠️ ไม่พบหมายเลข LOT"); return; }
+       window.open(`label.html?lotNumber=${lotNumber}&fromDashboard=true`, '_blank');
+    }
+
     function generateAggregateSummary(filteredData) {
       const aggContainer = document.getElementById('aggregateSummarySection');
       const aggBody = document.getElementById('aggregateSummaryBody');
@@ -818,15 +823,13 @@
         return;
       }
 
-      // โครงสร้างของสถิติ: { "ชื่อยา": { count: รวมจำนวนขวด/syr, unit: หน่วย } }
       const summaryMap = {};
 
       filteredData.forEach(row => {
         const prodName = row.productName || 'ไม่ระบุชื่อยา';
         const count = parseInt(row.prepCount) || 1;
-        const unit = row.prepUnit || 'ขวด'; // ดึงหน่วยดั้งเดิม เช่น ml, syr หรือขวดมาประยุกต์
+        const unit = row.prepUnit || 'ขวด';
         
-        // กำหนดคำลงท้ายหน่วยนับหลัก (เช่น เปลี่ยนจาก ml หรือหน่วยปริมาตรเป็น ขวด/หลอด/syr ตามบริบทสถิติ)
         let trackingUnit = 'ขวด';
         if (prodName.toLowerCase().includes('syr') || unit.toLowerCase().includes('syr')) {
           trackingUnit = 'syr';
@@ -852,7 +855,7 @@
             </span>
           </td>
         </tr>
-      `).join('');
+       `).join('');
 
       aggContainer.classList.remove('hidden');
     }
@@ -990,7 +993,6 @@
       const roles    = ['preparer','checker','labelMaker','labelChecker'];
       const fieldKey = { preparer:'preparer', checker:'checker', labelMaker:'labelMaker', labelChecker:'labelChecker' };
 
-      // Build workload object — แต่ละคนนับครั้ง (LOT) และขวด (prepCount) แยก
       const workload = {};
       persons.forEach(p => {
         workload[p] = {};
@@ -1010,7 +1012,6 @@
 
       const fmt = d => Number.isInteger(d) ? String(d) : d.toFixed(1);
 
-      // Sort persons by total workload (descending)
       const activePersons = persons
         .filter(p => roles.some(r => (workload[p]?.[r]?.count||0) > 0))
         .sort((a,b) => {
@@ -1026,7 +1027,6 @@
         labelChecker:'#b45309',
       };
 
-      // สร้าง 2 cells ต่อ role (ครั้ง | ขวด)
       const makeCountCell = (role, person, isSep) => {
         const c = workload[person]?.[role]?.count || 0;
         const color = c > 0 ? roleColors[role] : '#e8c4d8';
@@ -1089,10 +1089,6 @@
         `${formatThaiDate(start)} — ${formatThaiDate(end)} | Order: ${filtered.length} รายการ`;
     }
 
-
-    // =========================================
-    // 🖨️ PRINT
-    // =========================================
     function printWorkload() {
       document.getElementById('wl-print-title').classList.remove('hidden');
       window.print();
