@@ -6,23 +6,20 @@
   <title>ระบบพิมพ์ฉลากยาเฉพาะราย | Srinagarind Hospital</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-  <!-- JsBarcode สำหรับสร้าง Barcode -->
   <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.6/dist/JsBarcode.all.min.js"></script>
   <style>
     * { 
       font-family: 'Sarabun', sans-serif; 
       line-height: 1.25; 
     }
-    body {
-      background-color: #f1f5f9;
-    }
+    body { background-color: #f1f5f9; }
+
     [contenteditable="true"]:hover { 
       background: #fff9c4; 
       outline: 2px solid #000000; 
       cursor: text; 
     }
 
-    /* สไตล์สำหรับการควบคุมหน้าจอและการพิมพ์ */
     @media print {
       .no-print { display: none !important; }
       @page { size: auto; margin: 0mm; }
@@ -34,9 +31,9 @@
         margin: 0 auto 5mm auto !important; 
         page-break-after: always; 
       }
-      /* ฉลาก barcode ไม่ต้อง page-break ระหว่างคู่ */
-      .barcode-pair-wrapper {
-        page-break-after: avoid !important;
+      /* ฉลากคู่ (ปกติ + เช็คฉลาก) ไม่ตัดหน้าระหว่างกัน */
+      .bag-label-pair {
+        page-break-inside: avoid !important;
       }
     }
 
@@ -49,6 +46,9 @@
       font-weight: 800 !important;
     }
 
+    /* ══════════════════════════════════════
+       ฉลากมาตรฐาน (ถุง / ขวด)
+    ══════════════════════════════════════ */
     .label-standard { 
       width: 3.5in; 
       height: 2.48in; 
@@ -62,6 +62,115 @@
       border-radius: 0px;
     }
 
+    /* ══════════════════════════════════════
+       ฉลากเช็คฉลาก — ขนาดเท่าเดิม 3.5×2.48in
+       layout: แบ่งซ้าย (ข้อมูล) | ขวา (barcode ตะแคง)
+    ══════════════════════════════════════ */
+    .label-check {
+      width: 3.5in;
+      height: 2.48in;
+      margin: 15px auto;
+      box-sizing: border-box;
+      position: relative;
+      display: flex;
+      flex-direction: row;
+      align-items: stretch;
+      overflow: hidden;
+      background: #ffffff !important;
+      border: 2px solid #000 !important; /* กรอบฉลากเช็ค */
+    }
+
+    /* หมายเลข ① ② มุมฉลาก */
+    .label-corner-num {
+      position: absolute;
+      top: 3px;
+      font-size: 11px !important;
+      font-weight: 900 !important;
+      line-height: 1;
+      color: #000 !important;
+      background: #fff;
+      padding: 1px 3px;
+      border: 1.5px solid #000;
+      border-radius: 50%;
+      width: 18px;
+      height: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 10;
+    }
+    .label-corner-num-left  { left: 3px; }
+    .label-corner-num-right { right: 3px; }
+
+    /* แถบหัว "สำหรับเช็คฉลาก" */
+    .check-label-header {
+      font-size: 11px !important;
+      font-weight: 900 !important;
+      text-align: center;
+      border-bottom: 1.5px solid #000;
+      padding: 2px 0 3px 0;
+      letter-spacing: 0.5px;
+      color: #000 !important;
+      width: 100%;
+    }
+
+    /* ฝั่งซ้ายของฉลากเช็ค: ข้อมูลยา+ผู้ป่วย */
+    .check-left {
+      flex: 1;
+      padding: 4px 6px 4px 6px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      gap: 1px;
+      overflow: hidden;
+      border-right: 1.5px solid #000;
+    }
+
+    /* ฝั่งขวาของฉลากเช็ค: barcode ตะแคง 90° */
+    .check-right {
+      width: 1.1in;
+      min-width: 1.1in;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 4px 3px;
+      position: relative;
+    }
+
+    /* container หมุน barcode 90° */
+    .barcode-rotate-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      transform: rotate(90deg);
+      /* ปรับ origin ให้อยู่กลาง */
+      transform-origin: center center;
+      /* กว้าง = ความสูงพื้นที่ขวา, สูง = ความกว้างพื้นที่ขวา */
+      width: 2.0in;
+      height: 0.9in;
+    }
+
+    .barcode-rotate-wrap svg {
+      width: 100% !important;
+      height: auto !important;
+      display: block;
+    }
+
+    .barcode-lot-rotated {
+      font-size: 7px !important;
+      font-weight: 900 !important;
+      text-align: center;
+      margin-top: 1px;
+      letter-spacing: 0.3px;
+      color: #000 !important;
+      white-space: nowrap;
+    }
+
+    /* ══════════════════════════════════════
+       ฉลากเล็กติด Syringe
+    ══════════════════════════════════════ */
     .label-syringe {
       width: 10.1cm;
       height: 2.5cm;
@@ -87,132 +196,12 @@
       background: #ffffff !important;
     }
 
-    /* ══════════════════════════════════════════════
-       สไตล์ฉลาก Barcode สำหรับติดใบจ่ายยา
-       ขนาดเท่า Syringe Label คู่: 10.1cm x 2.5cm
-       แบ่งซ้าย-ขวา เว้นกลาง 1mm
-    ══════════════════════════════════════════════ */
-    .label-barcode-pair {
-      width: 10.1cm;
-      height: 2.5cm;
-      margin: 15px auto;
-      box-sizing: border-box;
-      display: flex;
-      flex-direction: row;
-      align-items: stretch;
-      overflow: hidden;
-      background: transparent !important;
-      /* เส้นขอบแสดงบน screen เพื่อดูขนาด */
-      border: 1px dashed #94a3b8;
-    }
-
-    @media print {
-      .label-barcode-pair {
-        border: none !important;
-      }
-    }
-
-    /* ดิ้นตัดฝั่งซ้าย */
-    .barcode-die-left {
-      width: calc(5.0cm - 0.5mm);
-      height: 2.5cm;
-      min-width: calc(5.0cm - 0.5mm);
-      padding: 1.5mm 2mm 1mm 2mm;
-      box-sizing: border-box;
-      background: #ffffff !important;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: space-between;
-      overflow: hidden;
-    }
-
-    /* ช่องว่างกลาง 1mm สำหรับดึงออก */
-    .barcode-gap {
-      width: 1mm;
-      min-width: 1mm;
-      height: 2.5cm;
-      background: transparent;
-      flex-shrink: 0;
-    }
-
-    /* ดิ้นตัดฝั่งขวา */
-    .barcode-die-right {
-      width: calc(5.0cm - 0.5mm);
-      height: 2.5cm;
-      min-width: calc(5.0cm - 0.5mm);
-      padding: 1.5mm 2mm 1mm 2mm;
-      box-sizing: border-box;
-      background: #ffffff !important;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: space-between;
-      overflow: hidden;
-    }
-
-    /* Barcode SVG */
-    .barcode-svg {
-      width: 100%;
-      max-height: 1.3cm;
-      display: block;
-    }
-
-    /* ข้อความใต้ barcode */
-    .barcode-lot-text {
-      font-size: 7.5px !important;
-      font-weight: 900 !important;
-      letter-spacing: 0.5px;
-      text-align: center;
-      line-height: 1;
-      margin-top: 0.5mm;
-      color: #000 !important;
-    }
-
-    /* ส่วนข้อมูลผู้ป่วยบน barcode label */
-    .barcode-info-row {
-      width: 100%;
-      display: flex;
-      flex-direction: column;
-      align-items: flex-start;
-      gap: 0.3mm;
-    }
-
-    .barcode-info-text {
-      font-size: 8px !important;
-      font-weight: 900 !important;
-      line-height: 1.15;
-      color: #000 !important;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      max-width: 100%;
-    }
-
-    .barcode-info-text-sm {
-      font-size: 7px !important;
-      font-weight: 800 !important;
-      line-height: 1.1;
-      color: #000 !important;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      max-width: 100%;
-    }
-
-    .barcode-divider {
-      width: 100%;
-      border-top: 0.3mm solid #000;
-      margin: 0.4mm 0;
-    }
-
-    .text-thermal-heavy {
-      font-weight: 900 !important;
-    }
+    .text-thermal-heavy { font-weight: 900 !important; }
   </style>
 </head>
 <body class="min-h-screen pb-20">
 
+  <!-- ════════════════════ NAVBAR ════════════════════ -->
   <nav class="no-print sticky top-0 z-50 bg-slate-900 text-white shadow-lg py-3 px-4 mb-6">
     <div class="max-w-5xl mx-auto flex justify-between items-center">
       <button onclick="history.back()" class="flex items-center gap-2 px-4 py-2 bg-slate-700 hover:bg-slate-600 rounded-xl transition-all font-bold text-sm text-white">
@@ -233,6 +222,7 @@
     </div>
   </nav>
 
+  <!-- ════════════════════ CONTROL PANEL ════════════════════ -->
   <div class="max-w-4xl mx-auto py-2 px-4 no-print text-center">
     <div class="mb-6 bg-white p-4 rounded-2xl shadow-sm border border-slate-200">
       <h1 class="text-xl font-black text-slate-800 uppercase tracking-tight">🖨️ จัดการพิมพ์ฉลากยาเฉพาะราย</h1>
@@ -241,55 +231,49 @@
       </p>
     </div>
 
-    <!-- ═══════════════════════════════════════════
-         Grid Card เลือกประเภทฉลาก (4 ประเภท)
-    ═══════════════════════════════════════════ -->
-    <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
-      
-      <div id="card-bag" onclick="selectSection('bag')" class="bg-white p-5 rounded-2xl border-4 border-slate-200 cursor-pointer transition-all hover:border-indigo-400 shadow-sm">
+    <!-- Cards เลือกประเภทฉลาก — 3 ประเภท -->
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
+
+      <div id="card-bag" onclick="selectSection('bag')"
+           class="bg-white p-5 rounded-2xl border-4 border-slate-200 cursor-pointer transition-all hover:border-indigo-400 shadow-sm">
         <div class="text-3xl mb-1">🛍️</div>
         <h3 class="font-black text-indigo-700 text-base">1. ฉลากใหญ่ติดถุง</h3>
-        <p class="text-xs text-slate-400 mt-1">พิมพ์ออกเพียง 1 ฉลาก สรุปยอด packageUnit รวม</p>
-      </div>
-      
-      <div id="card-product" onclick="selectSection('product')" class="bg-white p-5 rounded-2xl border-4 border-slate-200 cursor-pointer transition-all hover:border-purple-400 shadow-sm">
-        <div class="text-3xl mb-1">🍾</div>
-        <h3 class="font-black text-purple-700 text-base">2. ฉลากติดขวดยา / ซองยา</h3>
-        <p class="text-xs text-slate-400 mt-1">พิมพ์ออกจำนวน 1 แผ่น</p>
+        <p class="text-xs text-slate-400 mt-1">พิมพ์ 2 ฉลาก: ฉลากปกติ + ฉลากเช็คฉลาก (พร้อม Barcode)</p>
       </div>
 
-      <div id="card-syringe" onclick="selectSection('syringe')" class="bg-white p-5 rounded-2xl border-4 border-slate-200 cursor-pointer transition-all hover:border-amber-400 shadow-sm">
+      <div id="card-product" onclick="selectSection('product')"
+           class="bg-white p-5 rounded-2xl border-4 border-slate-200 cursor-pointer transition-all hover:border-purple-400 shadow-sm">
+        <div class="text-3xl mb-1">🍾</div>
+        <h3 class="font-black text-purple-700 text-base">2. ฉลากติดขวดยา / ซองยา</h3>
+        <p class="text-xs text-slate-400 mt-1">พิมพ์ออกจำนวน 1 แผ่น (สั่งเพิ่มจำนวนชุดในหน้าต่างพิมพ์ได้)</p>
+      </div>
+
+      <div id="card-syringe" onclick="selectSection('syringe')"
+           class="bg-white p-5 rounded-2xl border-4 border-slate-200 cursor-pointer transition-all hover:border-amber-400 shadow-sm">
         <div class="text-3xl mb-1">💉</div>
         <h3 class="font-black text-amber-700 text-base">3. ฉลากเล็กติด Syringe (คู่)</h3>
         <p class="text-xs text-slate-400 mt-1">สติกเกอร์คู่ซ้าย-ขวา 5.0×2.5 cm เว้นกลาง 1 mm</p>
       </div>
 
-      <!-- ✅ Card ใหม่: ฉลาก Barcode ติดใบจ่ายยา -->
-      <div id="card-barcode" onclick="selectSection('barcode')" class="bg-white p-5 rounded-2xl border-4 border-slate-200 cursor-pointer transition-all hover:border-rose-400 shadow-sm">
-        <div class="text-3xl mb-1">📋</div>
-        <h3 class="font-black text-rose-700 text-base">4. ฉลาก Barcode ใบจ่ายยา</h3>
-        <p class="text-xs text-slate-400 mt-1">สติกเกอร์คู่ซ้าย-ขวา 5.0×2.5 cm พร้อม Barcode LOT</p>
-      </div>
-
     </div>
 
     <div id="action-btns" class="hidden mb-6">
-      <button onclick="window.print()" class="bg-slate-900 text-white py-4 px-16 rounded-2xl font-black text-lg shadow-lg hover:bg-slate-800 hover:scale-[1.02] active:scale-[0.98] transition-all">
+      <button onclick="window.print()"
+              class="bg-slate-900 text-white py-4 px-16 rounded-2xl font-black text-lg shadow-lg hover:bg-slate-800 hover:scale-[1.02] active:scale-[0.98] transition-all">
         🖨️ สั่งพิมพ์ฉลากที่เลือก
       </button>
-      <p class="text-xs text-slate-400 mt-2">* สามารถคลิกข้อความบนตัวอย่างฉลากด้านล่างเพื่อพิมพ์แก้ไขข้อความสดได้ก่อนพิมพ์จริงค่ะ</p>
+      <p class="text-xs text-slate-400 mt-2">* สามารถคลิกข้อความบนตัวอย่างฉลากด้านล่างเพื่อแก้ไขข้อความสดได้ก่อนพิมพ์จริงค่ะ</p>
     </div>
   </div>
 
-  <div id="bag-area" class="print-area"></div>
+  <!-- ════════════════════ PRINT AREAS ════════════════════ -->
+  <div id="bag-area"     class="print-area"></div>
   <div id="product-area" class="print-area"></div>
   <div id="syringe-area" class="print-area"></div>
-  <!-- ✅ พื้นที่แสดงฉลาก Barcode -->
-  <div id="barcode-area" class="print-area"></div>
 
 
   <script>
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxIxwWDNzXfPKwESfaHqHdbT24d0s78tcy7nmSNEbzXIDx7lFilQQl2lNjuoW5HlVIv/exec";
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxOtixmCaMI3eoiSzDWGtmVjlfDNnfbvv6XvyWYYrcmXm99rJoZwIOAIqpIGdM0rRbV/exec";
 
     if (!sessionStorage.getItem('rxUser')) {
       alert("⚠️ กรุณาเข้าสู่ระบบในหน้าแรกก่อนนะคะ");
@@ -299,20 +283,20 @@
     let rxData = {};
 
     // ════════════════════════════════════════════════════════════════
-    // 🔧 ตารางบังคับคำต่อท้ายเฉพาะ "ชื่อยาสามัญ" (Generic Name)
+    // ตารางบังคับคำต่อท้ายเฉพาะ Generic Name
     // ════════════════════════════════════════════════════════════════
     const GENERIC_NAME_SUFFIX_MAP = {
       "6-mercaptopurine": "Suspension",
-      "Sirolimus": "Suspension",
-      "Valganciclovir": "Suspension",
-      "Temozolomide": "Suspension",
-      "Diazoxide": "Suspension",
-      "Insulin": "Eye Drops",
-      "0.02% Atropine": "Eye Drops",
-      "0.2% Linezolid": "Eye Drops",
-      "Azithromycin": "Eye Drops",
-      "1% Voriconazole": "Eye Drops",
-      "0.05% Voriconazole": "Injection",   
+      "Sirolimus":        "Suspension",
+      "Valganciclovir":   "Suspension",
+      "Temozolomide":     "Suspension",
+      "Diazoxide":        "Suspension",
+      "Insulin":          "Eye Drops",
+      "0.02% Atropine":   "Eye Drops",
+      "0.2% Linezolid":   "Eye Drops",
+      "Azithromycin":     "Eye Drops",
+      "1% Voriconazole":  "Eye Drops",
+      "0.05% Voriconazole": "Injection",
     };
 
     function getForcedSuffixByGenericName(genericName) {
@@ -321,17 +305,15 @@
     }
 
     function getEngOutputType(thaiText, fallbackProdName) {
-      const t = thaiText ? thaiText.toString().trim() : "";
-      const p = fallbackProdName ? fallbackProdName.toString().trim() : "";
-      const combined = (t + " " + p);
+      const combined = ((thaiText || "") + " " + (fallbackProdName || ""));
       if (combined.includes("ยาน้ำแขวนตะกอน") || combined.includes("Suspension")) return "Suspension";
-      if (combined.includes("ยาน้ำเชื่อม") || combined.includes("Syrup")) return "Syrup";
-      if (combined.includes("สารละลาย") || combined.includes("Solution")) return "Solution";
-      if (combined.includes("แคปซูล") || combined.includes("Capsule")) return "Repackaged Capsule";
-      if (combined.includes("ครีม") || combined.includes("เจล")) return "Cream/Gel";
-      if (combined.includes("ยาหยอดตา") || combined.includes("Eye Drops")) return "Eye Drops";
-      if (combined.includes("ยาหยอดหู") || combined.includes("Ear Drops")) return "Ear Drops";
-      if (combined.includes("ยาฉีด") || combined.includes("Injection")) return "Injection";
+      if (combined.includes("ยาน้ำเชื่อม")     || combined.includes("Syrup"))      return "Syrup";
+      if (combined.includes("สารละลาย")         || combined.includes("Solution"))   return "Solution";
+      if (combined.includes("แคปซูล")           || combined.includes("Capsule"))    return "Repackaged Capsule";
+      if (combined.includes("ครีม")             || combined.includes("เจล"))        return "Cream/Gel";
+      if (combined.includes("ยาหยอดตา")         || combined.includes("Eye Drops"))  return "Eye Drops";
+      if (combined.includes("ยาหยอดหู")         || combined.includes("Ear Drops"))  return "Ear Drops";
+      if (combined.includes("ยาฉีด")            || combined.includes("Injection"))  return "Injection";
       return "";
     }
 
@@ -341,33 +323,34 @@
       return getEngOutputType(o.outputType, o.productName || o.genericName);
     }
 
+    // ════════════════════════════════════════════════════════════════
+    // โหลดข้อมูลเมื่อ DOM พร้อม
+    // ════════════════════════════════════════════════════════════════
     document.addEventListener('DOMContentLoaded', async () => {
       const urlParams = new URLSearchParams(window.location.search);
-      
-      if (urlParams.get('fromDashboard') === 'true') {
-         const lotNumber = urlParams.get('lotNumber');
-         document.getElementById('topPatientInfo').innerText = `กำลังดึงข้อมูลประวัติยาของ LOT: ${lotNumber}...`;
-         
-         try {
-            const response = await fetch(`${SCRIPT_URL}?action=getOrderByLot&lotNumber=${lotNumber}`);
-            rxData = await response.json();
-            
-            if(!rxData || !rxData.hn){
-               document.getElementById('topPatientInfo').innerText = "❌ ไม่พบข้อมูลประวัติยาของ LOT นี้ในฐานข้อมูล";
-               return;
-            }
-            
-            rxData.expiryDays = parseInt(rxData.expiryDays) || 7;
-            rxData.prepCount = parseInt(rxData.prepCount) || 1;
 
-            document.getElementById('topPatientInfo').innerHTML = `HN: ${rxData.hn} - ${rxData.patientName} (Ward: ${rxData.ward || '-'}) <span class="text-purple-700 font-bold ml-1">[LOT: ${rxData.lotNumber}] [ประวัติเก่าทางคลัง]</span>`;
-            renderLabels();
-         } catch(err) {
-            document.getElementById('topPatientInfo').innerText = "❌ การเชื่อมต่อล้มหลวไม่สามารถเรียกข้อมูลได้";
-            alert("เกิดข้อผิดพลาดในการดึงข้อมูล: " + err.message);
-         }
-      } 
-      else if (urlParams.has('hn')) {
+      if (urlParams.get('fromDashboard') === 'true') {
+        const lotNumber = urlParams.get('lotNumber');
+        document.getElementById('topPatientInfo').innerText = `กำลังดึงข้อมูลประวัติยาของ LOT: ${lotNumber}...`;
+        try {
+          const response = await fetch(`${SCRIPT_URL}?action=getOrderByLot&lotNumber=${lotNumber}`);
+          rxData = await response.json();
+          if (!rxData || !rxData.hn) {
+            document.getElementById('topPatientInfo').innerText = "❌ ไม่พบข้อมูลประวัติยาของ LOT นี้ในฐานข้อมูล";
+            return;
+          }
+          rxData.expiryDays = parseInt(rxData.expiryDays) || 7;
+          rxData.prepCount  = parseInt(rxData.prepCount)  || 1;
+          document.getElementById('topPatientInfo').innerHTML =
+            `HN: ${rxData.hn} - ${rxData.patientName} (Ward: ${rxData.ward || '-'})
+             <span class="text-purple-700 font-bold ml-1">[LOT: ${rxData.lotNumber}] [ประวัติเก่าทางคลัง]</span>`;
+          renderLabels();
+        } catch (err) {
+          document.getElementById('topPatientInfo').innerText = "❌ การเชื่อมต่อล้มเหลว ไม่สามารถเรียกข้อมูลได้";
+          alert("เกิดข้อผิดพลาดในการดึงข้อมูล: " + err.message);
+        }
+
+      } else if (urlParams.has('hn')) {
         rxData = {
           orderDate:     urlParams.get('orderDate')     || '',
           lotNumber:     urlParams.get('lotNumber')     || 'ET------',
@@ -383,8 +366,8 @@
           brandName:     urlParams.get('brandName')     || '',
           strength:      urlParams.get('strength')      || '',
           unit:          urlParams.get('unit')          || 'ml',
-          outputType:    urlParams.get('outputType')    || '', 
-          dosageForm:    urlParams.get('dosageForm')    || '', 
+          outputType:    urlParams.get('outputType')    || '',
+          dosageForm:    urlParams.get('dosageForm')    || '',
           expiryDays:    parseInt(urlParams.get('expiryDays')) || 7,
           rawAmount:     urlParams.get('rawAmount')     || '',
           prepVolume:    urlParams.get('prepVolume')    || '',
@@ -396,11 +379,12 @@
           labelWarning:  urlParams.get('labelWarning')  || '',
           recordedBy:    urlParams.get('recordedBy')    || ''
         };
-
-        document.getElementById('topPatientInfo').innerText = `HN: ${rxData.hn} - ${rxData.patientName} (Ward: ${rxData.ward || '-'})`;
+        document.getElementById('topPatientInfo').innerText =
+          `HN: ${rxData.hn} - ${rxData.patientName} (Ward: ${rxData.ward || '-'})`;
         renderLabels();
+
       } else {
-        document.getElementById('topPatientInfo').innerText = "❌ ไม่พบข้อมูลกรุณากลับไปทำรายการใหม่ค่ะ";
+        document.getElementById('topPatientInfo').innerText = "❌ ไม่พบข้อมูล กรุณากลับไปทำรายการใหม่ค่ะ";
       }
     });
 
@@ -410,12 +394,9 @@
     function selectSection(type) {
       document.querySelectorAll('.print-area').forEach(el => el.classList.remove('active'));
       document.getElementById(`${type}-area`).classList.add('active');
-      
+
       document.querySelectorAll('[id^="card-"]').forEach(el => {
-        el.classList.remove(
-          'border-indigo-500','border-purple-500',
-          'border-amber-500','border-rose-500','shadow-md'
-        );
+        el.classList.remove('border-indigo-500','border-purple-500','border-amber-500','shadow-md');
         el.classList.add('border-slate-200');
       });
 
@@ -423,13 +404,12 @@
       if (type === 'bag')     card.classList.add('border-indigo-500', 'shadow-md');
       if (type === 'product') card.classList.add('border-purple-500', 'shadow-md');
       if (type === 'syringe') card.classList.add('border-amber-500',  'shadow-md');
-      if (type === 'barcode') card.classList.add('border-rose-500',   'shadow-md');
-      
+
       document.getElementById('action-btns').classList.remove('hidden');
 
-      // ✅ Render barcode หลัง DOM ปรากฏ
-      if (type === 'barcode') {
-        setTimeout(() => renderBarcodesSVG(), 100);
+      // Render barcode ในฉลากเช็คฉลาก หลัง DOM พร้อม
+      if (type === 'bag') {
+        setTimeout(() => renderBagBarcodes(), 150);
       }
     }
 
@@ -466,40 +446,32 @@
     // Render ฉลากทั้งหมด
     // ════════════════════════════════════════════════════════════════
     function renderLabels() {
-      const bagArea     = document.getElementById('bag-area');
-      const productArea = document.getElementById('product-area');
-      const syringeArea = document.getElementById('syringe-area');
-      const barcodeArea = document.getElementById('barcode-area');
-
-      bagArea.innerHTML     = '';
-      productArea.innerHTML = '';
-      syringeArea.innerHTML = '';
-      barcodeArea.innerHTML = '';
-
-      const totalCount = rxData.prepCount;
-
-      bagArea.innerHTML     = createBagLabelHTML(rxData, totalCount);
-      productArea.innerHTML = createProductLabelHTML(rxData);
-      syringeArea.innerHTML = createSyringeLabelHTML(rxData);
-      barcodeArea.innerHTML = createBarcodeLabelHTML(rxData);  // ✅ ฉลาก Barcode
+      document.getElementById('bag-area').innerHTML     = createBagLabelHTML(rxData, rxData.prepCount);
+      document.getElementById('product-area').innerHTML = createProductLabelHTML(rxData);
+      document.getElementById('syringe-area').innerHTML = createSyringeLabelHTML(rxData);
     }
 
     // ════════════════════════════════════════════════════════════════
-    // 🛍️ 1. ฉลากใหญ่ติดถุงยา
+    // 🛍️ 1. ฉลากใหญ่ติดถุงยา — 2 ฉลาก
+    //   • ฉลากที่ 1: ฉลากปกติ (คงเดิม)
+    //   • ฉลากที่ 2: "สำหรับเช็คฉลาก" — กรอบ + ① มุมซ้าย + Barcode ตะแคงมุมขวา
     // ════════════════════════════════════════════════════════════════
     function createBagLabelHTML(o, total) {
-      const pUnit = o.productUnit || 'ml';
-      const packUnit = o.packageUnit || 'ขวด';
-      const formText = getDosageFormSuffix(o);
-      const dForm = formText ? ` ${formText}` : '';
-      const warningText = o.labelWarning ? `${o.labelWarning.replace(/\n/g, ' ')}` : '';
-      
-      return `
+      const pUnit       = o.productUnit || 'ml';
+      const packUnit    = o.packageUnit || 'ขวด';
+      const formText    = getDosageFormSuffix(o);
+      const dForm       = formText ? ` ${formText}` : '';
+      const warningText = o.labelWarning ? o.labelWarning.replace(/\n/g, ' ') : '';
+      const lotNumber   = o.lotNumber || 'ET------';
+
+      /* ── ฉลากที่ 1: ปกติ ── */
+      const label1 = `
         <div class="label-box label-standard label-box-thermal text-sm font-black" contenteditable="true">
           <div class="flex flex-col items-center justify-start leading-none text-center">
             <div class="text-[20px] text-thermal-heavy tracking-tight mb-0.5">${o.genericName}${dForm}</div>
             <div class="text-[15px] text-thermal-heavy mb-0.5">
-              (${o.strength}) ${o.prepVolume} ${pUnit} จำนวน <span class="underline border-b border-black font-black">${total} ${packUnit}</span>
+              (${o.strength}) ${o.prepVolume} ${pUnit}
+              จำนวน <span class="underline border-b border-black font-black">${total} ${packUnit}</span>
             </div>
           </div>
           <div class="flex flex-col items-center justify-start leading-none text-center my-0.5">
@@ -520,16 +492,137 @@
           </div>
         </div>
       `;
+
+      /* ── ฉลากที่ 2: สำหรับเช็คฉลาก ── */
+      const label2 = `
+        <div class="label-check label-box-thermal" style="position:relative;">
+
+          <!-- หมายเลข ① มุมซ้ายบน -->
+          <div class="label-corner-num label-corner-num-left"
+               style="position:absolute;top:3px;left:3px;
+                      font-size:11px!important;font-weight:900!important;
+                      color:#000!important;background:#fff;
+                      border:1.5px solid #000;border-radius:50%;
+                      width:18px;height:18px;
+                      display:flex;align-items:center;justify-content:center;z-index:10;">
+            1
+          </div>
+
+          <!-- ฝั่งซ้าย: ข้อความ -->
+          <div class="check-left" style="padding-top:22px;">
+
+            <!-- แถบหัว "สำหรับเช็คฉลาก" -->
+            <div class="check-label-header"
+                 style="font-size:11px!important;font-weight:900!important;
+                        text-align:center;border-bottom:1.5px solid #000;
+                        padding-bottom:3px;margin-bottom:4px;
+                        letter-spacing:0.5px;color:#000!important;">
+              ◈ สำหรับเช็คฉลาก ◈
+            </div>
+
+            <div style="font-size:14px!important;font-weight:900!important;
+                        color:#000!important;line-height:1.3;margin-bottom:2px;">
+              ${o.genericName}${dForm}
+            </div>
+            <div style="font-size:11px!important;font-weight:800!important;
+                        color:#000!important;line-height:1.3;margin-bottom:3px;">
+              (${o.strength}) ${o.prepVolume} ${pUnit}
+              จำนวน <span style="text-decoration:underline;">${total} ${packUnit}</span>
+            </div>
+
+            <div style="font-size:13px!important;font-weight:900!important;
+                        color:#000!important;line-height:1.3;">
+              HN: ${o.hn}
+            </div>
+            <div style="font-size:13px!important;font-weight:900!important;
+                        color:#000!important;line-height:1.3;
+                        overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">
+              ${o.patientName}
+            </div>
+
+            <div style="margin-top:3px;font-size:10px!important;font-weight:800!important;
+                        color:#000!important;line-height:1.4;
+                        border-top:1px solid #000;padding-top:2px;">
+              <span>วันที่เตรียม: ${formatThaiDate(o.orderDate)}</span>
+              <span>วันหมดอายุ: ${calculateExpiryDate(o.orderDate, o.expiryDays)}</span>
+            </div>
+          </div>
+
+          <!-- ฝั่งขวา: Barcode ตะแคง 90° + หมายเลข ② -->
+          <div class="check-right" style="position:relative;">
+
+            <!-- หมายเลข ② มุมขวาบน -->
+            <div style="position:absolute;top:3px;right:3px;
+                        font-size:11px!important;font-weight:900!important;
+                        color:#000!important;background:#fff;
+                        border:1.5px solid #000;border-radius:50%;
+                        width:18px;height:18px;
+                        display:flex;align-items:center;justify-content:center;z-index:10;">
+              2
+            </div>
+
+            <!-- Barcode หมุน 90° -->
+            <div class="barcode-rotate-wrap">
+              <svg id="svg-check-barcode"
+                   data-lot="${lotNumber}"
+                   style="display:block;">
+              </svg>
+              <div class="barcode-lot-rotated"
+                   style="font-size:7px!important;font-weight:900!important;
+                          color:#000!important;text-align:center;
+                          margin-top:1px;white-space:nowrap;">
+                LOT: ${lotNumber}
+              </div>
+            </div>
+
+          </div>
+        </div>
+      `;
+
+      return `<div class="bag-label-pair">${label1}${label2}</div>`;
+    }
+
+    // ════════════════════════════════════════════════════════════════
+    // Render Barcode ในฉลากเช็คฉลาก
+    // ════════════════════════════════════════════════════════════════
+    function renderBagBarcodes() {
+      const svgList = document.querySelectorAll('#bag-area svg[data-lot]');
+      svgList.forEach(svgEl => {
+        const lot      = svgEl.getAttribute('data-lot') || 'ET------';
+        const cleanLot = lot.replace(/[^\x00-\x7F]/g, '');
+        try {
+          JsBarcode(svgEl, cleanLot, {
+            format:       "CODE128",
+            width:        1.6,
+            height:       38,
+            displayValue: false,
+            margin:       2,
+            background:   "#ffffff",
+            lineColor:    "#000000"
+          });
+          svgEl.setAttribute('preserveAspectRatio', 'xMidYMid meet');
+          svgEl.style.width   = '100%';
+          svgEl.style.height  = 'auto';
+          svgEl.style.display = 'block';
+        } catch (err) {
+          console.warn('JsBarcode error:', err, 'LOT:', cleanLot);
+          svgEl.outerHTML = `
+            <div style="font-size:7px;font-weight:900;text-align:center;
+                        border:1px solid #000;padding:2px;color:#000;">
+              [Barcode: ${lot}]
+            </div>`;
+        }
+      });
     }
 
     // ════════════════════════════════════════════════════════════════
     // 🍾 2. ฉลากติดขวดยา / ซองยา
     // ════════════════════════════════════════════════════════════════
     function createProductLabelHTML(o) {
-      const pUnit = o.productUnit || 'ml';
-      const formText = getDosageFormSuffix(o);
-      const dForm = formText ? ` ${formText}` : '';
-      const warningText = o.labelWarning ? `${o.labelWarning.replace(/\n/g, ' ')}` : '';
+      const pUnit       = o.productUnit || 'ml';
+      const formText    = getDosageFormSuffix(o);
+      const dForm       = formText ? ` ${formText}` : '';
+      const warningText = o.labelWarning ? o.labelWarning.replace(/\n/g, ' ') : '';
 
       return `
         <div class="label-box label-standard label-box-thermal text-sm font-black" contenteditable="true">
@@ -570,7 +663,10 @@
         </div>
         <div class="leading-tight my-0.5">
           <p class="text-[11.5px] text-thermal-heavy truncate leading-none mb-0.5">${o.genericName}</p>
-          <p class="text-[10.5px] text-thermal-heavy leading-none">Dose: <span class="underline border-b border-black">${o.dosePerTime || '-'} ซีซี</span> (${o.timingText || 'ตามสั่ง'})</p>
+          <p class="text-[10.5px] text-thermal-heavy leading-none">
+            Dose: <span class="underline border-b border-black">${o.dosePerTime || '-'} ซีซี</span>
+            (${o.timingText || 'ตามสั่ง'})
+          </p>
         </div>
         <div class="border-t border-black pt-0.5 text-[10px] leading-none text-thermal-heavy">
           Exp: ${calculateExpiryDate(o.orderDate, o.expiryDays)}
@@ -579,113 +675,10 @@
 
       return `
         <div class="label-box label-syringe label-box-thermal" contenteditable="true">
-          <div class="syringe-die-cut">
-            ${labelContent}
-          </div>
-          <div class="syringe-die-cut">
-            ${labelContent}
-          </div>
+          <div class="syringe-die-cut">${labelContent}</div>
+          <div class="syringe-die-cut">${labelContent}</div>
         </div>
       `;
-    }
-
-    // ════════════════════════════════════════════════════════════════
-    // 📋 4. ✅ ฉลาก Barcode สำหรับติดใบจ่ายยา
-    //    ขนาด 10.1cm × 2.5cm (เท่า Syringe Label คู่)
-    //    แบ่ง: ซ้าย (4.95cm) | gap 1mm | ขวา (4.95cm)
-    //    เนื้อหา: Barcode จาก lotNumber + orderDate + HN + ชื่อ
-    // ════════════════════════════════════════════════════════════════
-    function createBarcodeLabelHTML(o) {
-      const lotNumber   = o.lotNumber   || 'ETXXXXXX';
-      const orderDate   = formatThaiDate(o.orderDate);
-      const hn          = o.hn          || '-';
-      const patientName = o.patientName || '-';
-
-      // สร้าง SVG barcode placeholder (จะถูก render จริงด้วย JsBarcode ใน renderBarcodesSVG())
-      const barcodeContent = `
-        <div class="barcode-info-row" style="width:100%">
-          <div class="barcode-info-text-sm" style="color:#000!important;font-weight:800!important;">
-            วันที่: ${orderDate}
-          </div>
-          <div class="barcode-info-text" style="color:#000!important;font-weight:900!important;">
-            HN: ${hn}
-          </div>
-          <div class="barcode-info-text" 
-               style="color:#000!important;font-weight:900!important;
-                      overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:100%;">
-            ${patientName}
-          </div>
-        </div>
-        <div class="barcode-divider"></div>
-        <div style="width:100%;text-align:center;flex:1;display:flex;flex-direction:column;
-                    align-items:center;justify-content:center;">
-          <svg class="barcode-svg barcode-render"
-               data-lot="${lotNumber}"
-               style="width:100%;max-height:1.2cm;display:block;">
-          </svg>
-          <div class="barcode-lot-text" 
-               style="font-size:7px!important;font-weight:900!important;
-                      text-align:center;letter-spacing:0.5px;margin-top:0.5mm;
-                      color:#000!important;">
-            LOT: ${lotNumber}
-          </div>
-        </div>
-      `;
-
-      return `
-        <div class="barcode-pair-wrapper" style="display:flex;justify-content:center;align-items:center;padding:8px 0;">
-          <div class="label-barcode-pair label-box-thermal">
-            <!-- ฝั่งซ้าย -->
-            <div class="barcode-die-left">
-              ${barcodeContent}
-            </div>
-            <!-- ช่องว่างกลาง 1mm -->
-            <div class="barcode-gap"></div>
-            <!-- ฝั่งขวา (เนื้อหาเหมือนซ้าย) -->
-            <div class="barcode-die-right">
-              ${barcodeContent}
-            </div>
-          </div>
-        </div>
-      `;
-    }
-
-    // ════════════════════════════════════════════════════════════════
-    // ✅ Render Barcode SVG ด้วย JsBarcode
-    //    เรียกหลัง DOM ถูกวาดแล้ว (setTimeout 100ms)
-    // ════════════════════════════════════════════════════════════════
-    function renderBarcodesSVG() {
-      const svgElements = document.querySelectorAll('#barcode-area svg.barcode-render');
-      svgElements.forEach(svgEl => {
-        const lot = svgEl.getAttribute('data-lot') || 'ETXXXXXX';
-
-        // ทำความสะอาด LOT: เอาอักขระพิเศษที่ Code128 ไม่รองรับออก (ถ้ามี)
-        const cleanLot = lot.replace(/[^\x00-\x7F]/g, '');
-
-        try {
-          JsBarcode(svgEl, cleanLot, {
-            format:       "CODE128",
-            width:        1.4,          // ความกว้างแท่ง (px)
-            height:       32,           // ความสูง barcode (px)
-            displayValue: false,        // ซ่อน text ใต้ barcode (แสดงเองด้านล่าง)
-            margin:       0,
-            background:   "#ffffff",
-            lineColor:    "#000000"
-          });
-          // ปรับ SVG ให้ responsive
-          svgEl.setAttribute('preserveAspectRatio', 'xMidYMid meet');
-          svgEl.style.width  = '100%';
-          svgEl.style.height = 'auto';
-          svgEl.style.maxHeight = '1.2cm';
-          svgEl.style.display = 'block';
-        } catch (err) {
-          console.warn('JsBarcode error:', err, 'LOT:', cleanLot);
-          // fallback: แสดง text แทน
-          svgEl.outerHTML = `<div style="font-size:7px;font-weight:900;text-align:center;
-                              border:1px solid #000;padding:2px;color:#000;">
-                              [Barcode: ${lot}]</div>`;
-        }
-      });
     }
 
   </script>
