@@ -258,20 +258,34 @@
     let rxData = {};
 
     // ════════════════════════════════════════════════════════════════
-    // ตารางบังคับคำต่อท้ายเฉพาะ Generic Name
+    // กฎการคำนวณอัตโนมัติประจำชื่อยาแต่ละประเภท (พิมพ์เล็กทั้งหมดเพื่อป้องกัน Case-sensitive)
+    // ════════════════════════════════════════════════════════════════
+    const AUTO_CALC_RULES = {
+      "6-mercaptopurine": {
+        prepVolumeFixed: 50,
+        prepCountDivisor: 5
+      },
+      "sirolimus": {
+        prepVolumeFixed: 20,
+        prepCountDivisor: 1
+      }
+    };
+
+    // ════════════════════════════════════════════════════════════════
+    // ตารางบังคับคำต่อท้ายเฉพาะ Generic Name (แก้ไขปรับเป็นตัวพิมพ์เล็กทั้งหมด 100%)
     // ════════════════════════════════════════════════════════════════
     const GENERIC_NAME_SUFFIX_MAP = {
       "6-mercaptopurine": "Suspension",
-      "Sirolimus":        "Suspension",
-      "Valganciclovir":   "Suspension",
-      "Temozolomide":     "Suspension",
-      "Diazoxide":        "Suspension",
-      "Insulin":          "Eye Drops",
-      "0.02% Atropine":   "Eye Drops",
-      "0.2% Linezolid":   "Eye Drops",
-      "Azithromycin":     "Eye Drops",
-      "1% Voriconazole":  "Eye Drops",
-      "0.05% Voriconazole": "Injection",
+      "sirolimus":        "Suspension",
+      "valganciclovir":   "Suspension",
+      "temozolomide":     "Suspension",
+      "diazoxide":        "Suspension",
+      "insulin":          "Eye Drops",
+      "0.02% atropine":   "Eye Drops",
+      "0.2% linezolid":   "Eye Drops",
+      "azithromycin":     "Eye Drops",
+      "1% voriconazole":  "Eye Drops",
+      "0.05% voriconazole": "Injection",
     };
 
     function getForcedSuffixByGenericName(genericName) {
@@ -428,8 +442,6 @@
 
     // ════════════════════════════════════════════════════════════════
     // 🛍️ 1. ฉลากใหญ่ติดถุงยา — 2 ฉลาก
-    //   • ฉลากที่ 1: ฉลากปกติ (คงเดิม)
-    //   • ฉลากที่ 2: "สำหรับเช็คฉลาก" — ไม่มีกรอบ, เว้นบน 1.3 cm, ล่าง 4 mm, ไม่มีเลขมุม, ไม่มีเส้นกั้นกลาง
     // ════════════════════════════════════════════════════════════════
     function createBagLabelHTML(o, total) {
       const pUnit       = o.productUnit || 'ml';
@@ -547,7 +559,7 @@
         try {
           JsBarcode(svgEl, cleanLot, {
             format:       "CODE128",
-            width:        1.1,        /* บาร์โค้ดเส้นคมชัดสูง ขนาดกระชับเหมาะสมกับการสแกน */
+            width:        1.1,
             height:       28,         
             displayValue: false,
             margin:       1,
