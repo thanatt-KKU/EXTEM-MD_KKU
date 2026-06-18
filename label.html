@@ -6,6 +6,8 @@
   <title>ระบบพิมพ์ฉลากยาเฉพาะราย | Srinagarind Hospital</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <!-- JsBarcode สำหรับสร้าง Barcode -->
+  <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.6/dist/JsBarcode.all.min.js"></script>
   <style>
     * { 
       font-family: 'Sarabun', sans-serif; 
@@ -32,6 +34,10 @@
         margin: 0 auto 5mm auto !important; 
         page-break-after: always; 
       }
+      /* ฉลาก barcode ไม่ต้อง page-break ระหว่างคู่ */
+      .barcode-pair-wrapper {
+        page-break-after: avoid !important;
+      }
     }
 
     .label-box-thermal {
@@ -39,7 +45,7 @@
       border: none !important; 
     }
     .label-box-thermal * {
-      color: #000000 !important; /* บังคับตัวอักษรดำสนิท 100% สำหรับพิมพ์ความร้อน */
+      color: #000000 !important;
       font-weight: 800 !important;
     }
 
@@ -81,6 +87,125 @@
       background: #ffffff !important;
     }
 
+    /* ══════════════════════════════════════════════
+       สไตล์ฉลาก Barcode สำหรับติดใบจ่ายยา
+       ขนาดเท่า Syringe Label คู่: 10.1cm x 2.5cm
+       แบ่งซ้าย-ขวา เว้นกลาง 1mm
+    ══════════════════════════════════════════════ */
+    .label-barcode-pair {
+      width: 10.1cm;
+      height: 2.5cm;
+      margin: 15px auto;
+      box-sizing: border-box;
+      display: flex;
+      flex-direction: row;
+      align-items: stretch;
+      overflow: hidden;
+      background: transparent !important;
+      /* เส้นขอบแสดงบน screen เพื่อดูขนาด */
+      border: 1px dashed #94a3b8;
+    }
+
+    @media print {
+      .label-barcode-pair {
+        border: none !important;
+      }
+    }
+
+    /* ดิ้นตัดฝั่งซ้าย */
+    .barcode-die-left {
+      width: calc(5.0cm - 0.5mm);
+      height: 2.5cm;
+      min-width: calc(5.0cm - 0.5mm);
+      padding: 1.5mm 2mm 1mm 2mm;
+      box-sizing: border-box;
+      background: #ffffff !important;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      overflow: hidden;
+    }
+
+    /* ช่องว่างกลาง 1mm สำหรับดึงออก */
+    .barcode-gap {
+      width: 1mm;
+      min-width: 1mm;
+      height: 2.5cm;
+      background: transparent;
+      flex-shrink: 0;
+    }
+
+    /* ดิ้นตัดฝั่งขวา */
+    .barcode-die-right {
+      width: calc(5.0cm - 0.5mm);
+      height: 2.5cm;
+      min-width: calc(5.0cm - 0.5mm);
+      padding: 1.5mm 2mm 1mm 2mm;
+      box-sizing: border-box;
+      background: #ffffff !important;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      overflow: hidden;
+    }
+
+    /* Barcode SVG */
+    .barcode-svg {
+      width: 100%;
+      max-height: 1.3cm;
+      display: block;
+    }
+
+    /* ข้อความใต้ barcode */
+    .barcode-lot-text {
+      font-size: 7.5px !important;
+      font-weight: 900 !important;
+      letter-spacing: 0.5px;
+      text-align: center;
+      line-height: 1;
+      margin-top: 0.5mm;
+      color: #000 !important;
+    }
+
+    /* ส่วนข้อมูลผู้ป่วยบน barcode label */
+    .barcode-info-row {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.3mm;
+    }
+
+    .barcode-info-text {
+      font-size: 8px !important;
+      font-weight: 900 !important;
+      line-height: 1.15;
+      color: #000 !important;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 100%;
+    }
+
+    .barcode-info-text-sm {
+      font-size: 7px !important;
+      font-weight: 800 !important;
+      line-height: 1.1;
+      color: #000 !important;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 100%;
+    }
+
+    .barcode-divider {
+      width: 100%;
+      border-top: 0.3mm solid #000;
+      margin: 0.4mm 0;
+    }
+
     .text-thermal-heavy {
       font-weight: 900 !important;
     }
@@ -116,7 +241,10 @@
       </p>
     </div>
 
-    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
+    <!-- ═══════════════════════════════════════════
+         Grid Card เลือกประเภทฉลาก (4 ประเภท)
+    ═══════════════════════════════════════════ -->
+    <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
       
       <div id="card-bag" onclick="selectSection('bag')" class="bg-white p-5 rounded-2xl border-4 border-slate-200 cursor-pointer transition-all hover:border-indigo-400 shadow-sm">
         <div class="text-3xl mb-1">🛍️</div>
@@ -127,13 +255,20 @@
       <div id="card-product" onclick="selectSection('product')" class="bg-white p-5 rounded-2xl border-4 border-slate-200 cursor-pointer transition-all hover:border-purple-400 shadow-sm">
         <div class="text-3xl mb-1">🍾</div>
         <h3 class="font-black text-purple-700 text-base">2. ฉลากติดขวดยา / ซองยา</h3>
-        <p class="text-xs text-slate-400 mt-1">พิมพ์ออกจำนวน 1 แผ่น (สั่งเพิ่มจำนวนชุดในหน้าต่างพิมพ์ได้)</p>
+        <p class="text-xs text-slate-400 mt-1">พิมพ์ออกจำนวน 1 แผ่น</p>
       </div>
 
       <div id="card-syringe" onclick="selectSection('syringe')" class="bg-white p-5 rounded-2xl border-4 border-slate-200 cursor-pointer transition-all hover:border-amber-400 shadow-sm">
         <div class="text-3xl mb-1">💉</div>
         <h3 class="font-black text-amber-700 text-base">3. ฉลากเล็กติด Syringe (คู่)</h3>
-        <p class="text-xs text-slate-400 mt-1">สติกเกอร์คู่ซ้าย-ขวา $5.0 \times 2.5\text{ cm}$ เว้นกลาง $1\text{ mm}$ ออกแบบมา 1 ชุดพอดีแถว</p>
+        <p class="text-xs text-slate-400 mt-1">สติกเกอร์คู่ซ้าย-ขวา 5.0×2.5 cm เว้นกลาง 1 mm</p>
+      </div>
+
+      <!-- ✅ Card ใหม่: ฉลาก Barcode ติดใบจ่ายยา -->
+      <div id="card-barcode" onclick="selectSection('barcode')" class="bg-white p-5 rounded-2xl border-4 border-slate-200 cursor-pointer transition-all hover:border-rose-400 shadow-sm">
+        <div class="text-3xl mb-1">📋</div>
+        <h3 class="font-black text-rose-700 text-base">4. ฉลาก Barcode ใบจ่ายยา</h3>
+        <p class="text-xs text-slate-400 mt-1">สติกเกอร์คู่ซ้าย-ขวา 5.0×2.5 cm พร้อม Barcode LOT</p>
       </div>
 
     </div>
@@ -147,10 +282,10 @@
   </div>
 
   <div id="bag-area" class="print-area"></div>
-
   <div id="product-area" class="print-area"></div>
-
   <div id="syringe-area" class="print-area"></div>
+  <!-- ✅ พื้นที่แสดงฉลาก Barcode -->
+  <div id="barcode-area" class="print-area"></div>
 
 
   <script>
@@ -164,7 +299,7 @@
     let rxData = {};
 
     // ════════════════════════════════════════════════════════════════
-    // 🔧 จุดที่ 1: ตารางบังคับคำต่อท้ายเฉพาะ "ชื่อยาสามัญ" (Generic Name)
+    // 🔧 ตารางบังคับคำต่อท้ายเฉพาะ "ชื่อยาสามัญ" (Generic Name)
     // ════════════════════════════════════════════════════════════════
     const GENERIC_NAME_SUFFIX_MAP = {
       "6-mercaptopurine": "Suspension",
@@ -188,9 +323,7 @@
     function getEngOutputType(thaiText, fallbackProdName) {
       const t = thaiText ? thaiText.toString().trim() : "";
       const p = fallbackProdName ? fallbackProdName.toString().trim() : "";
-      
       const combined = (t + " " + p);
-      
       if (combined.includes("ยาน้ำแขวนตะกอน") || combined.includes("Suspension")) return "Suspension";
       if (combined.includes("ยาน้ำเชื่อม") || combined.includes("Syrup")) return "Syrup";
       if (combined.includes("สารละลาย") || combined.includes("Solution")) return "Solution";
@@ -199,7 +332,6 @@
       if (combined.includes("ยาหยอดตา") || combined.includes("Eye Drops")) return "Eye Drops";
       if (combined.includes("ยาหยอดหู") || combined.includes("Ear Drops")) return "Ear Drops";
       if (combined.includes("ยาฉีด") || combined.includes("Injection")) return "Injection";
-      
       return "";
     }
 
@@ -237,32 +369,32 @@
       } 
       else if (urlParams.has('hn')) {
         rxData = {
-          orderDate: urlParams.get('orderDate') || '',
-          lotNumber: urlParams.get('lotNumber') || 'ET------',
-          hn: urlParams.get('hn') || '',
-          patientName: urlParams.get('patientName') || '',
-          patientAge: urlParams.get('patientAge') || '',
+          orderDate:     urlParams.get('orderDate')     || '',
+          lotNumber:     urlParams.get('lotNumber')     || 'ET------',
+          hn:            urlParams.get('hn')            || '',
+          patientName:   urlParams.get('patientName')   || '',
+          patientAge:    urlParams.get('patientAge')    || '',
           patientWeight: urlParams.get('patientWeight') || '',
-          ward: urlParams.get('ward') || '',
-          patientNote: urlParams.get('patientNote') || '',
-          productId: urlParams.get('productId') || '',
-          productName: urlParams.get('productName') || '',
-          genericName: urlParams.get('genericName') || '',
-          brandName: urlParams.get('brandName') || '',
-          strength: urlParams.get('strength') || '',
-          unit: urlParams.get('unit') || 'ml',
-          outputType: urlParams.get('outputType') || '', 
-          dosageForm: urlParams.get('dosageForm') || '', 
-          expiryDays: parseInt(urlParams.get('expiryDays')) || 7,
-          rawAmount: urlParams.get('rawAmount') || '',
-          prepVolume: urlParams.get('prepVolume') || '',
-          prepCount: parseInt(urlParams.get('prepCount')) || 1,
-          dosePerTime: urlParams.get('dosePerTime') || '',
-          timesPerDay: urlParams.get('timesPerDay') || '',
-          timingText: urlParams.get('timingText') || '',
-          sigText: urlParams.get('sigText') || '',
-          labelWarning: urlParams.get('labelWarning') || '',
-          recordedBy: urlParams.get('recordedBy') || ''
+          ward:          urlParams.get('ward')          || '',
+          patientNote:   urlParams.get('patientNote')   || '',
+          productId:     urlParams.get('productId')     || '',
+          productName:   urlParams.get('productName')   || '',
+          genericName:   urlParams.get('genericName')   || '',
+          brandName:     urlParams.get('brandName')     || '',
+          strength:      urlParams.get('strength')      || '',
+          unit:          urlParams.get('unit')          || 'ml',
+          outputType:    urlParams.get('outputType')    || '', 
+          dosageForm:    urlParams.get('dosageForm')    || '', 
+          expiryDays:    parseInt(urlParams.get('expiryDays')) || 7,
+          rawAmount:     urlParams.get('rawAmount')     || '',
+          prepVolume:    urlParams.get('prepVolume')    || '',
+          prepCount:     parseInt(urlParams.get('prepCount')) || 1,
+          dosePerTime:   urlParams.get('dosePerTime')   || '',
+          timesPerDay:   urlParams.get('timesPerDay')   || '',
+          timingText:    urlParams.get('timingText')    || '',
+          sigText:       urlParams.get('sigText')       || '',
+          labelWarning:  urlParams.get('labelWarning')  || '',
+          recordedBy:    urlParams.get('recordedBy')    || ''
         };
 
         document.getElementById('topPatientInfo').innerText = `HN: ${rxData.hn} - ${rxData.patientName} (Ward: ${rxData.ward || '-'})`;
@@ -272,23 +404,38 @@
       }
     });
 
+    // ════════════════════════════════════════════════════════════════
+    // เลือก Section พิมพ์
+    // ════════════════════════════════════════════════════════════════
     function selectSection(type) {
       document.querySelectorAll('.print-area').forEach(el => el.classList.remove('active'));
       document.getElementById(`${type}-area`).classList.add('active');
       
       document.querySelectorAll('[id^="card-"]').forEach(el => {
-        el.classList.remove('border-indigo-500', 'border-purple-500', 'border-amber-500', 'shadow-md');
+        el.classList.remove(
+          'border-indigo-500','border-purple-500',
+          'border-amber-500','border-rose-500','shadow-md'
+        );
         el.classList.add('border-slate-200');
       });
 
       const card = document.getElementById(`card-${type}`);
-      if(type === 'bag') card.classList.add('border-indigo-500', 'shadow-md');
-      if(type === 'product') card.classList.add('border-purple-500', 'shadow-md');
-      if(type === 'syringe') card.classList.add('border-amber-500', 'shadow-md');
+      if (type === 'bag')     card.classList.add('border-indigo-500', 'shadow-md');
+      if (type === 'product') card.classList.add('border-purple-500', 'shadow-md');
+      if (type === 'syringe') card.classList.add('border-amber-500',  'shadow-md');
+      if (type === 'barcode') card.classList.add('border-rose-500',   'shadow-md');
       
       document.getElementById('action-btns').classList.remove('hidden');
+
+      // ✅ Render barcode หลัง DOM ปรากฏ
+      if (type === 'barcode') {
+        setTimeout(() => renderBarcodesSVG(), 100);
+      }
     }
 
+    // ════════════════════════════════════════════════════════════════
+    // Utility Functions
+    // ════════════════════════════════════════════════════════════════
     function formatThaiDate(dateStr) {
       if (!dateStr) return "-";
       const d = new Date(dateStr);
@@ -308,47 +455,41 @@
     function cleanStorageText(storageStr) {
       if (!storageStr) return "เก็บยาในตู้เย็น (2-8°C)";
       const str = storageStr.toString().toLowerCase();
-      if (str.includes("ตู้เย็น") || str.includes("2-8")) {
-        return "เก็บยาในตู้เย็น (2-8°C)";
-      } else if (str.includes("ห้อง") || str.includes("room")) {
-        return "เก็บยาที่อุณหภูมิห้อง";
-      } else if (str.includes("แข็ง") || str.includes("freeze")) {
-        return "เก็บยาในช่องแช่แข็ง";
-      } else if (str.includes("แสง") || str.includes("light")) {
-        return "เก็บยาในถุงสีชาป้องกันแสง";
-      }
+      if (str.includes("ตู้เย็น") || str.includes("2-8"))      return "เก็บยาในตู้เย็น (2-8°C)";
+      else if (str.includes("ห้อง") || str.includes("room"))   return "เก็บยาที่อุณหภูมิห้อง";
+      else if (str.includes("แข็ง") || str.includes("freeze")) return "เก็บยาในช่องแช่แข็ง";
+      else if (str.includes("แสง") || str.includes("light"))   return "เก็บยาในถุงสีชาป้องกันแสง";
       return storageStr;
     }
 
     // ════════════════════════════════════════════════════════════════
-    // 🔧 จุดปรับเปลี่ยนสำคัญ: บังคับการสร้างฉลากออกมาอย่างละ 1 แผ่นถ้วน
+    // Render ฉลากทั้งหมด
     // ════════════════════════════════════════════════════════════════
     function renderLabels() {
-      const bagArea = document.getElementById('bag-area');
+      const bagArea     = document.getElementById('bag-area');
       const productArea = document.getElementById('product-area');
       const syringeArea = document.getElementById('syringe-area');
+      const barcodeArea = document.getElementById('barcode-area');
 
-      bagArea.innerHTML = '';
+      bagArea.innerHTML     = '';
       productArea.innerHTML = '';
       syringeArea.innerHTML = '';
+      barcodeArea.innerHTML = '';
 
       const totalCount = rxData.prepCount;
 
-      // 1. สร้างฉลากถุงยา 1 ฉลาก (ส่ง totalCount เพื่อไปแสดงผลยอดขวดรวมบนฉลาก)
-      bagArea.innerHTML = createBagLabelHTML(rxData, totalCount);
-
-      // 2. สร้างฉลากติดขวดยา/ซองยา เพียง 1 ฉลากตามคำขอ
+      bagArea.innerHTML     = createBagLabelHTML(rxData, totalCount);
       productArea.innerHTML = createProductLabelHTML(rxData);
-
-      // 3. สร้างฉลากเล็กติด Syringe แบบดวงคู่ เพียง 1 แถว (มีซ้าย-ขวาข้างใน)
       syringeArea.innerHTML = createSyringeLabelHTML(rxData);
+      barcodeArea.innerHTML = createBarcodeLabelHTML(rxData);  // ✅ ฉลาก Barcode
     }
 
-    // 🛍️ 1. HTML Template: ฉลากใหญ่ติดถุงยา
+    // ════════════════════════════════════════════════════════════════
+    // 🛍️ 1. ฉลากใหญ่ติดถุงยา
+    // ════════════════════════════════════════════════════════════════
     function createBagLabelHTML(o, total) {
       const pUnit = o.productUnit || 'ml';
       const packUnit = o.packageUnit || 'ขวด';
-      
       const formText = getDosageFormSuffix(o);
       const dForm = formText ? ` ${formText}` : '';
       const warningText = o.labelWarning ? `${o.labelWarning.replace(/\n/g, ' ')}` : '';
@@ -361,17 +502,14 @@
               (${o.strength}) ${o.prepVolume} ${pUnit} จำนวน <span class="underline border-b border-black font-black">${total} ${packUnit}</span>
             </div>
           </div>
-          
           <div class="flex flex-col items-center justify-start leading-none text-center my-0.5">
             <div class="text-[18.5px] text-thermal-heavy">HN: ${o.hn}</div>
             <div class="text-[18.5px] text-thermal-heavy truncate max-w-full">${o.patientName}</div>
           </div>
-
           <div class="text-center text-[15px] text-thermal-heavy leading-tight py-1 px-0.5 rounded my-0.5">
             <div>${o.dosePerTime ? `รับประทานครั้งละ ${o.dosePerTime} ซีซี` : ''}</div>
             <div class="mt-0.5">${o.timesPerDay ? `วันละ ${o.timesPerDay} ครั้ง` : ''} ${o.timingText || ''}</div>
           </div>
-
           <div class="grid grid-cols-2 text-[12px] pt-0.5 border-t border-black leading-tight mt-0.5">
             <div>วันที่เตรียม: ${formatThaiDate(o.orderDate)}</div>
             <div class="text-right">วันหมดอายุ: ${calculateExpiryDate(o.orderDate, o.expiryDays)}</div>
@@ -384,7 +522,9 @@
       `;
     }
 
-    // 🍾 2. HTML Template: ฉลากติดขวดยา / ซองยา
+    // ════════════════════════════════════════════════════════════════
+    // 🍾 2. ฉลากติดขวดยา / ซองยา
+    // ════════════════════════════════════════════════════════════════
     function createProductLabelHTML(o) {
       const pUnit = o.productUnit || 'ml';
       const formText = getDosageFormSuffix(o);
@@ -397,17 +537,14 @@
             <div class="text-[20px] text-thermal-heavy tracking-tight mb-0.5">${o.genericName}${dForm}</div>
             <div class="text-[15px] text-thermal-heavy mb-0.5">(${o.strength}) ${o.prepVolume} ${pUnit}</div>
           </div>
-          
           <div class="flex flex-col items-center justify-start leading-none text-center my-0.5">
             <div class="text-[18.5px] text-thermal-heavy">HN: ${o.hn}</div>
             <div class="text-[18.5px] text-thermal-heavy truncate max-w-full">${o.patientName}</div>
           </div>
-
           <div class="text-center text-[15px] text-thermal-heavy leading-tight py-1 px-0.5 rounded my-0.5">
             <div>${o.dosePerTime ? `รับประทานครั้งละ ${o.dosePerTime} ซีซี` : ''}</div>
             <div class="mt-0.5">${o.timesPerDay ? `วันละ ${o.timesPerDay} ครั้ง` : ''} ${o.timingText || ''}</div>
           </div>
-
           <div class="grid grid-cols-2 text-[12px] pt-0.5 border-t border-black leading-tight mt-0.5">
             <div>วันที่เตรียม: ${formatThaiDate(o.orderDate)}</div>
             <div class="text-right">วันหมดอายุ: ${calculateExpiryDate(o.orderDate, o.expiryDays)}</div>
@@ -420,7 +557,9 @@
       `;
     }
 
-    // 💉 3. HTML Template: ฉลากเล็กติด Syringe แบบคู่ซ้าย-ขวา (เว้นระยะกลางดึงออก 1 มม.)
+    // ════════════════════════════════════════════════════════════════
+    // 💉 3. ฉลากเล็กติด Syringe แบบคู่ซ้าย-ขวา
+    // ════════════════════════════════════════════════════════════════
     function createSyringeLabelHTML(o) {
       const labelContent = `
         <div class="border-b border-black pb-0.5 leading-none text-thermal-heavy text-[12px]">
@@ -449,6 +588,106 @@
         </div>
       `;
     }
+
+    // ════════════════════════════════════════════════════════════════
+    // 📋 4. ✅ ฉลาก Barcode สำหรับติดใบจ่ายยา
+    //    ขนาด 10.1cm × 2.5cm (เท่า Syringe Label คู่)
+    //    แบ่ง: ซ้าย (4.95cm) | gap 1mm | ขวา (4.95cm)
+    //    เนื้อหา: Barcode จาก lotNumber + orderDate + HN + ชื่อ
+    // ════════════════════════════════════════════════════════════════
+    function createBarcodeLabelHTML(o) {
+      const lotNumber   = o.lotNumber   || 'ETXXXXXX';
+      const orderDate   = formatThaiDate(o.orderDate);
+      const hn          = o.hn          || '-';
+      const patientName = o.patientName || '-';
+
+      // สร้าง SVG barcode placeholder (จะถูก render จริงด้วย JsBarcode ใน renderBarcodesSVG())
+      const barcodeContent = `
+        <div class="barcode-info-row" style="width:100%">
+          <div class="barcode-info-text-sm" style="color:#000!important;font-weight:800!important;">
+            วันที่: ${orderDate}
+          </div>
+          <div class="barcode-info-text" style="color:#000!important;font-weight:900!important;">
+            HN: ${hn}
+          </div>
+          <div class="barcode-info-text" 
+               style="color:#000!important;font-weight:900!important;
+                      overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:100%;">
+            ${patientName}
+          </div>
+        </div>
+        <div class="barcode-divider"></div>
+        <div style="width:100%;text-align:center;flex:1;display:flex;flex-direction:column;
+                    align-items:center;justify-content:center;">
+          <svg class="barcode-svg barcode-render"
+               data-lot="${lotNumber}"
+               style="width:100%;max-height:1.2cm;display:block;">
+          </svg>
+          <div class="barcode-lot-text" 
+               style="font-size:7px!important;font-weight:900!important;
+                      text-align:center;letter-spacing:0.5px;margin-top:0.5mm;
+                      color:#000!important;">
+            LOT: ${lotNumber}
+          </div>
+        </div>
+      `;
+
+      return `
+        <div class="barcode-pair-wrapper" style="display:flex;justify-content:center;align-items:center;padding:8px 0;">
+          <div class="label-barcode-pair label-box-thermal">
+            <!-- ฝั่งซ้าย -->
+            <div class="barcode-die-left">
+              ${barcodeContent}
+            </div>
+            <!-- ช่องว่างกลาง 1mm -->
+            <div class="barcode-gap"></div>
+            <!-- ฝั่งขวา (เนื้อหาเหมือนซ้าย) -->
+            <div class="barcode-die-right">
+              ${barcodeContent}
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    // ════════════════════════════════════════════════════════════════
+    // ✅ Render Barcode SVG ด้วย JsBarcode
+    //    เรียกหลัง DOM ถูกวาดแล้ว (setTimeout 100ms)
+    // ════════════════════════════════════════════════════════════════
+    function renderBarcodesSVG() {
+      const svgElements = document.querySelectorAll('#barcode-area svg.barcode-render');
+      svgElements.forEach(svgEl => {
+        const lot = svgEl.getAttribute('data-lot') || 'ETXXXXXX';
+
+        // ทำความสะอาด LOT: เอาอักขระพิเศษที่ Code128 ไม่รองรับออก (ถ้ามี)
+        const cleanLot = lot.replace(/[^\x00-\x7F]/g, '');
+
+        try {
+          JsBarcode(svgEl, cleanLot, {
+            format:       "CODE128",
+            width:        1.4,          // ความกว้างแท่ง (px)
+            height:       32,           // ความสูง barcode (px)
+            displayValue: false,        // ซ่อน text ใต้ barcode (แสดงเองด้านล่าง)
+            margin:       0,
+            background:   "#ffffff",
+            lineColor:    "#000000"
+          });
+          // ปรับ SVG ให้ responsive
+          svgEl.setAttribute('preserveAspectRatio', 'xMidYMid meet');
+          svgEl.style.width  = '100%';
+          svgEl.style.height = 'auto';
+          svgEl.style.maxHeight = '1.2cm';
+          svgEl.style.display = 'block';
+        } catch (err) {
+          console.warn('JsBarcode error:', err, 'LOT:', cleanLot);
+          // fallback: แสดง text แทน
+          svgEl.outerHTML = `<div style="font-size:7px;font-weight:900;text-align:center;
+                              border:1px solid #000;padding:2px;color:#000;">
+                              [Barcode: ${lot}]</div>`;
+        }
+      });
+    }
+
   </script>
 </body>
 </html>
