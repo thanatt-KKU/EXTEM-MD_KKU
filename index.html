@@ -776,12 +776,16 @@
     // =========================================
     // 📦 ON PRODUCT CHANGE
     // =========================================
-    const AUTO_CALC_RULES = {
-      "6-mercaptopurine": {
-        prepVolumeFixed: 50,
-        prepCountDivisor: 5
-      },
-    };
+   const AUTO_CALC_RULES = {
+    "6-mercaptopurine": {
+      prepVolumeFixed: 50,
+      prepCountDivisor: 5
+    },
+    "sirolimus": {
+      prepVolumeFixed: 20,
+      prepCountDivisor: 1
+    }
+  };
 
     function getAutoCalcRule(genericName) {
       const key = (genericName || '').toLowerCase().trim();
