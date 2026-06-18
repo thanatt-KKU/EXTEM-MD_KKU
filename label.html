@@ -201,7 +201,6 @@
 </head>
 <body class="min-h-screen pb-20">
 
-  <!-- ════════════════════ NAVBAR ════════════════════ -->
   <nav class="no-print sticky top-0 z-50 bg-slate-900 text-white shadow-lg py-3 px-4 mb-6">
     <div class="max-w-5xl mx-auto flex justify-between items-center">
       <button onclick="history.back()" class="flex items-center gap-2 px-4 py-2 bg-slate-700 hover:bg-slate-600 rounded-xl transition-all font-bold text-sm text-white">
@@ -222,7 +221,6 @@
     </div>
   </nav>
 
-  <!-- ════════════════════ CONTROL PANEL ════════════════════ -->
   <div class="max-w-4xl mx-auto py-2 px-4 no-print text-center">
     <div class="mb-6 bg-white p-4 rounded-2xl shadow-sm border border-slate-200">
       <h1 class="text-xl font-black text-slate-800 uppercase tracking-tight">🖨️ จัดการพิมพ์ฉลากยาเฉพาะราย</h1>
@@ -231,7 +229,6 @@
       </p>
     </div>
 
-    <!-- Cards เลือกประเภทฉลาก — 3 ประเภท -->
     <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
 
       <div id="card-bag" onclick="selectSection('bag')"
@@ -266,7 +263,6 @@
     </div>
   </div>
 
-  <!-- ════════════════════ PRINT AREAS ════════════════════ -->
   <div id="bag-area"     class="print-area"></div>
   <div id="product-area" class="print-area"></div>
   <div id="syringe-area" class="print-area"></div>
@@ -454,7 +450,7 @@
     // ════════════════════════════════════════════════════════════════
     // 🛍️ 1. ฉลากใหญ่ติดถุงยา — 2 ฉลาก
     //   • ฉลากที่ 1: ฉลากปกติ (คงเดิม)
-    //   • ฉลากที่ 2: "สำหรับเช็คฉลาก" — กรอบ + ① มุมซ้าย + Barcode ตะแคงมุมขวา
+    //   • ฉลากที่ 2: "สำหรับเช็คฉลาก" — มีข้อมูลครบเหมือนฉลากปกติ + เพิ่ม Barcode ตะแคงขวา
     // ════════════════════════════════════════════════════════════════
     function createBagLabelHTML(o, total) {
       const pUnit       = o.productUnit || 'ml';
@@ -493,11 +489,10 @@
         </div>
       `;
 
-      /* ── ฉลากที่ 2: สำหรับเช็คฉลาก ── */
+      /* ── ฉลากที่ 2: สำหรับเช็คฉลาก (ปรับปรุงให้มีข้อมูลเหมือนฉลากปกติครบถ้วน) ── */
       const label2 = `
-        <div class="label-check label-box-thermal" style="position:relative;">
+        <div class="label-check label-box-thermal" style="position:relative;" contenteditable="true">
 
-          <!-- หมายเลข ① มุมซ้ายบน -->
           <div class="label-corner-num label-corner-num-left"
                style="position:absolute;top:3px;left:3px;
                       font-size:11px!important;font-weight:900!important;
@@ -508,51 +503,50 @@
             1
           </div>
 
-          <!-- ฝั่งซ้าย: ข้อความ -->
-          <div class="check-left" style="padding-top:22px;">
+          <div class="check-left" style="padding-top:20px; display:flex; flex-direction:column; justify-content:space-between; height:100%;">
 
-            <!-- แถบหัว "สำหรับเช็คฉลาก" -->
-            <div class="check-label-header"
-                 style="font-size:11px!important;font-weight:900!important;
-                        text-align:center;border-bottom:1.5px solid #000;
-                        padding-bottom:3px;margin-bottom:4px;
-                        letter-spacing:0.5px;color:#000!important;">
-              ◈ สำหรับเช็คฉลาก ◈
-            </div>
+            <div>
+              <div class="check-label-header"
+                   style="font-size:10px!important;font-weight:900!important;
+                          text-align:center;border-bottom:1.5px solid #000;
+                          padding-bottom:2px;margin-bottom:3px;
+                          letter-spacing:0.5px;color:#000!important;">
+                ◈ สำหรับเช็คฉลาก ◈
+              </div>
 
-            <div style="font-size:14px!important;font-weight:900!important;
-                        color:#000!important;line-height:1.3;margin-bottom:2px;">
-              ${o.genericName}${dForm}
-            </div>
-            <div style="font-size:11px!important;font-weight:800!important;
-                        color:#000!important;line-height:1.3;margin-bottom:3px;">
-              (${o.strength}) ${o.prepVolume} ${pUnit}
-              จำนวน <span style="text-decoration:underline;">${total} ${packUnit}</span>
-            </div>
+              <div style="text-align:center; leading-none; margin-bottom:2px;">
+                <div style="font-size:15px!important; font-weight:900!important; color:#000!important; tracking-tight: -0.5px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${o.genericName}${dForm}</div>
+                <div style="font-size:11px!important; font-weight:900!important; color:#000!important;">
+                  (${o.strength}) ${o.prepVolume} ${pUnit} จำนวน <span style="text-decoration:underline;">${total} ${packUnit}</span>
+                </div>
+              </div>
 
-            <div style="font-size:13px!important;font-weight:900!important;
-                        color:#000!important;line-height:1.3;">
-              HN: ${o.hn}
-            </div>
-            <div style="font-size:13px!important;font-weight:900!important;
-                        color:#000!important;line-height:1.3;
-                        overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">
-              ${o.patientName}
+              <div style="text-align:center; leading-none; margin-bottom:2px;">
+                <div style="font-size:14px!important; font-weight:900!important; color:#000!important;">HN: ${o.hn}</div>
+                <div style="font-size:14px!important; font-weight:900!important; color:#000!important; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${o.patientName}</div>
+              </div>
+
+              <div style="text-align:center; font-size:11px!important; font-weight:900!important; color:#000!important; line-height:1.2; margin-bottom:2px; padding:1px 0;">
+                <div>${o.dosePerTime ? `รับประทานครั้งละ ${o.dosePerTime} ซีซี` : ''}</div>
+                <div>${o.timesPerDay ? `วันละ ${o.timesPerDay} ครั้ง` : ''} ${o.timingText || ''}</div>
+              </div>
             </div>
 
-            <div style="margin-top:3px;font-size:10px!important;font-weight:800!important;
-                        color:#000!important;line-height:1.4;
-                        border-top:1px solid #000;padding-top:2px;">
-              <span>วันที่เตรียม: ${formatThaiDate(o.orderDate)}</span>
-
-              <span>วันหมดอายุ: ${calculateExpiryDate(o.orderDate, o.expiryDays)}</span>
+            <div style="font-size:9.5px!important; font-weight:800!important; color:#000!important; border-top:1px solid #000; padding-top:2px; line-height:1.25;">
+              <div style="display:flex; justify-content:space-between;">
+                <span>วันเตรียม: ${formatThaiDate(o.orderDate)}</span>
+                <span>หมดอายุ: ${calculateExpiryDate(o.orderDate, o.expiryDays)}</span>
+              </div>
+              <div style="display:flex; justify-content:space-between; margin-top:1px; font-weight:900!important;">
+                <span style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-w-[60%];">${cleanStorageText(o.storage)}</span>
+                <span style="text-align:right; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${warningText}</span>
+              </div>
             </div>
+
           </div>
 
-          <!-- ฝั่งขวา: Barcode ตะแคง 90° + หมายเลข ② -->
           <div class="check-right" style="position:relative;">
 
-            <!-- หมายเลข ② มุมขวาบน -->
             <div style="position:absolute;top:3px;right:3px;
                         font-size:11px!important;font-weight:900!important;
                         color:#000!important;background:#fff;
@@ -562,7 +556,6 @@
               2
             </div>
 
-            <!-- Barcode หมุน 90° -->
             <div class="barcode-rotate-wrap">
               <svg id="svg-check-barcode"
                    data-lot="${lotNumber}"
