@@ -9,6 +9,7 @@
   <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.6/dist/JsBarcode.all.min.js"></script>
   <style>
     * { 
+      box-sizing: border-box;
       font-family: 'Sarabun', sans-serif; 
       line-height: 1.25; 
     }
@@ -80,28 +81,6 @@
       border: none !important; /* ถอดกรอบฉลากออกตามคำสั่ง */
     }
 
-    /* หมายเลข ① ② มุมฉลาก */
-    .label-corner-num {
-      position: absolute;
-      top: 3px;
-      font-size: 11px !important;
-      font-weight: 900 !important;
-      line-height: 1;
-      color: #000 !important;
-      background: #fff;
-      padding: 1px 3px;
-      border: 1.5px solid #000;
-      border-radius: 50%;
-      width: 18px;
-      height: 18px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 10;
-    }
-    .label-corner-num-left  { left: 3px; }
-    .label-corner-num-right { right: 3px; }
-
     /* แถบหัว "สำหรับเช็คฉลาก" */
     .check-label-header {
       font-size: 11px !important;
@@ -117,24 +96,24 @@
     /* ฝั่งซ้ายของฉลากเช็ค: ข้อมูลยา+ผู้ป่วย */
     .check-left {
       flex: 1;
-      padding: 0 6px 0 6px; /* เอา padding บนล่างออกเพื่อให้คุมผ่าน inline style */
+      padding: 0 6px 0 6px; 
       display: flex;
       flex-direction: column;
       justify-content: flex-start;
       gap: 1px;
       overflow: hidden;
-      border-right: 1.5px solid #000;
+      border-right: none !important; /* เอาเส้นกั้นแนวตั้งออกตามคำสั่ง */
     }
 
     /* ฝั่งขวาของฉลากเช็ค: barcode ตะแคง 90° */
     .check-right {
-      width: 1.1in;
-      min-width: 1.1in;
+      width: 0.95in; /* ปรับขนาดความกว้างลงเล็กน้อยเพื่อเพิ่มพื้นที่ฝั่งซ้ายและขยับบาร์โค้ดไปทางขวา */
+      min-width: 0.95in;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      padding: 0 3px; /* เอา padding บนล่างออกเพื่อให้คุมผ่าน inline style */
+      padding: 0 3px; 
       position: relative;
     }
 
@@ -450,7 +429,7 @@
     // ════════════════════════════════════════════════════════════════
     // 🛍️ 1. ฉลากใหญ่ติดถุงยา — 2 ฉลาก
     //   • ฉลากที่ 1: ฉลากปกติ (คงเดิม)
-    //   • ฉลากที่ 2: "สำหรับเช็คฉลาก" — ไม่มีกรอบ, เว้นบน 1.3 cm, ล่าง 3 mm, ย่อบาร์โค้ดเส้นคมชัด
+    //   • ฉลากที่ 2: "สำหรับเช็คฉลาก" — ไม่มีกรอบ, เว้นบน 1.3 cm, ล่าง 4 mm, ไม่มีเลขมุม, ไม่มีเส้นกั้นกลาง
     // ════════════════════════════════════════════════════════════════
     function createBagLabelHTML(o, total) {
       const pUnit       = o.productUnit || 'ml';
@@ -489,19 +468,9 @@
         </div>
       `;
 
-      /* ── ฉลากที่ 2: สำหรับเช็คฉลาก (ปรับปรุงตามเงื่อนไขใหม่) ── */
+      /* ── ฉลากที่ 2: สำหรับเช็คฉลาก (ปรับขอบล่าง 4 mm / ลบเลขมุม / ขยับขวา / ลบเส้นกั้น) ── */
       const label2 = `
-        <div class="label-check label-box-thermal" style="position:relative; padding: 1.3cm 0.1in 3mm 0.1in;" contenteditable="true">
-
-          <div class="label-corner-num label-corner-num-left"
-               style="position:absolute;top:3px;left:3px;
-                      font-size:11px!important;font-weight:900!important;
-                      color:#000!important;background:#fff;
-                      border:1.5px solid #000;border-radius:50%;
-                      width:18px;height:18px;
-                      display:flex;align-items:center;justify-content:center;z-index:10;">
-            1
-          </div>
+        <div class="label-check label-box-thermal" style="position:relative; padding: 1.3cm 0.1in 4mm 0.1in;" contenteditable="true">
 
           <div class="check-left" style="display:flex; flex-direction:column; justify-content:space-between; height:100%;">
 
@@ -545,18 +514,9 @@
 
           </div>
 
-          <div class="check-right" style="position:relative; width:0.95in; min-width:0.95in;">
+          <div class="check-right" style="position:relative; width:0.8in; min-width:0.8in; padding-right:0px;">
 
-            <div style="position:absolute;top:3px;right:3px;
-                        font-size:11px!important;font-weight:900!important;
-                        color:#000!important;background:#fff;
-                        border:1.5px solid #000;border-radius:50%;
-                        width:18px;height:18px;
-                        display:flex;align-items:center;justify-content:center;z-index:10;">
-              2
-            </div>
-
-            <div class="barcode-rotate-wrap" style="width: 1.8in; height: 0.8in;">
+            <div class="barcode-rotate-wrap" style="width: 1.8in; height: 0.75in;">
               <svg id="svg-check-barcode"
                    data-lot="${lotNumber}"
                    style="display:block;">
@@ -587,8 +547,8 @@
         try {
           JsBarcode(svgEl, cleanLot, {
             format:       "CODE128",
-            width:        1.1,        /* ปรับความกว้างเส้นให้เล็กลงแต่คมกริบ (ค่าเริ่มต้นคือ 1.6-2.0) */
-            height:       28,         /* ปรับความสูงบาร์โค้ดลงเพื่อให้ได้สัดส่วนที่กะทัดรัด */
+            width:        1.1,        /* บาร์โค้ดเส้นคมชัดสูง ขนาดกระชับเหมาะสมกับการสแกน */
+            height:       28,         
             displayValue: false,
             margin:       1,
             background:   "#ffffff",
