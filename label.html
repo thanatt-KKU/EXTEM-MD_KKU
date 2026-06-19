@@ -11,7 +11,7 @@
     * { 
       box-sizing: border-box;
       font-family: 'Sarabun', sans-serif; 
-      line-height: 1.3; /* ปรับเพิ่มเล็กน้อยจาก 1.25 ป้องกันสระตัดขาด */
+      line-height: 1.3; 
     }
     body { background-color: #f1f5f9; }
 
@@ -32,7 +32,6 @@
         margin: 0 auto 5mm auto !important; 
         page-break-after: always; 
       }
-      /* ฉลากคู่ (ปกติ + เช็คฉลาก) ไม่ตัดหน้าระหว่างกัน */
       .bag-label-pair {
         page-break-inside: avoid !important;
       }
@@ -49,26 +48,22 @@
 
     /* ══════════════════════════════════════
         ฉลากมาตรฐาน (ถุง / ขวด)
-        ปรับขยับขึ้น 1.5mm ด้วยการลด padding-top 
-        และเพิ่มพื้นที่ safe zone สระภาษาไทยขาด
        ══════════════════════════════════════ */
     .label-standard { 
       width: 3.5in; 
       height: 2.48in; 
-      /* เดิม padding-top: 1.3cm ลดลง 1.5mm เพื่อขยับข้อความทั้งหมดขึ้น */
       padding: calc(1.3cm - 1.5mm) 0.25in 0.15in 0.25in; 
       margin: 15px auto; 
       box-sizing: border-box; 
       position: relative; 
       display: flex;
       flex-direction: column;
-      justify-content: space-between;
+      justify-content: flex-start; /* ปรับเพื่อให้คุม margin รายบรรทัดได้แม่นยำขึ้น */
       border-radius: 0px;
     }
 
     /* ══════════════════════════════════════
-        ฉลากเช็คฉลาก — ขนาดเท่าเดิม 3.5×2.48in
-        layout: แบ่งซ้าย (ข้อมูล) | ขวา (barcode ตะแคง)
+        ฉลากเช็คฉลาก
        ══════════════════════════════════════ */
     .label-check {
       width: 3.5in;
@@ -81,10 +76,9 @@
       align-items: stretch;
       overflow: hidden;
       background: #ffffff !important;
-      border: none !important; /* ถอดกรอบฉลากออกตามคำสั่ง */
+      border: none !important; 
     }
 
-    /* แถบหัว "สำหรับเช็คฉลาก" */
     .check-label-header {
       font-size: 11px !important;
       font-weight: 900 !important;
@@ -96,7 +90,6 @@
       width: 100%;
     }
 
-    /* ฝั่งซ้ายของฉลากเช็ค: ข้อมูลยา+ผู้ป่วย */
     .check-left {
       flex: 1;
       padding: 0 6px 0 6px; 
@@ -105,12 +98,11 @@
       justify-content: flex-start;
       gap: 1px;
       overflow: hidden;
-      border-right: none !important; /* เอาเส้นกั้นแนวตั้งออกตามคำสั่ง */
+      border-right: none !important; 
     }
 
-    /* ฝั่งขวาของฉลากเช็ค: barcode ตะแคง 90° */
     .check-right {
-      width: 0.95in; /* ปรับขนาดความกว้างลงเล็กน้อยเพื่อเพิ่มพื้นที่ฝั่งซ้ายและขยับบาร์โค้ดไปทางขวา */
+      width: 0.95in; 
       min-width: 0.95in;
       display: flex;
       flex-direction: column;
@@ -120,16 +112,13 @@
       position: relative;
     }
 
-    /* container หมุน barcode 90° */
     .barcode-rotate-wrap {
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
       transform: rotate(90deg);
-      /* ปรับ origin ให้อยู่กลาง */
       transform-origin: center center;
-      /* กว้าง = ความสูงพื้นที่ขวา, สูง = ความกว้างพื้นที่ขวา */
       width: 2.0in;
       height: 0.9in;
     }
@@ -261,7 +250,7 @@
     let rxData = {};
 
     // ════════════════════════════════════════════════════════════════
-    // กฎการคำนวณอัตโนมัติประจำชื่อยาแต่ละประเภท (พิมพ์เล็กทั้งหมดเพื่อป้องกัน Case-sensitive)
+    // กฎการคำนวณอัตโนมัติประจำชื่อยาแต่ละประเภท 
     // ════════════════════════════════════════════════════════════════
     const AUTO_CALC_RULES = {
       "6-mercaptopurine": {
@@ -275,7 +264,7 @@
     };
 
     // ════════════════════════════════════════════════════════════════
-    // ตารางบังคับคำต่อท้ายเฉพาะ Generic Name (แก้ไขปรับเป็นตัวพิมพ์เล็กทั้งหมด 100%)
+    // ตารางบังคับคำต่อท้ายเฉพาะ Generic Name
     // ════════════════════════════════════════════════════════════════
     const GENERIC_NAME_SUFFIX_MAP = {
       "6-mercaptopurine": "Suspension",
@@ -399,7 +388,6 @@
 
       document.getElementById('action-btns').classList.remove('hidden');
 
-      // Render barcode ในฉลากเช็คฉลาก หลัง DOM พร้อม
       if (type === 'bag') {
         setTimeout(() => renderBagBarcodes(), 150);
       }
@@ -434,9 +422,6 @@
       return storageStr;
     }
 
-    // ════════════════════════════════════════════════════════════════
-    // Render ฉลากทั้งหมด
-    // ════════════════════════════════════════════════════════════════
     function renderLabels() {
       document.getElementById('bag-area').innerHTML     = createBagLabelHTML(rxData, rxData.prepCount);
       document.getElementById('product-area').innerHTML = createProductLabelHTML(rxData);
@@ -454,28 +439,28 @@
       const warningText = o.labelWarning ? o.labelWarning.replace(/\n/g, ' ') : '';
       const lotNumber   = o.lotNumber || 'ET------';
 
-      /* ── ฉลากที่ 1: ปกติ (ไม่มี Barcode) — แก้ระยะเยื้องขึ้น 1.5mm ใน CSS class .label-standard แล้ว และปรับระยะบรรทัดเพื่อกันฟอนต์ไทยขาด ── */
+      /* ── ฉลากที่ 1: ปกติ (ไม่มี Barcode) ── */
       const label1 = `
         <div class="label-box label-standard label-box-thermal text-sm font-black" contenteditable="true">
-          <div class="flex flex-col items-center justify-start text-center" style="line-height: 1.3; padding-top: 1px;">
+          <div class="flex flex-col items-center justify-start text-center" style="line-height: 1.3; padding-top: 1px; margin-bottom: 2px;">
             <div class="text-[20px] text-thermal-heavy tracking-tight mb-0.5">${o.genericName}${dForm}</div>
             <div class="text-[15px] text-thermal-heavy mb-0.5">
               (${o.strength}) ${o.prepVolume} ${pUnit}
               จำนวน <span class="underline border-b border-black font-black">${total} ${packUnit}</span>
             </div>
           </div>
-          <div class="flex flex-col items-center justify-start text-center my-0.5" style="line-height: 1.3; padding-top: 1px; padding-bottom: 1px;">
+          <div class="flex flex-col items-center justify-start text-center" style="line-height: 1.3; margin-top: -0.5mm; margin-bottom: 2px;">
             <div class="text-[18.5px] text-thermal-heavy">HN: ${o.hn}</div>
             <div class="text-[18.5px] text-thermal-heavy truncate max-w-full" style="padding: 1px 0;">${o.patientName}</div>
           </div>
-          <div class="text-center text-[15px] text-thermal-heavy py-1 px-0.5 rounded my-0.5" style="line-height: 1.35;">
+          <div class="text-center text-[15px] text-thermal-heavy py-0.5 px-0.5 rounded" style="line-height: 1.35; margin-bottom: 3px;">
             <div style="padding-bottom: 1px;">${o.dosePerTime ? `รับประทานครั้งละ ${o.dosePerTime} ซีซี` : ''}</div>
             <div class="mt-0.5" style="padding-top: 1px;">${o.timesPerDay ? `วันละ ${o.timesPerDay} ครั้ง` : ''} ${o.timingText || ''}</div>
           </div>
-          <div class="grid grid-cols-2 text-[12px] pt-0.5 border-t border-black mt-0.5" style="line-height: 1.3;">
+          <div class="grid grid-cols-2 text-[12px] pt-1 border-t border-black" style="line-height: 1.3; margin-top: -0.5mm;">
             <div style="padding-bottom: 1px;">วันที่เตรียม: ${formatThaiDate(o.orderDate)}</div>
             <div class="text-right" style="padding-bottom: 1px;">วันหมดอายุ: ${calculateExpiryDate(o.orderDate, o.expiryDays)}</div>
-            <div class="col-span-2 mt-0.5 flex justify-between w-full" style="padding-top: 1px;">
+            <div class="col-span-2 flex justify-between w-full" style="padding-top: 1px; margin-top: -0.3mm;">
               <span>${cleanStorageText(o.storage)}</span>
               <span class="text-right font-black">${warningText}</span>
             </div>
@@ -483,7 +468,7 @@
         </div>
       `;
 
-      /* ── ฉลากที่ 2: สำหรับเช็คฉลาก (มี Barcode) — ขยับ Element ขึ้น 1.5mm โดยใช้ calc หักออกจาก padding-top และแก้ระยะบรรทัดกันฟอนต์ไทยขาด ── */
+      /* ── ฉลากที่ 2: สำหรับเช็คฉลาก (มี Barcode) ── */
       const label2 = `
         <div class="label-check label-box-thermal" style="position:relative; padding: calc(1.3cm - 1.5mm) 0.1in calc(4mm + 1.5mm) 0.1in;" contenteditable="true">
 
@@ -505,23 +490,23 @@
                 </div>
               </div>
 
-              <div style="text-align:center; line-height:1.3; margin-bottom:2px;">
+              <div style="text-align:center; line-height:1.3; margin-top:-0.5mm; margin-bottom:2px;">
                 <div style="font-size:15px!important; font-weight:900!important; color:#000!important;">HN: ${o.hn}</div>
                 <div style="font-size:15px!important; font-weight:900!important; color:#000!important; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; padding: 1px 0;">${o.patientName}</div>
               </div>
 
-              <div style="text-align:center; font-size:12px!important; font-weight:900!important; color:#000!important; line-height:1.35; padding:2px 0;">
+              <div style="text-align:center; font-size:12px!important; font-weight:900!important; color:#000!important; line-height:1.35; padding:1px 0; margin-bottom: 2px;">
                 <div style="padding-bottom:1px;">${o.dosePerTime ? `รับประทานครั้งละ ${o.dosePerTime} ซีซี` : ''}</div>
                 <div style="padding-top:1px;">${o.timesPerDay ? `วันละ ${o.timesPerDay} ครั้ง` : ''} ${o.timingText || ''}</div>
               </div>
             </div>
 
-            <div style="font-size:9.5px!important; font-weight:800!important; color:#000!important; border-top:1px solid #000; padding-top:2px; line-height:1.3;">
+            <div style="font-size:9.5px!important; font-weight:800!important; color:#000!important; border-top:1px solid #000; padding-top:2px; line-height:1.3; margin-top:-0.5mm;">
               <div style="display:flex; justify-content:space-between; padding-bottom:1px;">
                 <span>วันที่เตรียม: ${formatThaiDate(o.orderDate)}</span>
                 <span>วันหมดอายุ: ${calculateExpiryDate(o.orderDate, o.expiryDays)}</span>
               </div>
-              <div style="display:flex; justify-content:space-between; margin-top:1px; font-weight:900!important; padding-top:1px;">
+              <div style="display:flex; justify-content:space-between; font-weight:900!important; padding-top:1px; margin-top:-0.3mm;">
                 <span style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:60%;">${cleanStorageText(o.storage)}</span>
                 <span style="text-align:right; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${warningText}</span>
               </div>
@@ -595,22 +580,22 @@
 
       return `
         <div class="label-box label-standard label-box-thermal text-sm font-black" contenteditable="true">
-          <div class="flex flex-col items-center justify-start text-center" style="line-height: 1.3; padding-top: 1px;">
+          <div class="flex flex-col items-center justify-start text-center" style="line-height: 1.3; padding-top: 1px; margin-bottom: 2px;">
             <div class="text-[20px] text-thermal-heavy tracking-tight mb-0.5">${o.genericName}${dForm}</div>
             <div class="text-[15px] text-thermal-heavy mb-0.5">(${o.strength}) ${o.prepVolume} ${pUnit}</div>
           </div>
-          <div class="flex flex-col items-center justify-start text-center my-0.5" style="line-height: 1.3; padding-top: 1px; padding-bottom: 1px;">
+          <div class="flex flex-col items-center justify-start text-center" style="line-height: 1.3; margin-top: -0.5mm; margin-bottom: 2px;">
             <div class="text-[18.5px] text-thermal-heavy">HN: ${o.hn}</div>
             <div class="text-[18.5px] text-thermal-heavy truncate max-w-full" style="padding: 1px 0;">${o.patientName}</div>
           </div>
-          <div class="text-center text-[15px] text-thermal-heavy py-1 px-0.5 rounded my-0.5" style="line-height: 1.35;">
+          <div class="text-center text-[15px] text-thermal-heavy py-0.5 px-0.5 rounded" style="line-height: 1.35; margin-bottom: 3px;">
             <div style="padding-bottom: 1px;">${o.dosePerTime ? `รับประทานครั้งละ ${o.dosePerTime} ซีซี` : ''}</div>
             <div class="mt-0.5" style="padding-top: 1px;">${o.timesPerDay ? `วันละ ${o.timesPerDay} ครั้ง` : ''} ${o.timingText || ''}</div>
           </div>
-          <div class="grid grid-cols-2 text-[12px] pt-0.5 border-t border-black mt-0.5" style="line-height: 1.3;">
+          <div class="grid grid-cols-2 text-[12px] pt-1 border-t border-black" style="line-height: 1.3; margin-top: -0.5mm;">
             <div style="padding-bottom: 1px;">วันที่เตรียม: ${formatThaiDate(o.orderDate)}</div>
             <div class="text-right" style="padding-bottom: 1px;">วันหมดอายุ: ${calculateExpiryDate(o.orderDate, o.expiryDays)}</div>
-            <div class="col-span-2 mt-0.5 flex justify-between w-full" style="padding-top: 1px;">
+            <div class="col-span-2 flex justify-between w-full" style="padding-top: 1px; margin-top: -0.3mm;">
               <span>${cleanStorageText(o.storage)}</span>
               <span class="text-right font-black">${warningText}</span>
             </div>
