@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ระบบพิมพ์ฉลากยาเฉพาะราย | Srinagarind Hospital</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght=400;500;600;700;800;900&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.6/dist/JsBarcode.all.min.js"></script>
   <style>
     * { 
@@ -52,13 +52,14 @@
     .label-standard { 
       width: 3.5in; 
       height: 2.48in; 
-      padding: calc(1.3cm - 1.5mm) 0.25in 0.15in 0.25in; 
+      /* ปรับขยับลงมา 0.3mm ตามสั่ง (ลดตัวลบจาก 1.5mm เป็น 1.2mm เพื่อให้ Padding บนเพิ่มขึ้น) */
+      padding: calc(1.3cm - 1.2mm) 0.25in 0.15in 0.25in; 
       margin: 15px auto; 
       box-sizing: border-box; 
       position: relative; 
       display: flex;
       flex-direction: column;
-      justify-content: flex-start; /* ปรับเพื่อให้คุม margin รายบรรทัดได้แม่นยำขึ้น */
+      justify-content: flex-start;
       border-radius: 0px;
     }
 
@@ -201,33 +202,27 @@
     </div>
 
     <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
-
-      <div id="card-bag" onclick="selectSection('bag')"
-           class="bg-white p-5 rounded-2xl border-4 border-slate-200 cursor-pointer transition-all hover:border-indigo-400 shadow-sm">
+      <div id="card-bag" onclick="selectSection('bag')" class="bg-white p-5 rounded-2xl border-4 border-slate-200 cursor-pointer transition-all hover:border-indigo-400 shadow-sm">
         <div class="text-3xl mb-1">🛍️</div>
         <h3 class="font-black text-indigo-700 text-base">1. ฉลากใหญ่ติดถุง</h3>
         <p class="text-xs text-slate-400 mt-1">พิมพ์ 2 ฉลาก: ฉลากปกติ + ฉลากเช็คฉลาก (พร้อม Barcode)</p>
       </div>
 
-      <div id="card-product" onclick="selectSection('product')"
-           class="bg-white p-5 rounded-2xl border-4 border-slate-200 cursor-pointer transition-all hover:border-purple-400 shadow-sm">
+      <div id="card-product" onclick="selectSection('product')" class="bg-white p-5 rounded-2xl border-4 border-slate-200 cursor-pointer transition-all hover:border-purple-400 shadow-sm">
         <div class="text-3xl mb-1">🍾</div>
         <h3 class="font-black text-purple-700 text-base">2. ฉลากติดขวดยา / ซองยา</h3>
         <p class="text-xs text-slate-400 mt-1">พิมพ์ออกจำนวน 1 แผ่น (สั่งเพิ่มจำนวนชุดในหน้าต่างพิมพ์ได้)</p>
       </div>
 
-      <div id="card-syringe" onclick="selectSection('syringe')"
-           class="bg-white p-5 rounded-2xl border-4 border-slate-200 cursor-pointer transition-all hover:border-amber-400 shadow-sm">
+      <div id="card-syringe" onclick="selectSection('syringe')" class="bg-white p-5 rounded-2xl border-4 border-slate-200 cursor-pointer transition-all hover:border-amber-400 shadow-sm">
         <div class="text-3xl mb-1">💉</div>
         <h3 class="font-black text-amber-700 text-base">3. ฉลากเล็กติด Syringe (คู่)</h3>
         <p class="text-xs text-slate-400 mt-1">สติกเกอร์คู่ซ้าย-ขวา 5.0×2.5 cm เว้นกลาง 1 mm</p>
       </div>
-
     </div>
 
     <div id="action-btns" class="hidden mb-6">
-      <button onclick="window.print()"
-              class="bg-slate-900 text-white py-4 px-16 rounded-2xl font-black text-lg shadow-lg hover:bg-slate-800 hover:scale-[1.02] active:scale-[0.98] transition-all">
+      <button onclick="window.print()" class="bg-slate-900 text-white py-4 px-16 rounded-2xl font-black text-lg shadow-lg hover:bg-slate-800 hover:scale-[1.02] active:scale-[0.98] transition-all">
         🖨️ สั่งพิมพ์ฉลากที่เลือก
       </button>
       <p class="text-xs text-slate-400 mt-2">* สามารถคลิกข้อความบนตัวอย่างฉลากด้านล่างเพื่อแก้ไขข้อความสดได้ก่อนพิมพ์จริงค่ะ</p>
@@ -237,7 +232,6 @@
   <div id="bag-area"     class="print-area"></div>
   <div id="product-area" class="print-area"></div>
   <div id="syringe-area" class="print-area"></div>
-
 
   <script>
     const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxIxwWDNzXfPKwESfaHqHdbT24d0s78tcy7nmSNEbzXIDx7lFilQQl2lNjuoW5HlVIv/exec";
@@ -249,23 +243,11 @@
 
     let rxData = {};
 
-    // ════════════════════════════════════════════════════════════════
-    // กฎการคำนวณอัตโนมัติประจำชื่อยาแต่ละประเภท 
-    // ════════════════════════════════════════════════════════════════
     const AUTO_CALC_RULES = {
-      "6-mercaptopurine": {
-        prepVolumeFixed: 50,
-        prepCountDivisor: 5
-      },
-      "sirolimus": {
-        prepVolumeFixed: 20,
-        prepCountDivisor: 1
-      }
+      "6-mercaptopurine": { prepVolumeFixed: 50, prepCountDivisor: 5 },
+      "sirolimus":        { prepVolumeFixed: 20, prepCountDivisor: 1 }
     };
 
-    // ════════════════════════════════════════════════════════════════
-    // ตารางบังคับคำต่อท้ายเฉพาะ Generic Name
-    // ════════════════════════════════════════════════════════════════
     const GENERIC_NAME_SUFFIX_MAP = {
       "6-mercaptopurine": "Suspension",
       "sirolimus":        "Suspension",
@@ -304,9 +286,6 @@
       return getEngOutputType(o.outputType, o.productName || o.genericName);
     }
 
-    // ════════════════════════════════════════════════════════════════
-    // โหลดข้อมูลเมื่อ DOM พร้อม
-    // ════════════════════════════════════════════════════════════════
     document.addEventListener('DOMContentLoaded', async () => {
       const urlParams = new URLSearchParams(window.location.search);
 
@@ -369,9 +348,6 @@
       }
     });
 
-    // ════════════════════════════════════════════════════════════════
-    // เลือก Section พิมพ์
-    // ════════════════════════════════════════════════════════════════
     function selectSection(type) {
       document.querySelectorAll('.print-area').forEach(el => el.classList.remove('active'));
       document.getElementById(`${type}-area`).classList.add('active');
@@ -393,9 +369,6 @@
       }
     }
 
-    // ════════════════════════════════════════════════════════════════
-    // Utility Functions
-    // ════════════════════════════════════════════════════════════════
     function formatThaiDate(dateStr) {
       if (!dateStr) return "-";
       const d = new Date(dateStr);
@@ -428,9 +401,7 @@
       document.getElementById('syringe-area').innerHTML = createSyringeLabelHTML(rxData);
     }
 
-    // ════════════════════════════════════════════════════════════════
     // 🛍️ 1. ฉลากใหญ่ติดถุงยา — 2 ฉลาก
-    // ════════════════════════════════════════════════════════════════
     function createBagLabelHTML(o, total) {
       const pUnit       = o.productUnit || 'ml';
       const packUnit    = o.packageUnit || 'ขวด';
@@ -439,7 +410,7 @@
       const warningText = o.labelWarning ? o.labelWarning.replace(/\n/g, ' ') : '';
       const lotNumber   = o.lotNumber || 'ET------';
 
-      /* ── ฉลากที่ 1: ปกติ (ไม่มี Barcode) ── */
+      /* ── ฉลากที่ 1: ปกติ ── */
       const label1 = `
         <div class="label-box label-standard label-box-thermal text-sm font-black" contenteditable="true">
           <div class="flex flex-col items-center justify-start text-center" style="line-height: 1.3; padding-top: 1px; margin-bottom: 2px;">
@@ -468,12 +439,10 @@
         </div>
       `;
 
-      /* ── ฉลากที่ 2: สำหรับเช็คฉลาก (มี Barcode) ── */
+      /* ── ฉลากที่ 2: สำหรับเช็คฉลาก ── */
       const label2 = `
-        <div class="label-check label-box-thermal" style="position:relative; padding: calc(1.3cm - 1.5mm) 0.1in calc(4mm + 1.5mm) 0.1in;" contenteditable="true">
-
+        <div class="label-check label-box-thermal" style="position:relative; padding: calc(1.3cm - 1.2mm) 0.1in calc(4mm + 1.5mm) 0.1in;" contenteditable="true">
           <div class="check-left" style="display:flex; flex-direction:column; justify-content:space-between; height:100%;">
-
             <div>
               <div class="check-label-header"
                    style="font-size:10px!important;font-weight:900!important;
@@ -482,25 +451,21 @@
                           letter-spacing:0.5px;color:#000!important;">
                 ◈ สำหรับเช็คฉลาก ◈
               </div>
-
               <div style="text-align:center; line-height:1.3; margin-bottom:2px;">
                 <div style="font-size:16px!important; font-weight:900!important; color:#000!important; tracking-tight: -0.5px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${o.genericName}${dForm}</div>
                 <div style="font-size:11.5px!important; font-weight:900!important; color:#000!important; padding-top:1px;">
                   (${o.strength}) ${o.prepVolume} ${pUnit} จำนวน <span style="text-decoration:underline;">${total} ${packUnit}</span>
                 </div>
               </div>
-
               <div style="text-align:center; line-height:1.3; margin-top:-0.5mm; margin-bottom:2px;">
                 <div style="font-size:15px!important; font-weight:900!important; color:#000!important;">HN: ${o.hn}</div>
                 <div style="font-size:15px!important; font-weight:900!important; color:#000!important; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; padding: 1px 0;">${o.patientName}</div>
               </div>
-
               <div style="text-align:center; font-size:12px!important; font-weight:900!important; color:#000!important; line-height:1.35; padding:1px 0; margin-bottom: 2px;">
                 <div style="padding-bottom:1px;">${o.dosePerTime ? `รับประทานครั้งละ ${o.dosePerTime} ซีซี` : ''}</div>
                 <div style="padding-top:1px;">${o.timesPerDay ? `วันละ ${o.timesPerDay} ครั้ง` : ''} ${o.timingText || ''}</div>
               </div>
             </div>
-
             <div style="font-size:9.5px!important; font-weight:800!important; color:#000!important; border-top:1px solid #000; padding-top:2px; line-height:1.3; margin-top:-0.5mm;">
               <div style="display:flex; justify-content:space-between; padding-bottom:1px;">
                 <span>วันที่เตรียม: ${formatThaiDate(o.orderDate)}</span>
@@ -511,24 +476,14 @@
                 <span style="text-align:right; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${warningText}</span>
               </div>
             </div>
-
           </div>
-
           <div class="check-right" style="position:relative; width:0.8in; min-width:0.8in; padding-right:0px;">
-
             <div class="barcode-rotate-wrap" style="width: 1.8in; height: 0.75in;">
-              <svg id="svg-check-barcode"
-                   data-lot="${lotNumber}"
-                   style="display:block;">
-              </svg>
-              <div class="barcode-lot-rotated"
-                   style="font-size:7px!important;font-weight:900!important;
-                          color:#000!important;text-align:center;
-                          margin-top:1px;white-space:nowrap;">
+              <svg id="svg-check-barcode" data-lot="${lotNumber}" style="display:block;"></svg>
+              <div class="barcode-lot-rotated" style="font-size:7px!important;font-weight:900!important;color:#000!important;text-align:center;margin-top:1px;white-space:nowrap;">
                 LOT: ${lotNumber}
               </div>
             </div>
-
           </div>
         </div>
       `;
@@ -536,9 +491,6 @@
       return `<div class="bag-label-pair">${label1}${label2}</div>`;
     }
 
-    // ════════════════════════════════════════════════════════════════
-    // Render Barcode ในฉลากเช็คฉลาก
-    // ════════════════════════════════════════════════════════════════
     function renderBagBarcodes() {
       const svgList = document.querySelectorAll('#bag-area svg[data-lot]');
       svgList.forEach(svgEl => {
@@ -560,18 +512,12 @@
           svgEl.style.display = 'block';
         } catch (err) {
           console.warn('JsBarcode error:', err, 'LOT:', cleanLot);
-          svgEl.outerHTML = `
-            <div style="font-size:7px;font-weight:900;text-align:center;
-                        border:1px solid #000;padding:2px;color:#000;">
-              [Barcode: ${lot}]
-            </div>`;
+          svgEl.outerHTML = `<div style="font-size:7px;font-weight:900;text-align:center;border:1px solid #000;padding:2px;color:#000;">[Barcode: ${lot}]</div>`;
         }
       });
     }
 
-    // ════════════════════════════════════════════════════════════════
     // 🍾 2. ฉลากติดขวดยา / ซองยา
-    // ════════════════════════════════════════════════════════════════
     function createProductLabelHTML(o) {
       const pUnit       = o.productUnit || 'ml';
       const formText    = getDosageFormSuffix(o);
@@ -604,29 +550,21 @@
       `;
     }
 
-    // ════════════════════════════════════════════════════════════════
     // 💉 3. ฉลากเล็กติด Syringe แบบคู่ซ้าย-ขวา
-    // ════════════════════════════════════════════════════════════════
     function createSyringeLabelHTML(o) {
       const labelContent = `
-        <div class="border-b border-black pb-0.5 text-thermal-heavy text-[12px]" style="line-height: 1.3;">
-          HN: ${o.hn}
-        </div>
-        <div class="truncate text-thermal-heavy text-[12px] py-0.5" style="line-height: 1.3; padding: 1px 0;">
-          ${o.patientName}
-        </div>
+        <div class="border-b border-black pb-0.5 text-thermal-heavy text-[12px]" style="line-height: 1.3;">HN: ${o.hn}</div>
+        <div class="truncate text-thermal-heavy text-[12px] py-0.5" style="line-height: 1.3; padding: 1px 0;">${o.patientName}</div>
         <div class="my-0.5" style="line-height: 1.3;">
           <p class="text-[11.5px] text-thermal-heavy truncate mb-0.5">${o.genericName}</p>
           <p class="text-[10.5px] text-thermal-heavy">
-            Dose: <span class="underline border-b border-black">${o.dosePerTime || '-'} ซีซี</span>
-            (${o.timingText || 'ตามสั่ง'})
+            Dose: <span class="underline border-b border-black">${o.dosePerTime || '-'} ซีซี</span> (${o.timingText || 'ตามสั่ง'})
           </p>
         </div>
         <div class="border-t border-black pt-0.5 text-[10px] text-thermal-heavy" style="line-height: 1.3;">
           Exp: ${calculateExpiryDate(o.orderDate, o.expiryDays)}
         </div>
       `;
-
       return `
         <div class="label-box label-syringe label-box-thermal" contenteditable="true">
           <div class="syringe-die-cut">${labelContent}</div>
@@ -634,7 +572,6 @@
         </div>
       `;
     }
-
   </script>
 </body>
 </html>
