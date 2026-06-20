@@ -491,7 +491,7 @@
 
 
   <script>
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxOtixmCaMI3eoiSzDWGtmVjlfDNnfbvv6XvyWYYrcmXm99rJoZwIOAIqpIGdM0rRbV/exec";
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzO-yx8ETxy5SBk-66l12FpCVehdn37j0A2xKw7NfnGi_wJYjOQfqV7VUYnnRYDzBct/exec";
 
     // รายชื่อย่อเภสัชกร
     const PERSON_OPTIONS = ["OP","SK","NC","TT","MP","SO","PC","CK","KM","ST","LS","MT"];
@@ -799,7 +799,7 @@
               <button onclick='openPersonModal(${JSON.stringify(row).replace(/'/g,"&#39;").replace(/"/g,'&quot;')})'
                 class="px-3 py-2 rounded-xl border-2 shadow-sm transition-all hover:scale-105 text-sm font-black"
                 style="border-color:#e8c4d8; color:#4a4780; background:white;" title="แก้ไข">✏️ บันทึก</button>
-              <button onclick="deleteCase('${row.id}','${row.hn}')" class="btn-danger" title="ลบ">🗑️</button>
+              <button onclick="deleteCase('${row.lotNumber}','${row.hn}')" class="btn-danger">🗑️</button>
             </div>
           </td>
         </tr>`;
@@ -942,24 +942,55 @@
     // =========================================
     // 🗑️ DELETE
     // =========================================
-    async function deleteCase(id, hn) {
-      if (!confirm(`ยืนยันลบ HN: ${hn} ?\n(ไม่สามารถกู้คืนได้)`)) return;
-      const isDemo = sessionStorage.getItem('rxDemoMode') === 'true';
-      if (isDemo) {
-        masterData = masterData.filter(x => x.id !== id);
-        filterDisplay();
-        alert("⚠️ Demo Mode — ลบในเครื่องชั่วคราว");
-        return;
-      }
-      try {
-        const res    = await fetch(`${SCRIPT_URL}?action=deleteOrder&id=${id}`);
-        const result = await res.json();
-        if (result.success) { alert("✅ ลบเรียบร้อยค่ะ"); loadData(); }
-        else alert("❌ เกิดข้อผิดพลาด");
-      } catch(e) { alert("⚠️ เชื่อมต่อไม่ได้"); }
+  async function deleteCase(id, hn) {
+  if (!confirm(`ยืนยันลบ HN: ${hn} ?\n(ไม่สามารถกู้คืนได้)`)) return;
+  const isDemo = sessionStorage.getItem('rxDemoMode') === 'true';
+
+  if (isDemo) {
+    masterData = masterData.filter(x => String(x.rowIndex) !== String(id));
+    filterDisplay();
+    alert("⚠️ Demo Mode — ลบในเครื่องชั่วคราว");
+    return;
+  }
+
+  // หาปุ่มที่กด แล้วแสดง loading
+  const btn = event.currentTarget;
+  const originalText = btn.innerHTML;
+  btn.disabled = true;
+  btn.innerHTML = "⏳";
+
+  try {
+    const res = await fetch(`${SCRIPT_URL}?action=deleteOrder&id=${encodeURIComponent(id)}`);
+
+    // ตรวจสอบก่อนว่า response โอเคไหม
+    if (!res.ok) throw new Error(`Server error: ${res.status}`);
+
+    // รับ text ก่อน แล้วค่อย parse JSON (ป้องกัน parse error)
+    const text = await res.text();
+    let result;
+    try {
+      result = JSON.parse(text);
+    } catch(parseErr) {
+      throw new Error("ข้อมูลจาก Server ผิดปกติ");
     }
 
+    if (result.success) {
+      alert("✅ ลบเรียบร้อยค่ะ");
+      await loadData();
+    } else {
+      alert("❌ ลบไม่สำเร็จ: ไม่พบรายการในระบบ");
+      // คืนปุ่มกรณี error
+      btn.disabled = false;
+      btn.innerHTML = originalText;
+    }
 
+  } catch(e) {
+    alert("⚠️ เกิดข้อผิดพลาด: " + e.message);
+    // คืนปุ่มกรณี error
+    btn.disabled = false;
+    btn.innerHTML = originalText;
+  }
+}
     // =========================================
     // 📈 WORKLOAD REPORT
     // =========================================
