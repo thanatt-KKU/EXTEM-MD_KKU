@@ -257,7 +257,6 @@
                 <th>หน่วยบรรจุ</th>
                 <th>อายุยา</th>
                 <th>เก็บที่</th>
-                <th>Worksheet</th>
                 <th>สถานะ</th>
                 <th>จัดการ</th>
               </tr>
@@ -714,10 +713,9 @@
           return `
           <tr>
             <td class="font-mono text-xs" style="color:#8b85c1;">${p.drugCode||'-'}</td>
-            <td>
-              <div class="font-black" style="color:#1e1b3a;">${p.genericName}</div>
-              ${p.defaultWarning ? `<div class="text-[10px] font-bold mt-0.5" style="color:#c4a8cb;">⚠️ ${p.defaultWarning.split(',')[0]}...</div>` : ''}
-            </td>
+           <td>
+  <div class="font-black" style="color:#1e1b3a;">${p.genericName}</div>
+</td>
             <td class="font-semibold">${p.brandName||'-'}</td>
             <td class="font-bold" style="color:#4a4780;">${p.strength||'-'}</td>
             <td><span class="form-type-badge" style="background:${color};">${p.dosageForm||'-'}</span></td>
@@ -726,7 +724,6 @@
             <td><span class="unit-badge" style="background:#f0f9ff; color:#0369a1;">${p.packageUnit||'-'}</span></td>
             <td class="font-bold text-center">${p.expiryDays||'-'} <span class="text-xs font-normal" style="color:#c4a8cb;">วัน</span></td>
             <td class="text-xs font-bold" style="color:#4a4780;">${p.storage||'-'}</td>
-            <td class="text-center">${wsLink}</td>
             <td><span class="status-pill ${statusClass}">${statusLabel}</span></td>
             <td>
               <div class="flex gap-2">
