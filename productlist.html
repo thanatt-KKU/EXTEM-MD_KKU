@@ -705,7 +705,7 @@
         tbody.innerHTML = filtered.map(p => {
           const color       = formColors[p.dosageForm] || "#8b85c1";
           const statusClass = p.status === 'inactive' ? 'status-inactive' : 'status-active';
-          const statusLabel = p.status === 'inactive' ? '⛔ ปิดใช้งาน' : '✅ ใช้งาน';
+          const statusLabel = p.status === 'inactive' ? '⛔ ปิดใช้งาน' : 'ใช้งาน';
           const wsLink = p.worksheetUrl
             ? `<a href="${p.worksheetUrl}" target="_blank" class="btn-link" style="font-size:0.7rem; padding:4px 10px;">🔗 ดู</a>`
             : `<span class="text-xs font-bold" style="color:#e8c4d8;">-</span>`;
