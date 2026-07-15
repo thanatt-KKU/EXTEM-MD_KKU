@@ -279,8 +279,8 @@
       if (combined.includes("ยาน้ำแขวนตะกอน") || combined.includes("Suspension")) return "Suspension";
       if (combined.includes("ยาน้ำเชื่อม")     || combined.includes("Syrup"))      return "Syrup";
       if (combined.includes("สารละลาย")         || combined.includes("Solution"))   return "Solution";
-      if (combined.includes("แคปซูล")           || combined.includes("Capsule"))    return "Repackaged Capsule";
-      if (combined.includes("ครีม")             || combined.includes("เจล"))        return "Cream/Gel";
+      if (combined.includes("แคปซูล")            || combined.includes("Capsule"))    return "Repackaged Capsule";
+      if (combined.includes("ครีม")              || combined.includes("เจล"))        return "Cream/Gel";
       if (combined.includes("ยาหยอดตา")         || combined.includes("Eye Drops"))  return "Eye Drops";
       if (combined.includes("ยาหยอดหู")         || combined.includes("Ear Drops"))  return "Ear Drops";
       if (combined.includes("ยาฉีด")            || combined.includes("Injection"))  return "Injection";
@@ -416,7 +416,7 @@
       const dForm       = formText ? ` ${formText}` : '';
       const warningText = o.labelWarning ? o.labelWarning.replace(/\n/g, ' ') : '';
       const lotNumber   = o.lotNumber || 'ET------';
-      const wardText    = o.ward ? ` (Ward: ${o.ward})` : '';
+      const wardText    = o.ward ? `&nbsp;&nbsp;Ward: ${o.ward}` : '';
 
       /* ── ฉลากที่ 1: ปกติ ── */
       const label1 = `
@@ -428,7 +428,6 @@
               จำนวน <span class="underline border-b border-black font-black">${total} ${packUnit}</span>
             </div>
           </div>
-          <div class="border-b border-dashed border-slate-300 w-full mb-2"></div>
           <div class="flex flex-col items-center justify-start text-center" style="line-height: 1.3; margin-top: -0.5mm; margin-bottom: 2px;">
             <div class="text-[18.5px] text-thermal-heavy">HN: ${o.hn}${wardText}</div>
             <div class="text-[18.5px] text-thermal-heavy truncate max-w-full" style="padding: 1px 0;">${o.patientName}</div>
@@ -469,8 +468,6 @@
                   (${o.strength}) ${o.prepVolume} ${pUnit} จำนวน <span style="text-decoration:underline;">${total} ${packUnit}</span>
                 </div>
               </div>
-
-              <div class="border-b border-dashed border-slate-300 w-full mb-2"></div>
 
               <div style="text-align:center; line-height:1.3; margin-top:-0.5mm; margin-bottom:2px;">
                 <div style="font-size:15px!important; font-weight:900!important; color:#000!important;">HN: ${o.hn}${wardText}</div>
@@ -543,7 +540,7 @@
       const formText    = getDosageFormSuffix(o);
       const dForm       = formText ? ` ${formText}` : '';
       const warningText = o.labelWarning ? o.labelWarning.replace(/\n/g, ' ') : '';
-      const wardText    = o.ward ? ` (Ward: ${o.ward})` : '';
+      const wardText    = o.ward ? `&nbsp;&nbsp;Ward: ${o.ward}` : '';
 
       return `
         <div class="label-box label-standard label-box-thermal text-sm font-black" contenteditable="true">
@@ -551,7 +548,6 @@
             <div class="text-[20px] text-thermal-heavy tracking-tight mb-0.5">${o.genericName}${dForm}</div>
             <div class="text-[15px] text-thermal-heavy mb-2">(${o.strength}) ${o.prepVolume} ${pUnit}</div>
           </div>
-          <div class="border-b border-dashed border-slate-300 w-full mb-2"></div>
           <div class="flex flex-col items-center justify-start text-center" style="line-height: 1.3; margin-top: -0.5mm; margin-bottom: 2px;">
             <div class="text-[18.5px] text-thermal-heavy">HN: ${o.hn}${wardText}</div>
             <div class="text-[18.5px] text-thermal-heavy truncate max-w-full" style="padding: 1px 0;">${o.patientName}</div>
