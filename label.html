@@ -52,7 +52,6 @@
     .label-standard { 
       width: 3.5in; 
       height: 2.48in; 
-      /* ปรับเพิ่ม padding-top อีก 0.3mm (ลดตัวลบจาก 1.5mm เหลือ 1.2mm) เพื่อเลื่อนเนื้อหาลงมา */
       padding: calc(1.3cm - 1.2mm) 0.25in 0.15in 0.25in; 
       margin: 15px auto; 
       box-sizing: border-box; 
@@ -255,7 +254,6 @@
       "sirolimus":        { prepVolumeFixed: 20, prepCountDivisor: 1 }
     };
 
-    //ชื่อยาในโค้ดต้องเป็นพิมพ์เล็กทั้งหมด
     const GENERIC_NAME_SUFFIX_MAP = {
       "6-mercaptopurine": "Suspension",
       "sirolimus":        "Suspension",
@@ -418,19 +416,21 @@
       const dForm       = formText ? ` ${formText}` : '';
       const warningText = o.labelWarning ? o.labelWarning.replace(/\n/g, ' ') : '';
       const lotNumber   = o.lotNumber || 'ET------';
+      const wardText    = o.ward ? ` (Ward: ${o.ward})` : '';
 
       /* ── ฉลากที่ 1: ปกติ ── */
       const label1 = `
         <div class="label-box label-standard label-box-thermal text-sm font-black" contenteditable="true">
           <div class="flex flex-col items-center justify-start text-center" style="line-height: 1.3; padding-top: 1px; margin-bottom: 2px;">
             <div class="text-[20px] text-thermal-heavy tracking-tight mb-0.5">${o.genericName}${dForm}</div>
-            <div class="text-[15px] text-thermal-heavy mb-0.5">
+            <div class="text-[15px] text-thermal-heavy mb-2">
               (${o.strength}) ${o.prepVolume} ${pUnit}
               จำนวน <span class="underline border-b border-black font-black">${total} ${packUnit}</span>
             </div>
           </div>
+          <div class="border-b border-dashed border-slate-300 w-full mb-2"></div>
           <div class="flex flex-col items-center justify-start text-center" style="line-height: 1.3; margin-top: -0.5mm; margin-bottom: 2px;">
-            <div class="text-[18.5px] text-thermal-heavy">HN: ${o.hn}</div>
+            <div class="text-[18.5px] text-thermal-heavy">HN: ${o.hn}${wardText}</div>
             <div class="text-[18.5px] text-thermal-heavy truncate max-w-full" style="padding: 1px 0;">${o.patientName}</div>
           </div>
           <div class="text-center text-[15px] text-thermal-heavy py-0.5 px-0.5 rounded" style="line-height: 1.35; margin-bottom: 3px;">
@@ -449,7 +449,6 @@
       `;
 
       /* ── ฉลากที่ 2: สำหรับเช็คฉลาก ── */
-      /* ปรับเพิ่ม padding-top เป็น calc(1.3cm - 1.2mm) เพื่อขยับเนื้อหาลงมา 0.3mm บาลานซ์กับฉลากแรก */
       const label2 = `
         <div class="label-check label-box-thermal" style="position:relative; padding: calc(1.3cm - 1.2mm) 0.1in calc(4mm + 1.5mm) 0.1in;" contenteditable="true">
 
@@ -466,13 +465,15 @@
 
               <div style="text-align:center; line-height:1.3; margin-bottom:2px;">
                 <div style="font-size:16px!important; font-weight:900!important; color:#000!important; tracking-tight: -0.5px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${o.genericName}${dForm}</div>
-                <div style="font-size:11.5px!important; font-weight:900!important; color:#000!important; padding-top:1px;">
+                <div style="font-size:11.5px!important; font-weight:900!important; color:#000!important; padding-top:1px; margin-bottom: 4px;">
                   (${o.strength}) ${o.prepVolume} ${pUnit} จำนวน <span style="text-decoration:underline;">${total} ${packUnit}</span>
                 </div>
               </div>
 
+              <div class="border-b border-dashed border-slate-300 w-full mb-2"></div>
+
               <div style="text-align:center; line-height:1.3; margin-top:-0.5mm; margin-bottom:2px;">
-                <div style="font-size:15px!important; font-weight:900!important; color:#000!important;">HN: ${o.hn}</div>
+                <div style="font-size:15px!important; font-weight:900!important; color:#000!important;">HN: ${o.hn}${wardText}</div>
                 <div style="font-size:15px!important; font-weight:900!important; color:#000!important; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; padding: 1px 0;">${o.patientName}</div>
               </div>
 
@@ -518,12 +519,12 @@
         try {
           JsBarcode(svgEl, cleanLot, {
             format:       "CODE128",
-            width:        1.1,
-            height:       28,         
+            width:         1.1,
+            height:        28,          
             displayValue: false,
-            margin:       1,
-            background:   "#ffffff",
-            lineColor:    "#000000"
+            margin:        1,
+            background:    "#ffffff",
+            lineColor:     "#000000"
           });
           svgEl.setAttribute('preserveAspectRatio', 'xMidYMid meet');
           svgEl.style.width   = '100%';
@@ -542,15 +543,17 @@
       const formText    = getDosageFormSuffix(o);
       const dForm       = formText ? ` ${formText}` : '';
       const warningText = o.labelWarning ? o.labelWarning.replace(/\n/g, ' ') : '';
+      const wardText    = o.ward ? ` (Ward: ${o.ward})` : '';
 
       return `
         <div class="label-box label-standard label-box-thermal text-sm font-black" contenteditable="true">
           <div class="flex flex-col items-center justify-start text-center" style="line-height: 1.3; padding-top: 1px; margin-bottom: 2px;">
             <div class="text-[20px] text-thermal-heavy tracking-tight mb-0.5">${o.genericName}${dForm}</div>
-            <div class="text-[15px] text-thermal-heavy mb-0.5">(${o.strength}) ${o.prepVolume} ${pUnit}</div>
+            <div class="text-[15px] text-thermal-heavy mb-2">(${o.strength}) ${o.prepVolume} ${pUnit}</div>
           </div>
+          <div class="border-b border-dashed border-slate-300 w-full mb-2"></div>
           <div class="flex flex-col items-center justify-start text-center" style="line-height: 1.3; margin-top: -0.5mm; margin-bottom: 2px;">
-            <div class="text-[18.5px] text-thermal-heavy">HN: ${o.hn}</div>
+            <div class="text-[18.5px] text-thermal-heavy">HN: ${o.hn}${wardText}</div>
             <div class="text-[18.5px] text-thermal-heavy truncate max-w-full" style="padding: 1px 0;">${o.patientName}</div>
           </div>
           <div class="text-center text-[15px] text-thermal-heavy py-0.5 px-0.5 rounded" style="line-height: 1.35; margin-bottom: 3px;">
